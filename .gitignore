@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+site/
+digiinn360-update.zip
