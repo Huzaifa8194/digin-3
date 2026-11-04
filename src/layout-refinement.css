@@ -1,0 +1,125 @@
+/* The security orbit opens the story; the particle canvas takes over on scroll. */
+.hero-orbit{position:relative;width:min(42%,520px);flex:none;margin-left:auto;transform-origin:center;will-change:opacity,transform;z-index:3}
+.hero-orbit .security-orbit-map{width:min(100%,52svh);margin:auto}
+.hero-orbit .orbit-node{width:72px;font-size:9px;min-height:58px;gap:5px}
+.hero-orbit .orbit-node-icon{width:34px;height:34px}.hero-orbit .orbit-node svg{width:19px;height:20px}
+.hero-orbit .orbit-center{width:24%;background:#edf5fc;box-shadow:0 0 45px #87b5d51a}
+.hero-orbit-detail{padding:10px 15px;border:0;background:transparent;box-shadow:none;text-align:center;max-width:350px;margin:0 auto;min-height:82px}
+.hero-orbit-detail h3{font-size:15px;letter-spacing:0;margin:0 0 5px;line-height:1.4}
+.hero-orbit-detail>p:not(.kicker){font-size:11px;line-height:1.6;min-height:0;margin:0;color:#58748c}
+.hero-orbit #orbit-motion{display:block;margin:5px auto 0;padding:7px 12px;font-size:10px;background:#e5eef6}
+.motion-paused .orbit-track,.motion-paused .orbit-node{animation-play-state:paused!important}
+.fallback-orb{display:none}.past-hero .fallback-orb{display:block;width:23vw;left:73%;top:35%}
+@media(min-width:1000px){
+ .copy.chapter-composition{width:min(53%,760px)}
+ #test .chapter-composition{width:min(68%,940px)}
+ #test .security-bento{grid-template-columns:1fr 1fr}
+ #test .bento-monitor{grid-column:span 2}
+ #test .bento-privacy{grid-column:auto}
+ #test .bento-network{grid-column:auto}
+ #test .bento-monitor{display:grid;grid-template-columns:1.2fr 1fr;gap:8px 20px;align-items:center}
+ #test .bento-card-title{grid-column:1/-1}
+ #test .monitor-illustration{margin:0}
+ #test .monitor-events>div{flex-direction:column;align-items:start;gap:3px}
+ #test .bento-bottom{align-self:center}
+ #test .bento-privacy{min-height:130px}
+ #test .bento-network p{max-width:45ch}
+ #test .network-art{max-width:260px}
+ .reference-showcase{grid-template-columns:.7fr 1.3fr;gap:20px;padding:5px 0}
+ .spatial-art{min-height:215px}.spatial-art>span{bottom:-4px;font-size:9px}
+ .showcase-copy h3{font-size:25px}.showcase-copy p{font-size:12px;line-height:1.65}
+ .switcher{margin-bottom:16px}.switcher button{padding:9px 14px}
+ .showcase-copy ul{margin:15px 0}.showcase-copy li{font-size:11px;margin:7px 0}
+ .protection-composition .privacy-art{width:100px!important;height:100px!important;margin:0 auto 15px}
+ .protection-composition .spot-card{padding:20px}.protection-composition .spot-card h3{font-size:21px}
+ .protection-layers{margin-top:15px}.protection-layers summary{padding:10px 0}
+ .monitoring-composition .monitor-illustration{margin:14px auto;padding:14px;max-width:460px}
+ .monitoring-composition .monitor-overview{padding:12px 0;gap:18px}
+ .monitoring-composition .radar{width:105px;height:105px}
+ .monitoring-composition .monitor-events{gap:8px}
+ .monitoring-composition .monitor-events>div{flex-direction:column;align-items:start;gap:3px}
+ .monitoring-workflow button{padding:12px;gap:6px}.monitoring-workflow button>span:last-child{display:none}
+ .monitoring-composition .spot-card{padding:18px}
+ .capability-carousel{grid-template-columns:.8fr 1.2fr;gap:24px}
+ .circle-stage{min-height:235px}.capability-disc{max-width:210px}
+ .capability-copy h3{font-size:25px;margin:10px 0}.capability-copy>p{font-size:12px;line-height:1.7}
+ .counter{margin-bottom:12px}.tags{margin-top:12px}.tags>span{padding:5px 8px}
+ .carousel-nav{margin-top:18px}
+ .chapter-composition>.composition-heading{margin-bottom:20px}
+ .chapter-composition .composition-heading h2{font-size:clamp(30px,2.7vw,42px)}
+ .chapter-composition .composition-heading .description{font-size:13px;line-height:1.65}
+}
+@media(min-width:801px) and (max-width:999px){
+ .hero .chapter-stage{display:flex;align-items:center;gap:15px}.hero .copy{width:52%}
+ .hero-orbit{width:44%}.hero-orbit .orbit-node{font-size:8px;width:60px}
+ .hero-orbit .orbit-node-icon{width:28px;height:28px}.hero-orbit .orbit-node svg{width:16px;height:17px}
+ .copy.chapter-composition{width:62%}
+}
+@media(max-width:800px){
+ .hero .chapter-stage,.story-ready .hero.flow-chapter .chapter-stage{display:flex;flex-direction:column;padding:95px 5% 40px;gap:30px}
+ .hero .copy{width:100%;max-width:600px;margin:auto}
+ .hero-orbit{width:min(100%,390px);margin:0 auto;will-change:opacity}
+ .hero-orbit .security-orbit-map{width:min(88%,360px)}
+ .hero-orbit .orbit-node{width:60px;font-size:8px;min-height:50px}
+ .hero-orbit .orbit-node-icon{width:27px;height:27px}.hero-orbit .orbit-node svg{width:16px;height:17px}
+ .hero-orbit-detail{min-height:70px;padding:8px 15px}
+ .hero-orbit-detail h3{font-size:14px}
+ .hero-orbit-detail>p:not(.kicker){font-size:10px}
+ #test .bento-monitor,#test .bento-privacy,#test .bento-network{grid-column:auto}
+ #test .security-bento{grid-template-columns:1fr}
+ #test .spot-card{padding:20px}
+ #test .monitor-illustration{margin:14px 0}
+ #test .bento-privacy{min-height:140px;flex-direction:row}
+ #test .privacy-art{width:75px;height:75px}
+ #test .privacy-art>svg{width:55px;height:55px}
+ #test .bento-network .square-icon{display:none}
+ #test .bento-network h3{margin-top:0}
+ #test .network-art{margin-top:14px;max-width:280px}
+ .chapter:has(.chapter-composition) .chapter-stage{padding-bottom:170px}
+ .spatial-art{min-height:210px;max-width:220px}
+ .circle-stage{min-height:240px;max-width:235px}
+ .monitoring-composition .monitor-illustration{margin:12px auto;padding:12px}
+ .monitoring-composition .monitor-overview{padding:14px 0}
+ .protection-composition .privacy-art{width:95px!important;height:95px!important;margin:0 auto 15px}
+}
+@media(prefers-reduced-motion:reduce){.hero-orbit{will-change:auto}}
+
+.hero-orbit{overflow:clip}.hero-orbit .orbit-track-2{--radius:40cqw}
+.copy.contact-composition{width:100%}
+
+@media(min-width:1000px){
+ #watch .composition-heading h2{font-size:34px;line-height:1.12}
+ #watch .composition-heading .kicker{margin-bottom:10px}
+ #watch .composition-heading .description{font-size:12px}
+ #watch .monitoring-composition .square-icon{width:28px;height:28px}
+ #watch .monitoring-composition .monitor-events>div{flex-direction:row;align-items:center;gap:8px}
+ #watch .monitoring-composition .monitor-events>div>span{font-size:8px}
+ #watch .monitoring-composition .tiny-bars{height:20px}
+ #watch .monitoring-composition .tiny-bars b{width:3px}
+ #watch .monitoring-composition .monitor-events{max-width:230px;gap:7px}
+ #watch .monitoring-composition .bento-card-title{font-size:11px}
+ #watch .monitoring-composition .monitor-overview{padding:9px 0}
+ #watch .monitoring-composition .monitor-top{font-size:8px}
+ #watch .monitoring-composition .monitor-illustration{margin-block:10px}
+ #watch .monitoring-workflow button{padding:10px;flex-direction:row;align-items:center;gap:8px}
+ #watch .monitoring-workflow svg{width:19px;height:19px}
+ #test .bento-privacy p,#test .bento-network>p{display:none}
+}
+
+/* Sculptures are centered within the left/right half, with content in the other half. */
+@media(min-width:1000px){#test .chapter-composition{width:min(62%,860px)}}
+.hero-orbit{margin-right:0}
+
+@media(min-width:1000px) and (max-height:760px){
+ #test .composition-heading .description,#protect .composition-heading .description,#watch .composition-heading .description{display:none}
+ #protect .composition-heading .kicker,#watch .composition-heading .kicker{display:none}
+ #protect .composition-heading h2,#watch .composition-heading h2{font-size:30px;line-height:1.12}
+ #protect .protection-composition .privacy-art{width:75px!important;height:75px!important;margin-bottom:10px}
+ #protect .protection-composition .spot-card{padding:16px}
+ #protect .protection-composition .spot-card h3{font-size:19px}
+ #protect .protection-layers{margin-top:10px}
+ #watch .monitoring-composition .radar{width:85px;height:85px}
+ #watch .monitoring-composition .monitor-illustration{padding:10px}
+ #watch .monitoring-composition .spot-card{padding:14px}
+}
+.fallback-orb,.past-hero .fallback-orb{display:block;width:28vw;left:61%;top:35%}

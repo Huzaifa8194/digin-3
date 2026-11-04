@@ -2,6 +2,7 @@ import './style.css';
 import './component-refresh.css';
 import './reference-components.css';
 import './chapter-compositions.css';
+import './layout-refinement.css';
 import { mountReferenceComponents } from './reference-components';
 import { mountComponentRefresh } from './component-refresh';
 import { gsap } from 'gsap';
@@ -40,6 +41,21 @@ function sizeReadingStages(){
  });
  measureChapters();
 }
+const heroOrbit=document.querySelector<HTMLElement>('.hero-orbit')!;
+const heroChapter=document.querySelector<HTMLElement>('#home')!;
+function updateHeroHandoff(){
+ const distance=Math.max(1,(chapterOffsets[1]??innerHeight)-heroChapter.offsetTop);
+ const progress=THREE.MathUtils.clamp((scrollY-heroChapter.offsetTop)/distance,0,1);
+ const fade=THREE.MathUtils.smoothstep(progress,.24,.72);
+ heroOrbit.style.opacity=String(1-fade);
+ heroOrbit.style.filter=reduced.matches?'none':`blur(${fade*8}px)`;
+ heroOrbit.style.transform=reduced.matches?'none':`scale(${1+fade*.06})`;
+ heroOrbit.inert=fade>.75;
+ document.documentElement.classList.toggle('past-hero',progress>.24);
+}
+window.addEventListener('scroll',updateHeroHandoff,{passive:true});
+window.addEventListener('resize',updateHeroHandoff);
+updateHeroHandoff();
 const animationContext=gsap.matchMedia();
 function configureContentMotion(){
  animationContext.revert();
@@ -64,10 +80,10 @@ const chapterScroll=createChapterScroll({reduced,onUpdate:()=>ScrollTrigger.upda
 document.querySelectorAll('.solution details').forEach(details=>details.addEventListener('toggle',()=>{
  measureChapters();ScrollTrigger.refresh();chapterScroll.refresh();
 }));
-reduced.addEventListener('change',()=>{sizeReadingStages();configureContentMotion();ScrollTrigger.refresh();chapterScroll.refresh();});
-window.addEventListener('resize',()=>{sizeReadingStages();configureContentMotion();ScrollTrigger.refresh();chapterScroll.refresh();});
+reduced.addEventListener('change',()=>{sizeReadingStages();updateHeroHandoff();configureContentMotion();ScrollTrigger.refresh();chapterScroll.refresh();});
+window.addEventListener('resize',()=>{sizeReadingStages();updateHeroHandoff();configureContentMotion();ScrollTrigger.refresh();chapterScroll.refresh();});
 document.fonts.ready.then(()=>{
- sizeReadingStages();configureContentMotion();ScrollTrigger.refresh();
+ sizeReadingStages();updateHeroHandoff();configureContentMotion();ScrollTrigger.refresh();
  chapterScroll.refresh();
  const initialTarget=document.getElementById(location.hash.slice(1));
  if(initialTarget)chapterScroll.goTo(initialTarget);
@@ -96,7 +112,7 @@ document.querySelector<HTMLFormElement>('#inquiry')!.addEventListener('submit',e
 measureChapters();
 ScrollTrigger.addEventListener('refresh', measureChapters);
 gsap.to(state, { progress: 1, ease: 'none', scrollTrigger: { trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: true } });
-function syncButton(){ motion.textContent = paused ? 'Resume motion' : 'Pause motion'; motion.setAttribute('aria-pressed', String(paused)); }
+function syncButton(){ document.documentElement.classList.toggle('motion-paused',paused); motion.textContent = paused ? 'Resume motion' : 'Pause motion'; motion.setAttribute('aria-pressed', String(paused)); }
 motion.addEventListener('click', () => { paused = !paused; syncButton(); });
 reduced.addEventListener('change', () => { paused = reduced.matches; syncButton(); });
 syncButton();
@@ -130,7 +146,7 @@ for(let i=0;i<count;i++){
  const u=random()*Math.PI*2, v=Math.acos(2*random()-1), r=1.65+random()*.08;
  const j=i*3;
  sphere[j]=r*Math.sin(v)*Math.cos(u); sphere[j+1]=r*Math.sin(v)*Math.sin(u); sphere[j+2]=r*Math.cos(v);
- scattered[j]=sphere[j]+(random()-.5)*1.8; scattered[j+1]=sphere[j+1]+(random()-.5)*1.8; scattered[j+2]=sphere[j+2]+(random()-.5)*1.8;
+ scattered[j]=sphere[j]+(random()-.5); scattered[j+1]=sphere[j+1]+(random()-.5); scattered[j+2]=sphere[j+2]+(random()-.5);
  const radius=1.65+(random()-.5)*.24;
  ring[j]=Math.cos(u)*radius; ring[j+1]=Math.sin(u)*radius; ring[j+2]=(random()-.5)*.22;
  // Each service gets a distinct silhouette, with a shared particle identity.
@@ -252,9 +268,17 @@ function frame(now:number){
  const shot=shots[chapter], target=shots[next];
  const interpolate=(axis:number)=>THREE.MathUtils.lerp(shot[axis],target[axis],blend);
  const isMobile=innerWidth<700;
- const travel=frozen?0:Math.sin(blend*Math.PI);
- points.position.set((isMobile?.5:interpolate(0))+(frozen?0:pointer.x*.45),(isMobile?-1.65:interpolate(1))-(frozen?0:pointer.y*.3),interpolate(2)+travel*.9);
- points.scale.setScalar((isMobile?.88:1.38)*interpolate(3)*(1+travel*.16));
+ // Anchor visuals in the outer reading gutters rather than close to the copy.
+ const halfWidth=Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*7.4*camera.aspect;
+ const side=(index:number)=>Math.sign(shots[index][0]);
+ const gutter=(_index:number)=>.5;
+ const x=THREE.MathUtils.lerp(side(chapter)*gutter(chapter),side(next)*gutter(next),blend)*halfWidth;
+ const baseScale=(index:number)=>index===2?.75:.95;
+ const shapeScale=THREE.MathUtils.lerp(baseScale(chapter),baseScale(next),blend);
+ points.position.set((isMobile?0:x)+(frozen?0:pointer.x*.1),(isMobile?-1.9:interpolate(1))-(frozen?0:pointer.y*.08),-.4);
+ points.scale.setScalar((isMobile?.65:Math.min(shapeScale,halfWidth*.38/1.8))*interpolate(3));
+ material.opacity=.95*(1-.8*Math.sin(blend*Math.PI));
+ inspection.visible=monitoring.visible=true;
  // Keep application layers and the protective boundary readable from the front.
  const yaw=[.3,-.4,.35,.05,.4,.15,.3];
  // One continuous, bounded idle angle. Changing chapters must never switch
