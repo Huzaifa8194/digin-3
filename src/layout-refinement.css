@@ -150,16 +150,13 @@ header>.header-actions{justify-self:end}header .header-contact{display:inline-fl
 }
 
 /* Feedback belongs to the page, so it stays visible over every orb chapter. */
-.chapter-scroll-feedback{position:fixed;right:3%;bottom:20px;z-index:19;width:min(310px,94vw);padding:13px 16px;background:#f8fbfef2;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 30px #29466212;backdrop-filter:blur(12px);font-size:11px;color:var(--ink)}
+.chapter-scroll-feedback{position:fixed;right:4%;bottom:18px;z-index:19;width:112px;padding:0;background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;font-size:9px;color:#627c92;pointer-events:none}
 .chapter-scroll-feedback[hidden]{display:none}
-.scroll-feedback-top,.scroll-feedback-status{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.scroll-feedback-top{font-size:10px;color:var(--muted);margin-bottom:10px}
-.scroll-feedback-next{border:0;background:transparent;color:var(--ink);padding:3px 0;font-size:11px;white-space:nowrap}.scroll-feedback-next:disabled{opacity:.5;cursor:default}
-.scroll-feedback-track{height:4px;border-radius:4px;background:var(--line);overflow:hidden;margin:8px 0}
-.scroll-feedback-track>span{display:block;height:100%;width:0;background:var(--accent);border-radius:inherit}
-.scroll-feedback-hint{font-size:10px;color:var(--muted)}
+.scroll-feedback-status{display:flex;align-items:center;justify-content:space-between;gap:14px;line-height:1.5}
+.scroll-feedback-track{height:2px;background:#9eb7ca40;overflow:hidden;margin-top:5px}
+.scroll-feedback-track>span{display:block;height:100%;width:0;background:#7399b8}
 .footer-directory{display:grid;grid-template-columns:.8fr 1.4fr 1fr 1.2fr;gap:32px;margin-top:35px;padding-top:30px;border-top:1px solid #bacede}
 .footer-directory>div{display:flex;flex-direction:column;align-items:flex-start;gap:11px;min-width:0}.footer-directory h3{font-size:13px;letter-spacing:0;margin:0 0 7px;font-weight:700}.footer-directory a,.footer-directory span,.footer-directory address{font-size:12px;line-height:1.7;color:#526d85;overflow-wrap:anywhere}.footer-directory address{display:block;margin:0;font-style:normal}.footer-directory a:hover{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
 @media(max-width:900px){.footer-directory{grid-template-columns:1fr 1fr}}
-@media(max-width:700px){.chapter-scroll-feedback{bottom:12px;right:4%;width:min(280px,92vw);padding:10px 13px}.footer-directory{gap:28px 20px}.footer-directory a,.footer-directory span,.footer-directory address{font-size:11px}}
+@media(max-width:700px){.chapter-scroll-feedback{bottom:12px;right:5%;width:96px}.footer-directory{gap:28px 20px}.footer-directory a,.footer-directory span,.footer-directory address{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.chapter-scroll-feedback{display:none}}

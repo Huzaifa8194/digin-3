@@ -72,3 +72,11 @@ test('a delayed momentum burst is still the same gesture',()=>{
 });
 
 test('feedback reflects partial gesture and resets after cancellation',()=>{const input=new ScrollIntent();assert.equal(input.progress,0);input.feed(9,0);assert.equal(input.progress,.5);input.feed(9,20);assert.equal(input.progress,1);input.reset();assert.equal(input.progress,0);});
+
+test('completing a transition releases consumed input for the next wheel notch',()=>{
+ const input=new ScrollIntent();
+ assert.equal(input.feed(100,0).direction,1);
+ assert.equal(input.feed(100,100),null);
+ input.reset();
+ assert.equal(input.feed(100,200).direction,1);
+});

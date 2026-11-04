@@ -38,7 +38,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     const index = active ? destination : nearest();
     feedback.update(stops[index]?.section,index,stops.length,active ? transitionProgress : intent.progress,active !== null,enabled() && scrollY < nativeBoundary() - 2);
   }
-  feedback.onContinue(() => { intent.reset(); request(1); });
+
 
   function refresh() {
     cancel();
@@ -99,6 +99,9 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
       },
       onComplete() {
         active = null;
+        // The completed transition must release its consumed gesture. Otherwise
+        // repeated wheel notches over the workflow controls remain swallowed.
+        intent.reset();
         document.documentElement.classList.remove('scroll-transitioning');
         updateFeedback();
       },
