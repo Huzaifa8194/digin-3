@@ -1,4 +1,9 @@
 import './style.css';
+import './component-refresh.css';
+import './reference-components.css';
+import './chapter-compositions.css';
+import { mountReferenceComponents } from './reference-components';
+import { mountComponentRefresh } from './component-refresh';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
@@ -6,6 +11,8 @@ import { createChapterScroll } from './chapter-scroll';
 import { mountSecurityOrbit } from './security-orbit';
 
 mountSecurityOrbit();
+mountComponentRefresh();
+mountReferenceComponents();
 
 gsap.registerPlugin(ScrollTrigger);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -97,13 +104,13 @@ syncButton();
 const host = document.querySelector<HTMLDivElement>('#scene')!;
 try {
 const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'low-power' });
-renderer.setClearColor(0x000000, 1);
+renderer.setClearColor(0xedf3f8, 1);
 host.append(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42, 1, .1, 100);
 camera.position.z = 7;
 const mobile = innerWidth < 700;
-const count = mobile ? 6500 : 14500;
+const count = mobile ? 2400 : 5200;
 const positions = new Float32Array(count * 3);
 const scattered = new Float32Array(count * 3);
 const sphere = new Float32Array(count * 3);
@@ -156,12 +163,12 @@ for(let i=0;i<count;i++){
  orbit[j]=Math.cos(u)*radarRadius; orbit[j+1]=Math.sin(u)*radarRadius; orbit[j+2]=(random()-.5)*.035;
  const cluster=i%6, theta=cluster*Math.PI/3;
  network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
- const shade=.55+random()*.45; colors[j]=shade; colors[j+1]=shade; colors[j+2]=shade;
+ const shade=new THREE.Color(0x347eb8).lerp(new THREE.Color(0x7ab6df),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
 }
 const geometry=new THREE.BufferGeometry();
 geometry.setAttribute('position',new THREE.BufferAttribute(positions,3).setUsage(THREE.DynamicDrawUsage));
 geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
-const material=new THREE.PointsMaterial({size:mobile?.016:.012,vertexColors:true,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false});
+const material=new THREE.PointsMaterial({size:mobile?.052:.043,vertexColors:true,transparent:true,opacity:.95,blending:THREE.NormalBlending,depthWrite:false});
 const points=new THREE.Points(geometry,material);
 points.frustumCulled=false;
 scene.add(points);
@@ -170,13 +177,13 @@ const monitoring = new THREE.Group();
 points.add(inspection,monitoring);
 const findings:THREE.Mesh[]=[];
 for(const [x,y,z] of [[.75,.8,.9],[-.65,-.6,.95],[.8,-.7,.7]]){
- const dot=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),new THREE.MeshBasicMaterial({color:0xff334b,transparent:true,opacity:0,depthWrite:false}));
+ const dot=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,depthWrite:false}));
  dot.position.set(x,y,z); inspection.add(dot); findings.push(dot);
 }
-const sweepMaterial=new THREE.MeshBasicMaterial({color:0xff243d,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
+const sweepMaterial=new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
 const sweep=new THREE.Mesh(new THREE.CircleGeometry(1.75,40,0,.45),sweepMaterial);
 monitoring.add(sweep);
-const crossMaterial=new THREE.LineBasicMaterial({color:0x9a9aa4,transparent:true,opacity:0});
+const crossMaterial=new THREE.LineBasicMaterial({color:0x555c66,transparent:true,opacity:0});
 const cross=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([
  new THREE.Vector3(-1.9,0,0),new THREE.Vector3(1.9,0,0),
  new THREE.Vector3(0,-1.9,0),new THREE.Vector3(0,1.9,0)
@@ -184,7 +191,7 @@ const cross=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([
 monitoring.add(cross);
 const signals:THREE.Mesh[]=[];
 for(const [x,y] of [[.9,.65],[-1.05,.35],[.4,-1.25]]){
- const signal=new THREE.Mesh(new THREE.RingGeometry(.055,.085,24),new THREE.MeshBasicMaterial({color:0xff5c6f,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));
+ const signal=new THREE.Mesh(new THREE.RingGeometry(.055,.085,24),new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));
  signal.position.set(x,y,.06);monitoring.add(signal);signals.push(signal);
 }
 const pointer={x:0,y:0};
@@ -223,7 +230,7 @@ function frame(now:number){
   pointer.y=THREE.MathUtils.damp(pointer.y,pointerTarget.y,5,delta);
  }
  // Map the interpolated scroll position to real chapter positions, not equal bins.
- const scroll=p*Math.max(1,document.documentElement.scrollHeight-innerHeight);
+ const scroll=scrollY;
  let chapter=0;
  while(chapter<poses.length-2 && scroll>=chapterOffsets[chapter+1])chapter++;
  const next=Math.min(chapter+1,poses.length-1);
@@ -247,7 +254,7 @@ function frame(now:number){
  const isMobile=innerWidth<700;
  const travel=frozen?0:Math.sin(blend*Math.PI);
  points.position.set((isMobile?.5:interpolate(0))+(frozen?0:pointer.x*.45),(isMobile?-1.65:interpolate(1))-(frozen?0:pointer.y*.3),interpolate(2)+travel*.9);
- points.scale.setScalar((isMobile?.62:1)*interpolate(3)*(1+travel*.16));
+ points.scale.setScalar((isMobile?.88:1.38)*interpolate(3)*(1+travel*.16));
  // Keep application layers and the protective boundary readable from the front.
  const yaw=[.3,-.4,.35,.05,.4,.15,.3];
  // One continuous, bounded idle angle. Changing chapters must never switch

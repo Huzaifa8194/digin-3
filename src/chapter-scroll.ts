@@ -1,3 +1,4 @@
+import { nestedCanScroll } from './nested-scroll';
 import { gsap } from 'gsap';
 import { ScrollIntent, normalizeWheel, transitionDuration } from './scroll-policy';
 
@@ -111,18 +112,6 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     const next = step > 0 ? stops.findIndex(stop => stop.y > scrollY + 8) :
       stops.reduce((found, stop, i) => stop.y < scrollY - 8 ? i : found, -1);
     move(next >= 0 ? next : index);
-  }
-
-  function nestedCanScroll(target: EventTarget | null, delta: number) {
-    let element = target instanceof Element ? target : null;
-    if (element?.closest('input,textarea,select,[contenteditable="true"],dialog[open]')) return true;
-    while (element && element !== document.body) {
-      const style = getComputedStyle(element);
-      if (/(auto|scroll)/.test(style.overflowY) && element.scrollHeight > element.clientHeight + 2 &&
-          (delta < 0 ? element.scrollTop > 0 : element.scrollTop + element.clientHeight < element.scrollHeight - 2)) return true;
-      element = element.parentElement;
-    }
-    return false;
   }
 
   window.addEventListener('wheel', event => {
