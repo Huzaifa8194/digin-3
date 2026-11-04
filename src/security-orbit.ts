@@ -31,19 +31,10 @@ export function mountSecurityOrbit(){
  const map=document.querySelector<HTMLElement>('#security-orbit-map');
  if(!map)return;
  const preference=matchMedia('(prefers-reduced-motion: reduce)');
- const toggle=document.querySelector<HTMLButtonElement>('#orbit-motion')!;
  const title=document.querySelector<HTMLElement>('#orbit-detail-title')!;
  const description=document.querySelector<HTMLElement>('#orbit-detail-text')!;
- let paused=preference.matches;
- const updateMotion=()=>{
-  map.classList.toggle('orbit-paused',paused||preference.matches);
-  toggle.textContent=paused?'Resume orbit':'Pause orbit';
-  toggle.setAttribute('aria-pressed',String(paused));
-  toggle.disabled=preference.matches;
-  if(preference.matches)toggle.textContent='Motion reduced';
- };
- toggle.addEventListener('click',()=>{paused=!paused;updateMotion();});
- preference.addEventListener('change',()=>{paused=preference.matches;updateMotion();});
+ const updateMotion=()=>map.classList.toggle('orbit-paused',preference.matches);
+ preference.addEventListener('change',updateMotion);
  const buttons:HTMLButtonElement[]=[];
  for(let lane=0;lane<3;lane++){
   const track=document.createElement('div');track.className=`orbit-track orbit-track-${lane}`;

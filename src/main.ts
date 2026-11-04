@@ -17,7 +17,6 @@ mountReferenceComponents();
 
 gsap.registerPlugin(ScrollTrigger);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const motion = document.querySelector<HTMLButtonElement>('#motion')!;
 let paused = reduced.matches;
 const state = { progress: 0 };
 const chapters = [...document.querySelectorAll<HTMLElement>('.chapter')];
@@ -88,9 +87,6 @@ document.fonts.ready.then(()=>{
  const initialTarget=document.getElementById(location.hash.slice(1));
  if(initialTarget)chapterScroll.goTo(initialTarget);
 });
-document.querySelectorAll('.service-menu a').forEach(link=>link.addEventListener('click',()=>{
- document.querySelector<HTMLDetailsElement>('.service-menu')!.open=false;
-}));
 // Tall sticky sections need an explicit destination: browser anchor heuristics
 // can otherwise land near the end of a section, after its content has faded.
 document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(link=>{
@@ -112,10 +108,7 @@ document.querySelector<HTMLFormElement>('#inquiry')!.addEventListener('submit',e
 measureChapters();
 ScrollTrigger.addEventListener('refresh', measureChapters);
 gsap.to(state, { progress: 1, ease: 'none', scrollTrigger: { trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: true } });
-function syncButton(){ document.documentElement.classList.toggle('motion-paused',paused); motion.textContent = paused ? 'Resume motion' : 'Pause motion'; motion.setAttribute('aria-pressed', String(paused)); }
-motion.addEventListener('click', () => { paused = !paused; syncButton(); });
-reduced.addEventListener('change', () => { paused = reduced.matches; syncButton(); });
-syncButton();
+reduced.addEventListener('change', () => { paused = reduced.matches; });
 
 const host = document.querySelector<HTMLDivElement>('#scene')!;
 try {
@@ -146,7 +139,10 @@ for(let i=0;i<count;i++){
  const u=random()*Math.PI*2, v=Math.acos(2*random()-1), r=1.65+random()*.08;
  const j=i*3;
  sphere[j]=r*Math.sin(v)*Math.cos(u); sphere[j+1]=r*Math.sin(v)*Math.sin(u); sphere[j+2]=r*Math.cos(v);
- scattered[j]=sphere[j]+(random()-.5); scattered[j+1]=sphere[j+1]+(random()-.5); scattered[j+2]=sphere[j+2]+(random()-.5);
+ // A loose atmospheric field lets the hero's orbital diagram lead.
+ scattered[j]=sphere[j]*1.35+(random()-.5)*2.8;
+ scattered[j+1]=sphere[j+1]*1.15+(random()-.5)*2.3;
+ scattered[j+2]=sphere[j+2]+(random()-.5)*1.8;
  const radius=1.65+(random()-.5)*.24;
  ring[j]=Math.cos(u)*radius; ring[j+1]=Math.sin(u)*radius; ring[j+2]=(random()-.5)*.22;
  // Each service gets a distinct silhouette, with a shared particle identity.
@@ -180,6 +176,33 @@ for(let i=0;i<count;i++){
  const cluster=i%6, theta=cluster*Math.PI/3;
  network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
  const shade=new THREE.Color(0x347eb8).lerp(new THREE.Color(0x7ab6df),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
+}
+// Sample the wordmark into the final pose so the same particles assemble
+// into both the surrounding ring and its lettering (no text overlay).
+const lettering=document.createElement('canvas');
+lettering.width=640;lettering.height=180;
+const letteringContext=lettering.getContext('2d');
+if(letteringContext){
+ letteringContext.font='800 100px Arial, sans-serif';
+ const fontSize=Math.floor(580/letteringContext.measureText('DigiInn').width*100);
+ letteringContext.font=`800 ${fontSize}px Arial, sans-serif`;
+ letteringContext.textAlign='center';letteringContext.textBaseline='middle';
+ letteringContext.fillStyle='#fff';letteringContext.fillText('DigiInn',320,90);
+ const pixels=letteringContext.getImageData(0,0,640,180).data;
+ const samples:number[]=[];
+ for(let y=0;y<180;y+=2)for(let x=0;x<640;x+=2){
+  if(pixels[(y*640+x)*4+3]>160)samples.push(x,y);
+ }
+ if(samples.length){
+  const textCount=Math.floor(count*.64);
+  for(let i=0;i<textCount;i++){
+   const sample=Math.floor(random()*(samples.length/2))*2;
+   const j=i*3;
+   ring[j]=(samples[sample]-320)*(2.65/580)+(random()-.5)*.006;
+   ring[j+1]=(90-samples[sample+1])*(2.65/580)+(random()-.5)*.006;
+   ring[j+2]=(random()-.5)*.025;
+  }
+ }
 }
 const geometry=new THREE.BufferGeometry();
 geometry.setAttribute('position',new THREE.BufferAttribute(positions,3).setUsage(THREE.DynamicDrawUsage));
@@ -277,17 +300,19 @@ function frame(now:number){
  const shapeScale=THREE.MathUtils.lerp(baseScale(chapter),baseScale(next),blend);
  points.position.set((isMobile?0:x)+(frozen?0:pointer.x*.1),(isMobile?-1.9:interpolate(1))-(frozen?0:pointer.y*.08),-.4);
  points.scale.setScalar((isMobile?.65:Math.min(shapeScale,halfWidth*.38/1.8))*interpolate(3));
- material.opacity=.95*(1-.8*Math.sin(blend*Math.PI));
+ const particleOpacity=chapter===0?THREE.MathUtils.lerp(.22,.95,blend):.95;
+ material.opacity=particleOpacity*(1-.8*Math.sin(blend*Math.PI));
  inspection.visible=monitoring.visible=true;
  // Keep application layers and the protective boundary readable from the front.
- const yaw=[.3,-.4,.35,.05,.4,.15,.3];
+ const yaw=[.3,-.4,.35,.05,.4,.15,0];
  // One continuous, bounded idle angle. Changing chapters must never switch
  // between accumulated rotation and a near-zero wobble (the previous snap).
- const idleAmplitude=[.12,.035,.08,.035,.015,.08,.12];
+ const idleAmplitude=[.12,.035,.08,.035,.015,.08,0];
  const idle=Math.sin(time*.25)*THREE.MathUtils.lerp(idleAmplitude[chapter],idleAmplitude[next],blend);
- points.rotation.y=THREE.MathUtils.lerp(yaw[chapter],yaw[next],blend)+(frozen?0:idle+pointer.x);
- points.rotation.x=frozen?.1:pointer.y+interpolate(4);
- points.rotation.z=p*-.3;
+ const wordmarkWeight=next===6?blend:0;
+ points.rotation.y=THREE.MathUtils.lerp(yaw[chapter],yaw[next],blend)+(frozen?0:idle+pointer.x*(1-wordmarkWeight));
+ points.rotation.x=(frozen?.1:pointer.y+interpolate(4))*(1-wordmarkWeight);
+ points.rotation.z=p*-.3*(1-wordmarkWeight);
  const weight=(index:number)=>(chapter===index?1-blend:0)+(next===index?blend:0);
  const auditWeight=weight(2), radarWeight=weight(4);
  findings.forEach(dot=>{(dot.material as THREE.MeshBasicMaterial).opacity=auditWeight*.95;});
@@ -311,6 +336,5 @@ window.addEventListener('pagehide',()=>{
 },{once:true});
 }catch(error){
  host.innerHTML='<div class="fallback-orb"></div>';
- motion.hidden=true;
  console.warn('WebGL unavailable; using the static artwork.',error);
 }

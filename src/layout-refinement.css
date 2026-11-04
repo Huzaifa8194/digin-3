@@ -123,3 +123,28 @@
  #watch .monitoring-composition .spot-card{padding:14px}
 }
 .fallback-orb,.past-hero .fallback-orb{display:block;width:28vw;left:61%;top:35%}
+
+/* Give the hero diagram a quiet reading plane without enclosing it in a card. */
+.hero-orbit .security-orbit-map{background:radial-gradient(ellipse at center,rgba(237,243,248,.95) 0%,rgba(237,243,248,.82) 48%,rgba(237,243,248,.4) 66%,transparent 78%)}
+.hero-orbit .orbit-track:before{border-color:#9db8ce}
+.hero-orbit .orbit-node{color:#365c7c}
+.hero-orbit .orbit-node>span:last-child{background:rgba(237,243,248,.92);padding:2px 5px;border-radius:5px}
+.hero-orbit .orbit-node-icon{background:#f6fbff;border-color:#9ebdd4;color:#365f80;box-shadow:0 3px 12px #43658212}
+.hero-orbit .orbit-node[aria-pressed="true"] .orbit-node-icon{background:#fff0f3;border-color:var(--accent);color:var(--accent)}
+.hero-orbit .orbit-center{background:#edf5fc;border-color:#a5c1d7;box-shadow:0 0 35px #edf3f8}
+
+/* Balanced header: navigation is centered in the viewport, independent of side widths. */
+header{display:grid;grid-template-columns:1fr auto 1fr;gap:20px}
+header>.brand{justify-self:start}header>.tube-nav{display:flex;justify-self:center}
+header>.header-actions{justify-self:end}header .header-contact{display:inline-flex}
+@media(max-width:700px){
+ header{height:112px;grid-template-columns:1fr 1fr;grid-template-rows:36px 38px;gap:10px;padding:12px 5%}
+ header>.brand{grid-column:1;grid-row:1}header>.header-actions{grid-column:2;grid-row:1}
+ header .header-contact{min-height:34px;padding:8px 15px;font-size:11px}
+ header>.tube-nav{grid-column:1/-1;grid-row:2;gap:3px;padding:3px;max-width:100%}
+ header .tube-nav a{padding:8px 14px;font-size:11px}
+ header .tube-nav a[aria-current]:before{display:none}
+ html{scroll-padding-top:125px}
+ .hero .chapter-stage,.story-ready .hero.flow-chapter .chapter-stage{padding-top:140px}
+ .chapter:not(.hero) .chapter-stage,.story-ready .chapter:not(.hero).flow-chapter .chapter-stage{padding-top:140px}
+}

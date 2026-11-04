@@ -22,18 +22,10 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   const nearest = (y = scrollY) => stops.reduce((best, stop, i) =>
     Math.abs(stop.y - y) < Math.abs(stops[best].y - y) ? i : best, 0);
 
-  const mode = document.createElement('button');
-  mode.type = 'button'; mode.className = 'scroll-mode';
-  let guided = true;
-  try { guided = sessionStorage.getItem('diggiinn-scroll') !== 'native'; } catch { /* Storage is optional. */ }
+  const guided = true;
   const setMode = () => {
-    mode.textContent = guided ? 'Chapters' : 'Free scroll';
-    mode.setAttribute('aria-label', guided ? 'Chapter scrolling enabled; switch to free scrolling' : 'Free scrolling enabled; switch to chapter scrolling');
-    mode.setAttribute('aria-pressed', String(guided));
-    mode.title = 'Switch between chapter transitions and free scrolling';
-    document.documentElement.classList.toggle('guided-scroll', guided && !reduced.matches);
+    document.documentElement.classList.toggle('guided-scroll', !reduced.matches);
   };
-  document.querySelector('.header-actions')!.prepend(mode);
   const enabled = () => guided && !reduced.matches;
   const nativeBoundary = () => document.getElementById('solutions')?.offsetTop ?? Infinity;
   // The catalog and contact form are a normal reading/browsing area.
@@ -175,12 +167,6 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     if (target) goTo(target);
   }, { signal });
   reduced.addEventListener('change', () => { cancel(); setMode(); refresh(); }, { signal });
-  mode.addEventListener('click', () => {
-    cancel(); guided = !guided;
-    try { sessionStorage.setItem('diggiinn-scroll', guided ? 'guided' : 'native'); } catch { /* Storage is optional. */ }
-    setMode();
-  }, { signal });
-
   function goTo(section: HTMLElement) {
     cancel();
     const index = stops.findIndex(stop => stop.section === section);
@@ -189,7 +175,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   }
   setMode(); refresh();
   return { refresh, goTo, cancel, destroy() {
-    cancel(); destroyed = true; abort.abort(); mode.remove();
+    cancel(); destroyed = true; abort.abort();
     document.documentElement.classList.remove('guided-scroll');
   } };
 }
