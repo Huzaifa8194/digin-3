@@ -1,5 +1,7 @@
-export function nestedCanScroll(target: EventTarget | null, delta: number) {
+export function nestedCanScroll(target: EventTarget | null, delta: number, pageOnly = false) {
     let element = target instanceof Element ? target : null;
+    // Guided orb chapters always move the page, including over cards and controls.
+    if (pageOnly) return Boolean(element?.closest('dialog[open],[aria-modal="true"]'));
     if (element?.closest('input,textarea,select,[contenteditable="true"],dialog[open]')) return true;
     // Empty scene areas can target <html> directly. The page scroller is not
     // a nested container: guided input must handle it just like chapter copy.

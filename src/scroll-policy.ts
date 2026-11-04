@@ -1,6 +1,6 @@
 export const SCROLL_TUNING = {
-  gestureGap: 420, threshold: 32, reversalThreshold: 48,
-  minDuration: 2.2, maxDuration: 3.2,
+  gestureGap: 420, threshold: 18, reversalThreshold: 30,
+  minDuration: .85, maxDuration: 1.4,
 } as const;
 
 /** Device-independent intent. Momentum belongs to its original gesture. */
@@ -10,6 +10,7 @@ export class ScrollIntent {
   private distance = 0;
   private spent = false;
   private candidate = 0;
+  get progress() { return this.spent ? 1 : Math.min(1, this.distance / SCROLL_TUNING.threshold); }
   reset() { this.last = -Infinity; this.direction = 0; this.distance = 0; this.spent = false; this.candidate = 0; }
   feed(delta: number, now: number): { direction: number; continuation: boolean } | null {
     if (!Number.isFinite(delta) || Math.abs(delta) < .5) return null;
@@ -35,5 +36,5 @@ export function normalizeWheel(delta: number, mode: number, height: number) {
 }
 export function transitionDuration(distance: number, viewport: number) {
   return Math.min(SCROLL_TUNING.maxDuration,
-    Math.max(SCROLL_TUNING.minDuration, 2 + Math.abs(distance) / Math.max(1, viewport) * .32));
+    Math.max(SCROLL_TUNING.minDuration, .7 + Math.abs(distance) / Math.max(1, viewport) * .18));
 }

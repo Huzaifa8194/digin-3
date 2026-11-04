@@ -1,3 +1,4 @@
+import { mountScrollFeedback } from './scroll-feedback';
 import { nestedCanScroll } from './nested-scroll';
 import { gsap } from 'gsap';
 import { ScrollIntent, normalizeWheel, transitionDuration } from './scroll-policy';
@@ -8,6 +9,8 @@ type Options = { reduced: MediaQueryList; onUpdate: () => void };
 /** One animation owner for wheel, touch, keys, links and browser navigation. */
 export function createChapterScroll({ reduced, onUpdate }: Options) {
   const intent = new ScrollIntent();
+  const feedback = mountScrollFeedback();
+  let transitionProgress = 0;
   let stops: Stop[] = [];
   let active: gsap.core.Tween | null = null;
   let destination = 0;
@@ -30,6 +33,12 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   const nativeBoundary = () => document.getElementById('solutions')?.offsetTop ?? Infinity;
   // The catalog and contact form are a normal reading/browsing area.
   const controlsInput = () => enabled() && (active !== null || scrollY < nativeBoundary() - 2);
+
+  function updateFeedback() {
+    const index = active ? destination : nearest();
+    feedback.update(stops[index]?.section,index,stops.length,active ? transitionProgress : intent.progress,active !== null,enabled() && scrollY < nativeBoundary() - 2);
+  }
+  feedback.onContinue(() => { intent.reset(); request(1); });
 
   function refresh() {
     cancel();
@@ -57,12 +66,14 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     stops.sort((a, b) => a.y - b.y);
     stops = stops.filter((stop, i) => i === 0 || stop.y - stops[i - 1].y > 24);
     destination = nearest();
+    updateFeedback();
   }
 
   function cancel() {
     active?.kill(); active = null; intent.reset();
     clearTimeout(nativeTimer);
     document.documentElement.classList.remove('scroll-transitioning');
+    updateFeedback();
   }
 
   function move(index: number, force = false) {
@@ -75,19 +86,24 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     if (Math.abs(distance) < 2) { active = null; return; }
     const proxy = { y: scrollY };
     const duration = reduced.matches ? 0 : transitionDuration(distance, innerHeight);
+    transitionProgress = 0;
     document.documentElement.classList.add('scroll-transitioning');
     active = gsap.to(proxy, {
       y: target.y, duration, ease: 'sine.inOut', overwrite: true,
       onUpdate() {
         ownScrollUntil = performance.now() + 100;
         window.scrollTo({ top: proxy.y, behavior: 'instant' });
+        transitionProgress = 1 - Math.abs(target.y - proxy.y) / Math.abs(distance);
+        updateFeedback();
         onUpdate();
       },
       onComplete() {
         active = null;
         document.documentElement.classList.remove('scroll-transitioning');
+        updateFeedback();
       },
     });
+    updateFeedback();
     if (force) intent.reset();
   }
 
@@ -108,12 +124,13 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
 
   window.addEventListener('wheel', event => {
     if (!controlsInput() || event.ctrlKey || event.metaKey || !event.cancelable ||
-        Math.abs(event.deltaX) > Math.abs(event.deltaY) || nestedCanScroll(event.target, event.deltaY)) return;
+        Math.abs(event.deltaX) > Math.abs(event.deltaY) || nestedCanScroll(event.target, event.deltaY, true)) return;
     event.preventDefault();
     const now = performance.now();
     const action = intent.feed(normalizeWheel(event.deltaY, event.deltaMode, innerHeight), now);
     if (action) request(action.direction);
-  }, { passive: false, signal });
+    updateFeedback();
+  }, { passive: false, capture: true, signal });
 
   window.addEventListener('keydown', event => {
     if (event.key === 'Escape') { cancel(); return; }
@@ -138,13 +155,14 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   window.addEventListener('touchmove', event => {
     if (!controlsInput() || !touch || event.touches.length !== 1) return;
     const point = event.touches[0], delta = touch.y - point.clientY;
-    if (nestedCanScroll(event.target, delta) || Math.abs(point.clientX - touch.x) > Math.abs(delta)) return;
+    if (nestedCanScroll(event.target, delta, true) || Math.abs(point.clientX - touch.x) > Math.abs(delta)) return;
     if (Math.abs(delta) > 10 && event.cancelable) {
       event.preventDefault(); touch.delta = delta; touch.captured = true;
+      feedback.update(stops[nearest()]?.section,nearest(),stops.length,Math.min(1,Math.abs(delta)/24),false,enabled());
     }
-  }, { passive: false, signal });
+  }, { passive: false, capture: true, signal });
   window.addEventListener('touchend', () => {
-    if (touch?.captured && Math.abs(touch.delta) > 36) request(Math.sign(touch.delta));
+    if (touch?.captured && Math.abs(touch.delta) >= 24) request(Math.sign(touch.delta));
     touch = null;
   }, { passive: true, signal });
   window.addEventListener('touchcancel', () => { touch = null; }, { signal });
@@ -155,6 +173,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   }, { passive: true, signal });
   window.addEventListener('focusin', () => { if (active) cancel(); }, { signal });
   window.addEventListener('scroll', () => {
+    updateFeedback();
     if (active || performance.now() < ownScrollUntil || !enabled()) return;
     clearTimeout(nativeTimer);
     nativeTimer = setTimeout(() => { destination = nearest(); }, 180);
@@ -175,7 +194,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   }
   setMode(); refresh();
   return { refresh, goTo, cancel, destroy() {
-    cancel(); destroyed = true; abort.abort();
+    cancel(); destroyed = true; abort.abort(); feedback.destroy();
     document.documentElement.classList.remove('guided-scroll');
   } };
 }

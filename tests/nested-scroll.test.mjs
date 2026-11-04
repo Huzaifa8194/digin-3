@@ -7,7 +7,7 @@ const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext
 const {nestedCanScroll}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
 class ElementStub {
  constructor(parent=null,options={}){Object.assign(this,{parentElement:parent,scrollHeight:2000,clientHeight:700,scrollTop:100,overflowY:'auto',form:false},options);}
- closest(){return this.form?this:null;}
+ closest(selector){return selector.includes('input') && this.form?this:null;}
 }
 globalThis.Element=ElementStub;
 const root=new ElementStub();
@@ -32,3 +32,5 @@ test('genuinely nested scroll areas retain scrolling until their edge',()=>{
 test('form fields retain their native wheel behavior',()=>{
  assert.equal(nestedCanScroll(new ElementStub(body,{form:true}),100),true);
 });
+
+test('guided chapters advance the page over nested content and fields',()=>{const nested=new ElementStub(body);assert.equal(nestedCanScroll(nested,100,true),false);assert.equal(nestedCanScroll(nested,-100,true),false);assert.equal(nestedCanScroll(new ElementStub(body,{form:true}),100,true),false);});

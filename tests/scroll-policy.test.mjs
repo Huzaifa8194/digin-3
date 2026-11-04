@@ -13,8 +13,8 @@ test('one wheel notch is one complete intent', () => {
 });
 test('fine trackpad movement accumulates, jitter does not trigger', () => {
   const input = new ScrollIntent();
-  for(let i=0;i<7;i++) assert.equal(input.feed(4, i*15), null);
-  assert.equal(input.feed(4, 105).direction, 1);
+  for(let i=0;i<4;i++) assert.equal(input.feed(4, i*15), null);
+  assert.equal(input.feed(4, 60).direction, 1);
 });
 test('decaying trackpad momentum cannot skip chapters', () => {
   const input = new ScrollIntent();
@@ -37,7 +37,7 @@ test('a sustained strong gesture never advances twice', () => {
   assert.equal(actions.length,1);
 });
 test('reset discards partial input and permits a new gesture', () => {
-  const input=new ScrollIntent();input.feed(20,0);input.reset();
+  const input=new ScrollIntent();input.feed(10,0);input.reset();
   assert.equal(input.feed(15,30),null);
   assert.equal(input.feed(20,60).direction,1);
 });
@@ -50,8 +50,8 @@ test('wheel line and page units normalize before thresholding',()=>{
  assert.equal(normalizeWheel(40,0,800),40);
 });
 test('animation duration is bounded for tiny, large and reverse moves',()=>{
- assert.equal(transitionDuration(1,800),2.2);
- assert.equal(transitionDuration(100000,800),3.2);
+ assert.equal(transitionDuration(1,800),.85);
+ assert.equal(transitionDuration(100000,800),1.4);
  assert.equal(transitionDuration(-1600,800),transitionDuration(1600,800));
 });
 
@@ -70,3 +70,5 @@ test('a delayed momentum burst is still the same gesture',()=>{
  assert.equal(input.feed(60,600),null);
  assert.equal(input.feed(100,1100).direction,1);
 });
+
+test('feedback reflects partial gesture and resets after cancellation',()=>{const input=new ScrollIntent();assert.equal(input.progress,0);input.feed(9,0);assert.equal(input.progress,.5);input.feed(9,20);assert.equal(input.progress,1);input.reset();assert.equal(input.progress,0);});
