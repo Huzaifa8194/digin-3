@@ -11,6 +11,8 @@ import * as THREE from 'three';
 import { createChapterScroll } from './chapter-scroll';
 import { mountSecurityOrbit } from './security-orbit';
 
+if (location.hash === '#solutions') location.replace('/products/');
+
 mountSecurityOrbit();
 mountComponentRefresh();
 mountReferenceComponents();
@@ -76,9 +78,6 @@ function configureContentMotion(){
 sizeReadingStages();
 configureContentMotion();
 const chapterScroll=createChapterScroll({reduced,onUpdate:()=>ScrollTrigger.update()});
-document.querySelectorAll('.solution details').forEach(details=>details.addEventListener('toggle',()=>{
- measureChapters();ScrollTrigger.refresh();chapterScroll.refresh();
-}));
 reduced.addEventListener('change',()=>{sizeReadingStages();updateHeroHandoff();configureContentMotion();ScrollTrigger.refresh();chapterScroll.refresh();});
 window.addEventListener('resize',()=>{sizeReadingStages();updateHeroHandoff();configureContentMotion();ScrollTrigger.refresh();chapterScroll.refresh();});
 document.fonts.ready.then(()=>{

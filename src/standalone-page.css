@@ -1,0 +1,19 @@
+.standalone-page main { padding-top: 116px; }
+.standalone-page h1 { max-width: 20ch; }
+.standalone-page .solutions-heading h1 { margin-bottom: 20px; }
+.standalone-page .page-intro { padding: 30px 7% 50px; }
+.standalone-page .page-intro .description { max-width: 62ch; }
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 0 7% 72px;
+}
+.service-detail { scroll-margin-top: 120px; }
+.service-detail .copy { width: 100%; height: 100%; }
+.service-detail h2 { font-size: clamp(1.8rem, 3.2vw, 3.2rem); }
+.page-contact { padding: 0 7% 64px; }
+@media (max-width: 700px) {
+  .standalone-page main { padding-top: 136px; }
+  .service-grid { grid-template-columns: 1fr; }
+}

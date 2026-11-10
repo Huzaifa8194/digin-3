@@ -29,13 +29,5 @@ export function mountComponentRefresh() {
    card.style.setProperty('--pointer-y',`${event.clientY-bounds.top}px`);
   });
  });
- const links=[...document.querySelectorAll<HTMLAnchorElement>('.tube-nav a')];
- const update=()=>{
-  const y=scrollY+innerHeight*.35;
-  let selected=links[0];
-  for(const link of links){const section=document.querySelector<HTMLElement>(link.hash);if(section&&section.offsetTop<=y)selected=link;}
-  links.forEach(link=>{if(link===selected)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});
- };
- window.addEventListener('scroll',update,{passive:true});update();
  document.querySelectorAll('.faq-items details').forEach(item=>item.addEventListener('toggle',()=>window.dispatchEvent(new Event('resize'))));
 }
