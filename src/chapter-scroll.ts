@@ -25,31 +25,30 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   const nearest = (y = scrollY) => stops.reduce((best, stop, i) =>
     Math.abs(stop.y - y) < Math.abs(stops[best].y - y) ? i : best, 0);
 
-  const guided = true;
+  const contact = document.getElementById('connect');
+  let boundary = Infinity;
+  const enabled = () => !reduced.matches;
+  const inGuidedStory = () => scrollY < boundary - 2;
   const setMode = () => {
-    document.documentElement.classList.toggle('guided-scroll', !reduced.matches);
+    document.documentElement.classList.toggle('guided-scroll', enabled() && (active !== null || inGuidedStory()));
   };
-  const enabled = () => guided && !reduced.matches;
-  const nativeBoundary = () => document.getElementById('solutions')?.offsetTop ?? Infinity;
-  // The catalog and contact form are a normal reading/browsing area.
-  const controlsInput = () => enabled() && (active !== null || scrollY < nativeBoundary() - 2);
+  // Team, FAQs and the footer use native scrolling after the contact chapter.
+  const controlsInput = () => enabled() && (active !== null || inGuidedStory());
 
   function updateFeedback() {
+    setMode();
     const index = active ? destination : nearest();
-    feedback.update(stops[index]?.section,index,stops.length,active ? transitionProgress : intent.progress,active !== null,enabled() && scrollY < nativeBoundary() - 2);
+    feedback.update(stops[index]?.section,index,stops.length,active ? transitionProgress : intent.progress,active !== null,enabled() && inGuidedStory());
   }
 
 
   function refresh() {
     cancel();
     stops = [];
+    boundary = contact ? contact.offsetTop + contact.offsetHeight : Infinity;
     const sections = [...document.querySelectorAll<HTMLElement>('main > section')];
     for (const section of sections) {
       const start = section.offsetTop;
-      if (section.id === 'solutions') {
-        stops.push({ y: clamp(start), section });
-        break;
-      }
       const pinned = section.classList.contains('chapter') && !section.classList.contains('flow-chapter');
       if (pinned) {
         // Land after the assembly beat, inside the fully readable hold.
@@ -61,6 +60,10 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
         for (let y = start + innerHeight * .72; y < last; y += innerHeight * .72)
           stops.push({ y: clamp(y), section });
         if (last > start + 80) stops.push({ y: clamp(last), section });
+      }
+      if (section === contact) {
+        stops.push({ y: clamp(boundary), section });
+        break;
       }
     }
     stops.sort((a, b) => a.y - b.y);
@@ -177,7 +180,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   window.addEventListener('focusin', () => { if (active) cancel(); }, { signal });
   window.addEventListener('scroll', () => {
     updateFeedback();
-    if (active || performance.now() < ownScrollUntil || !enabled()) return;
+    if (active || performance.now() < ownScrollUntil || !enabled() || !inGuidedStory()) return;
     clearTimeout(nativeTimer);
     nativeTimer = setTimeout(() => { destination = nearest(); }, 180);
   }, { passive: true, signal });
@@ -188,14 +191,14 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     cancel(); const target = document.getElementById(location.hash.slice(1));
     if (target) goTo(target);
   }, { signal });
-  reduced.addEventListener('change', () => { cancel(); setMode(); refresh(); }, { signal });
+  reduced.addEventListener('change', refresh, { signal });
   function goTo(section: HTMLElement) {
     cancel();
     const index = stops.findIndex(stop => stop.section === section);
     if (enabled() && index >= 0) move(index, true);
     else window.scrollTo({ top: section.offsetTop, behavior: reduced.matches ? 'instant' : 'smooth' });
   }
-  setMode(); refresh();
+  refresh();
   return { refresh, goTo, cancel, destroy() {
     cancel(); destroyed = true; abort.abort(); feedback.destroy();
     document.documentElement.classList.remove('guided-scroll');

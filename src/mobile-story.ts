@@ -6,20 +6,22 @@ const chapterLabels = [
   ['watch', 'Monitoring'],
   ['people', 'Training'],
   ['connect', 'Contact'],
-  ['team', 'Team'],
-  ['faq', 'FAQs'],
 ] as const;
 
 /** Touch devices keep the browser's scroll physics. The guide only observes position. */
 export function mountMobileStory() {
   const root = document.documentElement;
   const header = document.querySelector('body > header')!;
-  const story = document.getElementById('story')!;
   const chapters = chapterLabels.map(([id, label]) => ({
     id, label, section: document.getElementById(id)!,
   }));
 
   root.classList.add('mobile-story');
+  // The contact chapter is the sticky guide's natural stopping point.
+  const story = document.createElement('div');
+  story.className = 'mobile-guided-story';
+  chapters[0].section.before(story);
+  story.append(...chapters.map(({ section }) => section));
   const guide = document.createElement('nav');
   guide.className = 'mobile-chapter-guide';
   guide.setAttribute('aria-label', 'Homepage chapters');

@@ -6,12 +6,12 @@ html.mobile-story {
   scroll-padding-top: calc(var(--mobile-reading-top) + 8px);
 }
 .mobile-story #scene, .mobile-story .vignette { display: none; }
-.mobile-story #story > .chapter {
+.mobile-guided-story > .chapter {
   padding: clamp(32px, 6vw, 70px) 5%;
   min-height: 0;
   scroll-margin-top: 0;
 }
-.mobile-story #story > .hero {
+.mobile-guided-story > .hero {
   display: grid;
   justify-items: center;
   gap: 24px;
@@ -42,7 +42,7 @@ html.mobile-story {
 .mobile-story .copy.contact-composition { grid-template-columns: minmax(0, 1fr); gap: 22px; }
 .mobile-story #inquiry :is(input, select, textarea) { font-size: 16px; }
 .mobile-story #story > :is(#team, #faq) { scroll-margin-top: 0; }
-.mobile-story #story > section:focus { outline: none; }
+.mobile-guided-story > section:focus { outline: none; }
 
 .mobile-chapter-guide {
   position: sticky;
