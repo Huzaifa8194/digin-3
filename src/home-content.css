@@ -1,4 +1,5 @@
 html:has(> .home-page) { background: #fff; }
+.home-page > header { background: transparent; }
 
 /* Homepage content treatment. Chapter stages and scene layers are styled elsewhere. */
 .home-page #story {
