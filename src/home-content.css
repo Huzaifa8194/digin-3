@@ -186,30 +186,32 @@
   background-size: 20px 20px;
 }
 .home-page #home .security-orbit-map {
-  background: radial-gradient(circle, #91bde63d, transparent 70%);
+  background: radial-gradient(circle, #79b3e373, transparent 72%);
 }
-.home-page #home .orbit-track::before { border-color: #799ebda6; }
+.home-page #home .orbit-track::before { border: 1.5px solid #4d7fa9; }
 .home-page #home .orbit-track-2::before { border-style: dashed; }
 .home-page #home .orbit-center {
-  background: radial-gradient(circle at 35% 25%, #f6fbff, #d1e7fa);
-  border: 1px solid #9abddd;
-  box-shadow: 0 0 0 5px #82bbf029, 0 0 34px #80b4df65;
+  background: radial-gradient(circle at 35% 25%, #f4fbff, #a9d0ef);
+  border: 2px solid #4b7fa9;
+  box-shadow: 0 0 0 6px #4c8dc833, 0 0 34px #559bd58a;
   color: #142c45;
 }
 .home-page #home .orbit-node-icon {
-  background: #f5faff;
-  border-color: #8cabc5;
-  color: #2c597e;
+  background: #214f79;
+  border-color: #123653;
+  color: #fff;
+  box-shadow: 0 3px 9px #173e6652;
 }
 .home-page #home .orbit-node > span:last-child {
-  color: #264f73;
-  background: #eef6fcf5;
+  color: #193c5a;
+  background: #f5faff;
+  font-weight: 700;
 }
 .home-page #home .orbit-node:is(:hover, :focus-visible, [aria-pressed="true"]) .orbit-node-icon {
-  background: #275781;
-  border-color: #214d74;
+  background: #af1236;
+  border-color: #8f102e;
   color: #fff;
-  box-shadow: 0 0 14px #6190b575;
+  box-shadow: 0 0 0 3px #af12362e, 0 3px 11px #77102b4d;
 }
 .home-page #home .orbit-node:focus-visible { outline: 2px solid #326691; outline-offset: 3px; }
 .home-page #home .hero-orbit-detail {
