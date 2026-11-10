@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" role="img" aria-labelledby="poster-title">
+  <title id="poster-title">DarkIntel360 hero poster</title>
+  <rect width="480" height="600" fill="#100d1a"/>
+  <rect x="16" y="16" width="448" height="568" fill="none" stroke="#d4a8ff" stroke-opacity=".4"/>
+  <text x="36" y="49" fill="#d4a8ff" font-family="monospace" font-size="13" letter-spacing="2">THREAT INTELLIGENCE / 05</text>
+  <text x="36" y="91" fill="#f7f2ff" font-family="system-ui,sans-serif" font-size="26" font-weight="750">DarkIntel360</text>
+  <svg x="24" y="110" width="432" height="336" viewBox="0 0 620 520" fill="none">
+        <defs>
+          <radialGradient id="sphere"><stop stop-color="#6942a3"/><stop offset="1" stop-color="#1b112f"/></radialGradient>
+          <pattern id="stars" width="31" height="28" patternUnits="userSpaceOnUse"><circle cx="3" cy="4" r="1" fill="#d4a8ff" opacity=".31"/></pattern>
+        </defs>
+        <path d="M16 16h588v488H16z" fill="url(#stars)"/>
+        <circle cx="310" cy="260" r="154" fill="url(#sphere)" stroke="#c494ff"/>
+        <g stroke="#b68be7" opacity=".48">
+          <ellipse cx="310" cy="260" rx="154" ry="53"/><ellipse cx="310" cy="260" rx="154" ry="109"/>
+          <ellipse cx="310" cy="260" rx="57" ry="154"/><ellipse cx="310" cy="260" rx="112" ry="154"/>
+          <path d="M156 260h308M310 106v308"/>
+        </g>
+        <ellipse cx="310" cy="260" rx="230" ry="91" transform="rotate(-24 310 260)" stroke="#d4a8ff" stroke-opacity=".65"/>
+        <ellipse cx="310" cy="260" rx="230" ry="91" transform="rotate(25 310 260)" stroke="#ab75f4" stroke-opacity=".53" stroke-dasharray="4 7"/>
+        <path class="orbit-dash" d="M111 324 199 300 263 231 333 273 406 194 515 169" pathLength="100" stroke="#eacfff" stroke-width="2" stroke-dasharray="100"/>
+        <g fill="#f0d9ff" stroke="#9b59ef" stroke-width="4"><circle cx="111" cy="324" r="6"/><circle cx="199" cy="300" r="7"/><circle cx="263" cy="231" r="7"/><circle cx="333" cy="273" r="9"/><circle cx="406" cy="194" r="7"/><circle cx="515" cy="169" r="6"/></g>
+        <g font-family="monospace" font-size="12" fill="#ead6ff"><text x="26" y="38">DARKINTEL360 / SIGNAL MAP</text><text x="453" y="150">DISCUSSION</text><text x="44" y="356">EXPOSURE</text><text x="378" y="471">ILLUSTRATIVE TOPOLOGY</text></g>
+        <path d="M16 62V16h44m500 0h44v46M16 458v46h44m500 0h44v-46" stroke="#d4a8ff"/>
+      </svg>
+  <path d="M36 452h408" stroke="#d4a8ff" stroke-opacity=".4"/>
+  <g font-family="system-ui,sans-serif" font-size="34" font-weight="750" letter-spacing="-1.5">
+    <text x="36" y="497" fill="#f7f2ff">From dark web</text>
+    <text x="36" y="540" fill="#d4a8ff">to actionable intel.</text>
+  </g>
+  <text x="36" y="568" fill="#f7f2ff" font-family="monospace" font-size="10" letter-spacing="1.5">DIGIINN360 / HERO STUDY</text>
+</svg>
