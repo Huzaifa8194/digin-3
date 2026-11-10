@@ -51,6 +51,8 @@ const teamMembers = [
   ['ZARLISH RAFID', 'Cybersecurity Business Developer Lead', 'zarlish-rafid', '50% 43%'],
 ] as const;
 
+const teamRows = [teamMembers.slice(0, 3), teamMembers.slice(3, 6), teamMembers.slice(6)];
+
 export function mountTeam(anchor: Element) {
   const team = document.createElement('section');
   team.id = 'team';
@@ -58,23 +60,42 @@ export function mountTeam(anchor: Element) {
   team.setAttribute('aria-labelledby', 'team-title');
   team.innerHTML = `
     <div class="team-heading">
-      <div><p class="kicker">Expert team</p><h2 id="team-title">Meet our expert team</h2></div>
+      <div><p class="kicker">Expert team</p><h2 id="team-title">Meet our<br>expert team</h2></div>
       <p>Engineers, analysts and business development specialists.</p>
     </div>
     <div class="team-roster">
-      ${teamMembers.map(([name, role, portrait, position]) => `
-        <article class="team-member">
-          <img class="team-portrait" src="/team/${portrait}.webp" alt="" loading="lazy" decoding="async" style="object-position: ${position}">
-          <div class="team-member-info">
-            <h3>${name}</h3>
-            <p>${role}</p>
-          </div>
-        </article>
+      ${teamRows.map(row => `
+        <div class="team-panels" role="group" aria-label="Team members">
+          ${row.map(([name, role, portrait, position], index) => `
+            <button type="button" class="team-panel" aria-pressed="${index === 0}">
+              <span class="team-portrait-frame">
+                <img class="team-portrait" src="/team/${portrait}.webp" alt="" loading="lazy" decoding="async" style="object-position: ${position}">
+              </span>
+              <span class="team-panel-bottom">
+                <strong>${name}</strong>
+                <span>${role}</span>
+              </span>
+              <span class="team-arrow" aria-hidden="true">↗</span>
+            </button>
+          `).join('')}
+        </div>
       `).join('')}
     </div>
     <div class="team-caption">
+      <span>Different disciplines. One team.</span>
       ${link('Work with us', 'mailto:info@digiinn360.com')}
     </div>
   `;
+
+  team.querySelectorAll('.team-panels').forEach(row => {
+    const panels = row.querySelectorAll<HTMLButtonElement>('.team-panel');
+    panels.forEach(panel => {
+      const select = () => {
+        panels.forEach(other => other.setAttribute('aria-pressed', String(other === panel)));
+      };
+      panel.addEventListener('click', select);
+      panel.addEventListener('focus', select);
+    });
+  });
   anchor.before(team);
 }
