@@ -49,17 +49,19 @@ test('wheel line and page units normalize before thresholding',()=>{
  assert.equal(normalizeWheel(1,2,800),800);
  assert.equal(normalizeWheel(40,0,800),40);
 });
-test('animation duration is bounded for tiny, large and reverse moves',()=>{
+test('upward transitions are shorter with their own duration bounds',()=>{
  assert.equal(transitionDuration(1,800),.85);
  assert.equal(transitionDuration(100000,800),1.4);
- assert.equal(transitionDuration(-1600,800),transitionDuration(1600,800));
+ assert.equal(transitionDuration(-1,800),.38);
+ assert.equal(transitionDuration(-100000,800),.63);
+ assert.ok(transitionDuration(-1600,800) < transitionDuration(1600,800) / 2);
 });
 
 test('minor opposite-direction trackpad noise cannot reverse a transition',()=>{
  const input=new ScrollIntent();input.feed(100,0);
  for(let t=10;t<200;t+=20){assert.equal(input.feed(-4,t),null);assert.equal(input.feed(20,t+10),null);}
- assert.equal(input.feed(-25,210),null);
- assert.equal(input.feed(-25,230).direction,-1);
+ assert.equal(input.feed(-12,210),null);
+ assert.equal(input.feed(-4,230).direction,-1);
 });
 
 
@@ -79,4 +81,13 @@ test('completing a transition releases consumed input for the next wheel notch',
  assert.equal(input.feed(100,100),null);
  input.reset();
  assert.equal(input.feed(100,200).direction,1);
+});
+
+test('light upward movement triggers sooner and its momentum stays consumed', () => {
+  const input = new ScrollIntent();
+  assert.equal(input.feed(-5, 0), null);
+  assert.equal(input.progress, .5);
+  assert.equal(input.feed(-5, 15).direction, -1);
+  for (let time = 30; time <= 700; time += 15) assert.equal(input.feed(-8, time), null);
+  assert.equal(input.feed(-10, 850).direction, -1);
 });
