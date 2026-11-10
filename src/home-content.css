@@ -137,3 +137,120 @@
 @media (max-width: 760px) {
   .home-page #faq { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Hero presentation. The orbit and chapter controllers own all movement. */
+.home-page #home {
+  --hero-console: #0b2037;
+  --hero-console-line: #2b4c69;
+  --hero-ice: #dceeff;
+}
+.home-page #home .copy h1 {
+  font-size: clamp(2.75rem, 5.7vw, 6.75rem);
+  font-weight: 780;
+  line-height: .97;
+  letter-spacing: -.078em;
+  padding-bottom: .14em;
+  margin-bottom: .16em;
+}
+.home-page #home .copy h1 em {
+  font-style: normal;
+  color: #315f86;
+}
+.home-page #home .copy .description { max-width: 39ch; }
+.home-page #home .copy .kicker::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px #d6002714;
+}
+.home-page #home .entry-points a {
+  background: #f6faffb8;
+  border-color: #b4c9dc;
+}
+.home-page #home .hero-orbit {
+  overflow: clip;
+  border: 1px solid #31526f;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 48%, #1b4670 0, #0b2037 66%),
+    #0b2037;
+  box-shadow: 0 20px 52px #0b203733, 0 0 0 6px #d4e4f080;
+  color: var(--hero-ice);
+}
+.home-page #home .hero-orbit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(#a1c5e211 1px, transparent 1px),
+    linear-gradient(90deg, #a1c5e211 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.hero-console-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--hero-console-line);
+  background: #081b2e;
+  color: #cce7fb;
+  font: 650 .67rem/1.4 ui-monospace, Consolas, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.hero-console-header span:last-child { display: flex; align-items: center; gap: 6px; }
+.hero-console-header span:last-child::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #83e9d5;
+  box-shadow: 0 0 9px #83e9d5;
+}
+.home-page #home .security-orbit-map {
+  background: radial-gradient(circle, #386e9b45, transparent 69%);
+}
+.home-page #home .orbit-track::before { border-color: #719dbb80; }
+.home-page #home .orbit-track-2::before { border-style: dashed; }
+.home-page #home .orbit-center {
+  background: radial-gradient(circle at 35% 25%, #f6fbff, #b9daf4);
+  border: 1px solid #b9dfff;
+  box-shadow: 0 0 0 5px #82bbf029, 0 0 34px #96cfff65;
+  color: #142c45;
+}
+.home-page #home .orbit-node-icon {
+  background: #102a44;
+  border-color: #608bad;
+  color: #d2edff;
+}
+.home-page #home .orbit-node > span:last-child {
+  color: #e3f1ff;
+  background: #091e34f5;
+}
+.home-page #home .orbit-node:is(:hover, :focus-visible, [aria-pressed="true"]) .orbit-node-icon {
+  background: #e1f3ff;
+  border-color: #b2dfff;
+  color: #173c60;
+  box-shadow: 0 0 16px #9bd9ff9c;
+}
+.home-page #home .orbit-node:focus-visible { outline: 2px solid #a9d7f8; outline-offset: 3px; }
+.home-page #home .hero-orbit-detail {
+  position: relative;
+  max-width: none;
+  min-height: 88px;
+  margin: 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--hero-console-line);
+  border-radius: 0;
+  background: #081b2e;
+  color: #e3f1ff;
+}
+.home-page #home .hero-orbit-detail h3 { color: #e3f1ff; }
+.home-page #home .hero-orbit-detail > p:not(.kicker) { color: #b9d4e9; }
+@media (max-width: 800px) {
+  .home-page #home .copy h1 { font-size: clamp(2.65rem, 8.6vw, 4.5rem); }
+  .home-page #home .hero-orbit { border-radius: 14px; }
+  .hero-console-header { padding-inline: 12px; font-size: .61rem; }
+}
