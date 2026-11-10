@@ -39,8 +39,42 @@ export function mountReferenceComponents(){
  }));
 }
 
+const teamMembers = [
+  ['AIMAN ZULFIQAR', 'Mobile AppSec Automation Engineer', 'aiman-zulfiqar', '50% 20%'],
+  ['HAFZA REHMAN', 'Malware Analyst &amp; AppSec Engineer', 'hafza-rehman', '50% 58%'],
+  ['M. HUZAIFA IMRAN', 'Secure Full Stack Developer', 'huzaifa-imran', '50% 0%'],
+  ['ANSAB FAROOQ', 'Full Stack Penetration Tester &amp; Detection Engineer', 'ansab-farooq', '50% 22%'],
+  ['JALIL AHMED', 'Cyber Threat Intelligence Engineer', 'jalil-ahmed', '50% 64%'],
+  ['KHALID KHAN', 'Offensive Security &amp; Product Engineer', 'khalid-khan', '50% 0%'],
+  ['HAMZA JALIL', 'Endpoint Security Product Engineer', 'hamza-jalil', '50% 38%'],
+  ['MUHAMMAD HASEEB', 'Red Team Automation Engineer', 'muhammad-haseeb', '50% 38%'],
+  ['ZARLISH RAFID', 'Cybersecurity Business Developer Lead', 'zarlish-rafid', '50% 43%'],
+] as const;
+
 export function mountTeam(anchor: Element) {
- const members=[['Nauman Khan','Senior Software Engineer','NK','Engineering','Tailored software solutions for web, mobile and desktop.','code'],['Nabeela Younis','Software Engineer','NY','Development','Turning business needs into practical digital experiences.','code'],['Ghulam Mujtaba','Cyber Security Auditor','GM','Cybersecurity','Identifying vulnerabilities and strengthening your security posture.','scan'],['Hamza Javed','System & Network Engineer','HJ','Infrastructure','Connecting reliable systems with a stronger network foundation.','network']];
- const team=document.createElement('section');team.id='team';team.className='reference-team';team.setAttribute('aria-labelledby','team-title');team.innerHTML=`<div class="team-heading"><div><p class="kicker">Expert team</p><h2 id="team-title">Meet our<br>expert team</h2></div><p>Software engineers, security auditors<br>and infrastructure specialists.</p></div><div class="team-panels">${members.map((p,i)=>`<article class="team-panel ${i===0?'expanded':''}"><button type="button" aria-expanded="${i===0}" aria-controls="person-${i}"><span class="team-discipline">${p[3]}</span><span class="team-monogram" aria-hidden="true">${p[2]}</span>${icon(p[5],'team-icon')}<span class="team-panel-bottom"><strong>${p[0]}</strong><span>${p[1]}</span><span id="person-${i}" class="team-description" ${i===0?'':'hidden'}>${p[4]}</span></span><span class="team-arrow" aria-hidden="true">↗</span></button></article>`).join('')}</div><div class="team-caption"><span>Different disciplines. One team.</span>${link('Work with us','mailto:info@digiinn360.com')}</div>`;anchor.before(team);
- team.querySelectorAll<HTMLButtonElement>('.team-panel button').forEach(b=>{const select=()=>{team.querySelectorAll<HTMLButtonElement>('.team-panel button').forEach(other=>{const selected=other===b;other.setAttribute('aria-expanded',String(selected));other.parentElement!.classList.toggle('expanded',selected);other.querySelector<HTMLElement>('.team-description')!.hidden=!selected;});};b.addEventListener('click',select);b.addEventListener('focus',select);});
+  const team = document.createElement('section');
+  team.id = 'team';
+  team.className = 'reference-team';
+  team.setAttribute('aria-labelledby', 'team-title');
+  team.innerHTML = `
+    <div class="team-heading">
+      <div><p class="kicker">Expert team</p><h2 id="team-title">Meet our expert team</h2></div>
+      <p>Engineers, analysts and business development specialists.</p>
+    </div>
+    <div class="team-roster">
+      ${teamMembers.map(([name, role, portrait, position]) => `
+        <article class="team-member">
+          <img class="team-portrait" src="/team/${portrait}.webp" alt="" loading="lazy" decoding="async" style="object-position: ${position}">
+          <div class="team-member-info">
+            <h3>${name}</h3>
+            <p>${role}</p>
+          </div>
+        </article>
+      `).join('')}
+    </div>
+    <div class="team-caption">
+      ${link('Work with us', 'mailto:info@digiinn360.com')}
+    </div>
+  `;
+  anchor.before(team);
 }
