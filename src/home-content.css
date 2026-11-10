@@ -19,14 +19,7 @@
   letter-spacing: .07em;
 }
 .home-page #story .description { color: #405970; }
-.home-page #story .entry-points a {
-  border-color: var(--home-line);
-  border-radius: 4px;
-  background: #f5faff;
-  box-shadow: inset 2px 0 #799fc0;
-}
-.home-page #story .entry-points a:hover,
-.home-page #story .entry-points a:focus-visible { box-shadow: inset 3px 0 var(--home-blue); }
+
 
 .home-page #story #build { --sheet-number: "01"; }
 .home-page #story #test { --sheet-number: "02"; }
@@ -42,7 +35,7 @@
   border: 1px solid #8aabc7;
   border-radius: 2px;
   background: #edf5fc;
-  color: var(--home-blue);
+  color: #285f91;
   font-size: .88em;
   line-height: 1;
 }
@@ -58,10 +51,7 @@
   border-color: #b4cbdf;
   background-color: #edf5fc;
 }
-.home-page #story :is(.switcher, .monitoring-workflow) button[aria-pressed="true"] {
-  border-color: #285f91;
-  box-shadow: inset 0 -2px #285f91;
-}
+
 .home-page #story .bento-link { color: #204e76; text-underline-offset: 4px; }
 .home-page #story .bento-link:hover { text-decoration: underline; }
 .home-page #story :is(.tags > span, .counter) { color: #365d7e; }
@@ -70,8 +60,122 @@
   border-color: var(--home-line);
   background: var(--home-paper);
 }
-.home-page #story .faq-items details[open] { box-shadow: inset 2px 0 var(--home-blue); }
+
 .home-page #story :is(a, button, summary, select, textarea):not(.hero-orbit *):focus-visible {
   outline: 2px solid #3977ae;
   outline-offset: 3px;
+}
+
+/* Bold content panels sit inside the existing chapter stages and leave the scene exposed. */
+.home-page #story {
+  --home-night: #11263e;
+  --home-bright: #f4f9ff;
+  --home-on-dark: #cfdeef;
+  --home-signal: #83dcff;
+  --home-signal-dark: #145876;
+  --home-dark-grid: linear-gradient(#a4d9ff13 1px, transparent 1px),
+                    linear-gradient(90deg, #a4d9ff13 1px, transparent 1px);
+}
+.home-page #story #test { --home-signal: #ff9f9c; --home-signal-dark: #8d3145; }
+.home-page #story #protect { --home-signal: #b7f777; --home-signal-dark: #3e621a; }
+.home-page #story #watch { --home-signal: #ffcb76; --home-signal-dark: #79501a; }
+.home-page #story #people { --home-signal: #ceb8ff; --home-signal-dark: #563787; }
+.home-page #story :is(#home .copy, .composition-heading, .contact-intro) {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  color: var(--home-bright);
+}
+.home-page #story :is(#home .copy, .composition-heading, .contact-intro)::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  display: block;
+  inset: -9px -12px;
+  border: 1px solid #44627d;
+  border-left: 3px solid var(--home-signal);
+  border-radius: 5px;
+  background: var(--home-dark-grid), linear-gradient(115deg, var(--home-night) 70%, #203e5b);
+  background-size: 22px 22px, 22px 22px, auto;
+  pointer-events: none;
+}
+.home-page #story #home .copy { background: transparent; border-color: transparent; }
+.home-page #story #home .copy::after { inset: -18px -16px; }
+.home-page #story :is(#home .copy h1, .composition-heading h2, .contact-intro h2) {
+  color: var(--home-bright);
+  font-weight: 800;
+}
+.home-page #story #home .copy h1 {
+  padding-bottom: .18em;
+  margin-bottom: 0;
+}
+.home-page #story .contact-intro h2 { padding-bottom: .18em; }
+.home-page #story #home .copy h1 > span { color: var(--home-signal); }
+.home-page #story :is(#home .copy, .composition-heading, .contact-intro) .kicker {
+  color: var(--home-signal);
+}
+.home-page #story :is(#home .copy, .composition-heading, .contact-intro) .description,
+.home-page #story :is(#home .copy .location-note, .contact-intro address) { color: var(--home-on-dark); }
+.home-page #story #home .copy .text-link,
+.home-page #story .contact-intro address a { color: var(--home-bright); }
+.home-page #story .composition-heading > .kicker::before {
+  border-color: var(--home-signal);
+  background: var(--home-signal);
+  color: var(--home-night);
+  font-weight: 800;
+}
+.home-page #story #home .service-cta {
+  background: var(--home-signal);
+  color: var(--home-night);
+}
+.home-page #story .entry-points a {
+  border-radius: 4px;
+  background: #1d3b56;
+  border-color: #55728c;
+  box-shadow: inset 0 2px var(--entry-signal);
+}
+.home-page #story .entry-points a:nth-child(1) { --entry-signal: #83dcff; }
+.home-page #story .entry-points a:nth-child(2) { --entry-signal: #b7f777; }
+.home-page #story .entry-points a:nth-child(3) { --entry-signal: #ceb8ff; }
+.home-page #story .entry-points strong { color: var(--entry-signal); }
+.home-page #story .entry-points span { color: var(--home-on-dark); }
+.home-page #story .entry-points a:is(:hover, :focus-visible) { box-shadow: inset 0 4px var(--entry-signal); }
+
+.home-page #story :is(.security-bento, .protection-composition, .monitoring-composition) .spot-card {
+  border-radius: 5px;
+  box-shadow: inset 0 3px var(--home-signal);
+}
+.home-page #story :is(#test .bento-monitor, #watch .monitoring-main) {
+  background: var(--home-night);
+  color: var(--home-bright);
+}
+.home-page #story :is(#test .bento-monitor, #watch .monitoring-main) :is(h3, .bento-link, .monitoring-legend) { color: var(--home-bright); }
+.home-page #story #test .bento-monitor .bento-bottom > p { color: var(--home-on-dark); }
+.home-page #story :is(.switcher, .monitoring-workflow) button[aria-pressed="true"],
+.home-page #story .carousel-nav button {
+  background: var(--home-night);
+  color: var(--home-signal);
+  border-color: var(--home-signal-dark);
+  box-shadow: inset 0 -2px var(--home-signal);
+}
+.home-page #story .tags > span {
+  border-color: var(--home-signal-dark);
+  color: var(--home-signal-dark);
+}
+.home-page #story .contact-form-surface {
+  border-radius: 5px;
+  box-shadow: inset 0 3px var(--home-signal);
+}
+.home-page #story .contact-form-surface .service-cta { background: var(--home-night); color: var(--home-bright); }
+.home-page #story .faq-items details[open] {
+  background: var(--home-night);
+  color: var(--home-bright);
+  box-shadow: inset 3px 0 var(--home-signal);
+}
+.home-page #story .faq-items details[open] :is(summary, p) { color: var(--home-bright); }
+
+@media (max-width: 700px) {
+  .home-page #story #home .copy h1 { font-size: clamp(2rem, 9vw, 3.5rem); }
+  .home-page #story #home .copy::after { inset: -12px -8px; }
+  .home-page #story :is(.composition-heading, .contact-intro)::before { inset-inline: -8px; }
 }
