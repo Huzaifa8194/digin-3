@@ -66,12 +66,74 @@
 .home-page #story .bento-link:hover { text-decoration: underline; }
 .home-page #story :is(.tags > span, .counter) { color: #365d7e; }
 .home-page #story .contact-form-surface :is(select, textarea) { border-color: #a8c2d8; }
-.home-page #story .faq-items details {
-  border-color: var(--home-line);
-  background: var(--home-paper);
-}
-.home-page #story .faq-items details[open] { box-shadow: inset 2px 0 var(--home-blue); }
 .home-page #story :is(a, button, summary, select, textarea):not(.hero-orbit *):focus-visible {
   outline: 2px solid #3977ae;
   outline-offset: 3px;
+}
+
+.home-page #faq {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.35fr);
+  align-items: start;
+  gap: clamp(28px, 5vw, 80px);
+  padding: clamp(52px, 7vw, 100px) max(5%, calc((100% - 1280px) / 2));
+}
+.home-page #faq > div:first-child { max-width: 430px; }
+.home-page #faq .kicker {
+  color: var(--home-blue);
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: .065em;
+  text-transform: uppercase;
+}
+.home-page #faq .kicker::before { display: none; }
+.home-page #faq h2 { font-size: clamp(2rem, 3.3vw, 3.45rem); line-height: 1.08; }
+.home-page #faq .faq-items {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+}
+.home-page #faq details {
+  --faq-inset: clamp(16px, 2.3vw, 28px);
+  border: 1px solid var(--home-line);
+  border-radius: 10px;
+  background: var(--home-paper);
+}
+.home-page #faq details[open] {
+  border-color: #8caeca;
+  background: #e7f1fa;
+  box-shadow: inset 3px 0 var(--home-blue);
+}
+.home-page #faq summary {
+  min-height: 58px;
+  padding: 12px var(--faq-inset);
+  font-size: clamp(.9rem, 1.25vw, 1rem);
+  font-weight: 700;
+}
+.home-page #faq summary:focus-visible { outline-offset: -4px; border-radius: inherit; }
+.home-page #faq summary::after {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--home-line);
+  border-radius: 50%;
+  color: var(--home-blue);
+  font-size: 1rem;
+  line-height: 1;
+}
+.home-page #faq details[open] summary::after {
+  border-color: var(--home-blue);
+  background: var(--home-blue);
+  color: #fff;
+}
+.home-page #faq .faq-items p {
+  max-width: 66ch;
+  padding: 0 var(--faq-inset) 20px;
+  color: #405970;
+  font-size: .93rem;
+  line-height: 1.65;
+}
+@media (max-width: 760px) {
+  .home-page #faq { grid-template-columns: minmax(0, 1fr); }
 }
