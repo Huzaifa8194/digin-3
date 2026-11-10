@@ -1,11 +1,13 @@
 .home-page {
-  --canvas: #E8E9DF;
-  --sage: #A9B887;
-  --ink: #2E3D28;
-  --panel: color-mix(in srgb, var(--canvas) 78%, white);
-  --surface: color-mix(in srgb, var(--canvas) 72%, var(--sage));
-  --muted: color-mix(in srgb, var(--ink) 85%, var(--sage));
-  --line: color-mix(in srgb, var(--sage) 84%, var(--ink));
+  --canvas: #FFFFFF;
+  --highlight: #D9B899;
+  --ink: #3C485E;
+  --gray: #968D90;
+  --sierra: #AF7F6B;
+  --panel: color-mix(in srgb, var(--canvas) 70%, var(--surface));
+  --surface: #EBE6E0;
+  --muted: color-mix(in srgb, var(--ink) 78%, var(--gray));
+  --line: color-mix(in srgb, var(--gray) 50%, var(--surface));
   --accent: var(--ink);
   --red: var(--accent);
   --home-grid-line: color-mix(in srgb, var(--ink) 9%, transparent);
@@ -21,15 +23,15 @@
 .home-page :is(.header-contact, #story .service-cta):hover,
 .home-page #story .service-cta span,
 .home-page .tube-nav a[aria-current] {
-  background: var(--sage);
+  background: var(--highlight);
   color: var(--ink);
 }
 .home-page #story .service-cta:hover span { background: var(--ink); color: var(--canvas); }
 .home-page :is(header a, footer a):focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
-.home-page .fallback-orb { background: radial-gradient(circle at 30% 30%, var(--canvas), var(--sage) 42%, var(--ink)); }
+.home-page .fallback-orb { background: radial-gradient(circle at 30% 30%, var(--canvas), var(--highlight) 42%, var(--ink)); }
 .home-page .chapter-scroll-feedback { color: var(--ink); }
 .home-page .scroll-feedback-track { background: var(--surface); }
-.home-page .scroll-feedback-track > span { background: var(--ink); }
+.home-page .scroll-feedback-track > span { background: var(--sierra); }
 
 .home-page #story :is(.text-link, .entry-points strong, .spatial-art > span, .switcher button, .monitoring-legend, .monitor-explanation, .monitor-top, .monitor-bottom, .network-art) {
   color: var(--muted);
@@ -39,23 +41,23 @@
   background: var(--surface);
   color: var(--ink);
 }
-.home-page #story :is(.switcher, .monitoring-workflow) button[aria-pressed="true"] { background: var(--sage); color: var(--ink); }
+.home-page #story :is(.switcher, .monitoring-workflow) button[aria-pressed="true"] { background: var(--highlight); color: var(--ink); }
 .home-page #story :is(.spatial-core, .capability-disc, .privacy-art) {
-  background: radial-gradient(circle at 30% 25%, var(--panel), var(--sage));
+  background: radial-gradient(circle at 30% 25%, var(--panel), var(--highlight));
   border-color: var(--line);
   box-shadow: none;
 }
 .home-page #story :is(.spatial-core svg, .capability-disc svg, .privacy-art > svg) { color: var(--ink); stroke: var(--ink); }
-.home-page #story :is(.capability-disc > span, .privacy-art > span, .network-art > b, .square-icon) { background: var(--sage); color: var(--ink); }
+.home-page #story :is(.capability-disc > span, .privacy-art > span, .network-art > b, .square-icon) { background: var(--highlight); color: var(--ink); }
 .home-page #story :is(.spatial-ring, .spatial-ring.second, .tags > span) { border-color: var(--line); }
 .home-page #story .spot-glow { background: radial-gradient(circle at var(--pointer-x) var(--pointer-y), var(--home-grid-line), transparent 70%); }
 
 .home-page .new-footer { background: var(--ink); color: var(--canvas); }
 .home-page .new-footer :is(.brand, .footer-directory a, .footer-directory span, .footer-directory address, .footer-bottom > span, .footer-bottom > a) { color: var(--canvas); }
-.home-page .new-footer :is(.brand > span, .footer-word) { color: var(--sage); }
-.home-page .new-footer :is(.footer-top > a, .footer-directory, .footer-bottom) { border-color: var(--sage); }
-.home-page .new-footer .brand::before { background: var(--sage); }
-.home-page .new-footer a:hover { color: var(--sage); }
+.home-page .new-footer :is(.brand > span, .footer-word) { color: var(--highlight); }
+.home-page .new-footer :is(.footer-top > a, .footer-directory, .footer-bottom) { border-color: var(--highlight); }
+.home-page .new-footer .brand::before { background: var(--highlight); }
+.home-page .new-footer a:hover { color: var(--highlight); }
 
 /* Homepage content treatment. Chapter stages and scene layers are styled elsewhere. */
 .home-page #story {
@@ -211,7 +213,7 @@
 }
 .home-page #home .copy .description { max-width: 39ch; }
 .home-page #home .copy .kicker::before {
-  background: var(--accent);
+  background: var(--sierra);
   box-shadow: 0 0 0 4px var(--home-grid-line);
 }
 .home-page #home .entry-points a {
@@ -241,7 +243,7 @@
   background-size: 20px 20px;
 }
 .home-page #home .security-orbit-map {
-  background: radial-gradient(circle, var(--sage), transparent 72%);
+  background: radial-gradient(circle, var(--highlight), transparent 72%);
 }
 .home-page #home .orbit-track::before { border: 1px solid var(--line); }
 .home-page #home .orbit-track-2::before { border-style: dashed; }
@@ -264,7 +266,7 @@
   font-weight: 700;
 }
 .home-page #home .orbit-node:is(:hover, :focus-visible, [aria-pressed="true"]) .orbit-node-icon {
-  background: var(--sage);
+  background: var(--highlight);
   border-color: var(--ink);
   color: var(--ink);
   box-shadow: 0 0 0 2px var(--home-grid-line);

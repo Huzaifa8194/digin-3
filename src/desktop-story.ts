@@ -95,7 +95,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerP
 const theme = getComputedStyle(document.body);
 const canvasColor = new THREE.Color(theme.getPropertyValue('--canvas').trim());
 const inkColor = new THREE.Color(theme.getPropertyValue('--ink').trim());
-const sageColor = new THREE.Color(theme.getPropertyValue('--sage').trim());
+const highlightColor = new THREE.Color(theme.getPropertyValue('--highlight').trim());
 renderer.setClearColor(canvasColor, 1);
 host.append(renderer.domElement);
 const scene = new THREE.Scene();
@@ -158,7 +158,7 @@ for(let i=0;i<count;i++){
  orbit[j]=Math.cos(u)*radarRadius; orbit[j+1]=Math.sin(u)*radarRadius; orbit[j+2]=(random()-.5)*.035;
  const cluster=i%6, theta=cluster*Math.PI/3;
  network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
- const shade=inkColor.clone().lerp(sageColor, random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
+ const shade=inkColor.clone().lerp(highlightColor, random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
 }
 // Sample the wordmark into the final pose so the same particles assemble
 // into both the surrounding ring and its lettering (no text overlay).
