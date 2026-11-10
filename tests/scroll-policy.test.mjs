@@ -13,8 +13,8 @@ test('one wheel notch is one complete intent', () => {
 });
 test('fine trackpad movement accumulates, jitter does not trigger', () => {
   const input = new ScrollIntent();
-  for(let i=0;i<4;i++) assert.equal(input.feed(4, i*15), null);
-  assert.equal(input.feed(4, 60).direction, 1);
+  for(let i=0;i<2;i++) assert.equal(input.feed(4, i*15), null);
+  assert.equal(input.feed(4, 30).direction, 1);
 });
 test('decaying trackpad momentum cannot skip chapters', () => {
   const input = new ScrollIntent();
@@ -37,9 +37,9 @@ test('a sustained strong gesture never advances twice', () => {
   assert.equal(actions.length,1);
 });
 test('reset discards partial input and permits a new gesture', () => {
-  const input=new ScrollIntent();input.feed(10,0);input.reset();
-  assert.equal(input.feed(15,30),null);
-  assert.equal(input.feed(20,60).direction,1);
+  const input=new ScrollIntent();input.feed(8,0);input.reset();
+  assert.equal(input.feed(7,30),null);
+  assert.equal(input.feed(3,60).direction,1);
 });
 test('invalid deltas are ignored',()=>{
  const input=new ScrollIntent();for(const delta of [NaN,Infinity,0,.1])assert.equal(input.feed(delta,0),null);
@@ -49,12 +49,12 @@ test('wheel line and page units normalize before thresholding',()=>{
  assert.equal(normalizeWheel(1,2,800),800);
  assert.equal(normalizeWheel(40,0,800),40);
 });
-test('upward transitions are shorter with their own duration bounds',()=>{
- assert.equal(transitionDuration(1,800),.85);
- assert.equal(transitionDuration(100000,800),1.4);
- assert.equal(transitionDuration(-1,800),.38);
- assert.equal(transitionDuration(-100000,800),.63);
- assert.ok(transitionDuration(-1600,800) < transitionDuration(1600,800) / 2);
+test('transitions have equal timing in both directions and stay within bounds', () => {
+ for (const direction of [-1, 1]) {
+  assert.equal(transitionDuration(direction,800),.38);
+  assert.equal(transitionDuration(direction * 100000,800),.63);
+ }
+ assert.equal(transitionDuration(-1600,800),transitionDuration(1600,800));
 });
 
 test('minor opposite-direction trackpad noise cannot reverse a transition',()=>{
@@ -68,26 +68,20 @@ test('minor opposite-direction trackpad noise cannot reverse a transition',()=>{
 test('a delayed momentum burst is still the same gesture',()=>{
  const input=new ScrollIntent();
  assert.equal(input.feed(100,0).direction,1);
- assert.equal(input.feed(80,300),null);
- assert.equal(input.feed(60,600),null);
- assert.equal(input.feed(100,1100).direction,1);
+ assert.equal(input.feed(80,100),null);
+ assert.equal(input.feed(60,230),null);
+ assert.equal(input.feed(100,400).direction,1);
 });
 
-test('feedback reflects partial gesture and resets after cancellation',()=>{const input=new ScrollIntent();assert.equal(input.progress,0);input.feed(9,0);assert.equal(input.progress,.5);input.feed(9,20);assert.equal(input.progress,1);input.reset();assert.equal(input.progress,0);});
+test('feedback reflects partial gesture and resets after cancellation',()=>{const input=new ScrollIntent();assert.equal(input.progress,0);input.feed(5,0);assert.equal(input.progress,.5);input.feed(5,20);assert.equal(input.progress,1);input.reset();assert.equal(input.progress,0);});
 
-test('completing a transition releases consumed input for the next wheel notch',()=>{
- const input=new ScrollIntent();
- assert.equal(input.feed(100,0).direction,1);
- assert.equal(input.feed(100,100),null);
- input.reset();
- assert.equal(input.feed(100,200).direction,1);
-});
-
-test('light upward movement triggers sooner and its momentum stays consumed', () => {
-  const input = new ScrollIntent();
-  assert.equal(input.feed(-5, 0), null);
-  assert.equal(input.progress, .5);
-  assert.equal(input.feed(-5, 15).direction, -1);
-  for (let time = 30; time <= 700; time += 15) assert.equal(input.feed(-8, time), null);
-  assert.equal(input.feed(-10, 850).direction, -1);
+test('light movement triggers equally and its momentum stays consumed in both directions', () => {
+  for (const direction of [-1, 1]) {
+    const input = new ScrollIntent();
+    assert.equal(input.feed(direction * 5, 0), null);
+    assert.equal(input.progress, .5);
+    assert.equal(input.feed(direction * 5, 15).direction, direction);
+    for (let time = 30; time <= 700; time += 15) assert.equal(input.feed(direction * 8, time), null);
+    assert.equal(input.feed(direction * 10, 850).direction, direction);
+  }
 });

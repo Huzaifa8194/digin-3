@@ -94,7 +94,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     transitionProgress = 0;
     document.documentElement.classList.add('scroll-transitioning');
     active = gsap.to(proxy, {
-      y: target.y, duration, ease: distance < 0 ? 'sine.out' : 'sine.inOut', overwrite: true,
+      y: target.y, duration, ease: 'sine.out', overwrite: true,
       onUpdate() {
         ownScrollUntil = performance.now() + 100;
         window.scrollTo({ top: proxy.y, behavior: 'instant' });
@@ -104,9 +104,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
       },
       onComplete() {
         active = null;
-        // A quick upward transition can end while trackpad momentum is still
-        // arriving. Keep that gesture consumed until the input falls quiet.
-        if (distance > 0) intent.reset();
+        // The gesture stays consumed until trackpad input falls quiet.
         document.documentElement.classList.remove('scroll-transitioning');
         updateFeedback();
       },
