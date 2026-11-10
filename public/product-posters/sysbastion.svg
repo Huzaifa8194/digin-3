@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" role="img" aria-labelledby="poster-title">
+  <title id="poster-title">SysBastion hero poster</title>
+  <rect width="480" height="600" fill="#122d26"/>
+  <rect x="16" y="16" width="448" height="568" fill="none" stroke="#c9fa71" stroke-opacity=".4"/>
+  <text x="36" y="49" fill="#c9fa71" font-family="monospace" font-size="13" letter-spacing="2">ENDPOINT HARDENING / 02</text>
+  <text x="36" y="91" fill="#eaf0ed" font-family="system-ui,sans-serif" font-size="26" font-weight="750">SysBastion</text>
+  <svg x="24" y="110" width="432" height="336" viewBox="0 0 480 390" fill="none">
+        <defs><pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0v24" stroke="#335145" stroke-width="1"/></pattern></defs>
+        <path d="M0 0h480v390H0z" fill="url(#grid)"/>
+        <path d="M240 44v300M46 195h388" stroke="#668473" stroke-dasharray="4 6"/>
+        <path d="m240 170 162 70-162 84-162-84z" fill="#193f32" stroke="#759988" stroke-width="2"/>
+        <path d="m240 119 162 70-162 84-162-84z" fill="#265040" stroke="#9dbdaf" stroke-width="2"/>
+        <path d="m240 65 162 70-162 84-162-84z" fill="#c9fa71" stroke="#dcffad" stroke-width="2"/>
+        <path d="m240 90 107 46-107 55-107-55z" stroke="#417348" stroke-dasharray="4 5"/>
+        <path d="m240 103 38 16v16c0 13-14 26-38 38-24-12-38-25-38-38v-16z" fill="#102c27"/>
+        <path d="m224 134 11 10 22-22" stroke="#c9fa71" stroke-width="5"/>
+        <g fill="#c9fa71" font-family="monospace" font-size="12"><text x="18" y="37">+</text><text x="450" y="37">+</text><text x="18" y="360">+</text><text x="450" y="360">+</text></g>
+      </svg>
+  <path d="M36 452h408" stroke="#c9fa71" stroke-opacity=".4"/>
+  <g font-family="system-ui,sans-serif" font-size="34" font-weight="750" letter-spacing="-1.5">
+    <text x="36" y="497" fill="#eaf0ed">Build a stronger</text>
+    <text x="36" y="540" fill="#c9fa71">baseline.</text>
+  </g>
+  <text x="36" y="568" fill="#eaf0ed" font-family="monospace" font-size="10" letter-spacing="1.5">DIGIINN360 / HERO STUDY</text>
+</svg>

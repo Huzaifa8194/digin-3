@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" role="img" aria-labelledby="poster-title">
+  <title id="poster-title">AEGIS-SHIELD hero poster</title>
+  <rect width="480" height="600" fill="#0b111a"/>
+  <rect x="16" y="16" width="448" height="568" fill="none" stroke="#ffc273" stroke-opacity=".4"/>
+  <text x="36" y="49" fill="#ffc273" font-family="monospace" font-size="13" letter-spacing="2">THREAT HUNTING / 03</text>
+  <text x="36" y="91" fill="#f1f4f7" font-family="system-ui,sans-serif" font-size="26" font-weight="750">AEGIS-SHIELD</text>
+  <svg x="24" y="110" width="432" height="336" viewBox="0 0 560 475" fill="none">
+        <defs>
+          <pattern id="mesh" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0v28" stroke="#273c54"/></pattern>
+          <linearGradient id="beam" x1="280" y1="240" x2="473" y2="111" gradientUnits="userSpaceOnUse"><stop stop-color="#79e8f0" stop-opacity=".02"/><stop offset="1" stop-color="#79e8f0" stop-opacity=".26"/></linearGradient>
+        </defs>
+        <path d="M16 23h528v426H16z" fill="url(#mesh)" opacity=".68"/>
+        <path d="M16 56V23h34m460 0h34v33M16 416v33h34m460 0h34v-33" stroke="#72e2f0" stroke-opacity=".65"/>
+        <g stroke="#4a748c"><circle cx="280" cy="240" r="175"/><circle cx="280" cy="240" r="132"/><circle cx="280" cy="240" r="88"/><circle cx="280" cy="240" r="44"/><path d="M105 240h350M280 65v350M156 116l248 248m0-248L156 364" stroke-dasharray="3 5"/></g>
+        <g class="signal"><path d="M280 240V65a175 175 0 0 1 158 101z" fill="url(#beam)"/><path d="m280 240 158-74" stroke="#72e2f0"/></g>
+        <path d="m159 306 121-66 104-82 77-46" stroke="#ffc273" stroke-width="1.5" stroke-dasharray="6 5"/>
+        <g fill="#72e2f0"><circle cx="159" cy="306" r="4"/><circle cx="280" cy="240" r="5"/><circle cx="207" cy="170" r="3"/><circle cx="340" cy="316" r="3"/></g>
+        <circle cx="384" cy="158" r="14" stroke="#ffc273"/><circle cx="384" cy="158" r="5" fill="#ffc273"/>
+        <path d="M398 158h93v28m-347 120H75v22" stroke="#718ba1"/>
+        <g font-family="monospace" font-size="11"><text x="37" y="51" fill="#72e2f0">ENDPOINT TELEMETRY</text><text x="386" y="204" fill="#ffc273">PERSISTENCE SIGNAL</text><text x="37" y="347" fill="#9eb9cb">PROCESS ORIGIN</text><text x="39" y="426" fill="#9eb9cb">TRACE / 001</text></g>
+      </svg>
+  <path d="M36 452h408" stroke="#ffc273" stroke-opacity=".4"/>
+  <g font-family="system-ui,sans-serif" font-size="34" font-weight="750" letter-spacing="-1.5">
+    <text x="36" y="497" fill="#f1f4f7">Find what hides.</text>
+    <text x="36" y="540" fill="#ffc273">Contain what persists.</text>
+  </g>
+  <text x="36" y="568" fill="#f1f4f7" font-family="monospace" font-size="10" letter-spacing="1.5">DIGIINN360 / HERO STUDY</text>
+</svg>
