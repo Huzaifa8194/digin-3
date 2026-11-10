@@ -279,7 +279,7 @@ function frame(now:number){
  const shapeScale=THREE.MathUtils.lerp(baseScale(chapter),baseScale(next),blend);
  points.position.set((isMobile?0:x)+(frozen?0:pointer.x*.1),(isMobile?-1.9:interpolate(1))-(frozen?0:pointer.y*.08),-.4);
  points.scale.setScalar((isMobile?.65:Math.min(shapeScale,halfWidth*.38/1.8))*interpolate(3));
- const particleOpacity=chapter===0?THREE.MathUtils.lerp(.22,.95,blend):.95;
+ const particleOpacity=chapter===0?THREE.MathUtils.lerp(.62,.95,blend):.95;
  material.opacity=particleOpacity*(1-.8*Math.sin(blend*Math.PI));
  inspection.visible=monitoring.visible=true;
  // Keep application layers and the protective boundary readable from the front.
