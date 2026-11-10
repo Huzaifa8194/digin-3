@@ -140,9 +140,7 @@
 
 /* Hero presentation. The orbit and chapter controllers own all movement. */
 .home-page #home {
-  --hero-console: #0b2037;
-  --hero-console-line: #2b4c69;
-  --hero-ice: #dceeff;
+  --hero-orbit-line: #b9d0e3;
 }
 .home-page #home .copy h1 {
   font-size: clamp(2.75rem, 5.7vw, 6.75rem);
@@ -167,13 +165,15 @@
 }
 .home-page #home .hero-orbit {
   overflow: clip;
-  border: 1px solid #31526f;
+  border: 1px solid #c8dceb;
   border-radius: 18px;
-  background:
-    radial-gradient(ellipse at 50% 48%, #1b4670 0, #0b2037 66%),
-    #0b2037;
-  box-shadow: 0 20px 52px #0b203733, 0 0 0 6px #d4e4f080;
-  color: var(--hero-ice);
+  background: radial-gradient(ellipse at 50% 44%, #d4e8f9, #f1f7fce0 74%);
+  box-shadow: 0 16px 42px #45688616;
+  color: var(--home-ink);
+}
+@media (min-width: 1000px) {
+  .home-page #home .hero-orbit { width: min(46%, 640px); }
+  .home-page #home .security-orbit-map { width: min(96%, 63svh); }
 }
 .home-page #home .hero-orbit::before {
   content: '';
@@ -181,76 +181,52 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(#a1c5e211 1px, transparent 1px),
-    linear-gradient(90deg, #a1c5e211 1px, transparent 1px);
+    linear-gradient(#769abb24 1px, transparent 1px),
+    linear-gradient(90deg, #769abb24 1px, transparent 1px);
   background-size: 20px 20px;
 }
-.hero-console-header {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  min-height: 42px;
-  padding: 9px 16px;
-  border-bottom: 1px solid var(--hero-console-line);
-  background: #081b2e;
-  color: #cce7fb;
-  font: 650 .67rem/1.4 ui-monospace, Consolas, monospace;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.hero-console-header span:last-child { display: flex; align-items: center; gap: 6px; }
-.hero-console-header span:last-child::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #83e9d5;
-  box-shadow: 0 0 9px #83e9d5;
-}
 .home-page #home .security-orbit-map {
-  background: radial-gradient(circle, #386e9b45, transparent 69%);
+  background: radial-gradient(circle, #91bde63d, transparent 70%);
 }
-.home-page #home .orbit-track::before { border-color: #719dbb80; }
+.home-page #home .orbit-track::before { border-color: #799ebda6; }
 .home-page #home .orbit-track-2::before { border-style: dashed; }
 .home-page #home .orbit-center {
-  background: radial-gradient(circle at 35% 25%, #f6fbff, #b9daf4);
-  border: 1px solid #b9dfff;
-  box-shadow: 0 0 0 5px #82bbf029, 0 0 34px #96cfff65;
+  background: radial-gradient(circle at 35% 25%, #f6fbff, #d1e7fa);
+  border: 1px solid #9abddd;
+  box-shadow: 0 0 0 5px #82bbf029, 0 0 34px #80b4df65;
   color: #142c45;
 }
 .home-page #home .orbit-node-icon {
-  background: #102a44;
-  border-color: #608bad;
-  color: #d2edff;
+  background: #f5faff;
+  border-color: #8cabc5;
+  color: #2c597e;
 }
 .home-page #home .orbit-node > span:last-child {
-  color: #e3f1ff;
-  background: #091e34f5;
+  color: #264f73;
+  background: #eef6fcf5;
 }
 .home-page #home .orbit-node:is(:hover, :focus-visible, [aria-pressed="true"]) .orbit-node-icon {
-  background: #e1f3ff;
-  border-color: #b2dfff;
-  color: #173c60;
-  box-shadow: 0 0 16px #9bd9ff9c;
+  background: #275781;
+  border-color: #214d74;
+  color: #fff;
+  box-shadow: 0 0 14px #6190b575;
 }
-.home-page #home .orbit-node:focus-visible { outline: 2px solid #a9d7f8; outline-offset: 3px; }
+.home-page #home .orbit-node:focus-visible { outline: 2px solid #326691; outline-offset: 3px; }
 .home-page #home .hero-orbit-detail {
   position: relative;
   max-width: none;
   min-height: 88px;
   margin: 0;
   padding: 12px 16px;
-  border-top: 1px solid var(--hero-console-line);
+  border-top: 1px solid var(--hero-orbit-line);
   border-radius: 0;
-  background: #081b2e;
-  color: #e3f1ff;
+  background: #f1f7fce8;
+  color: var(--home-ink);
 }
-.home-page #home .hero-orbit-detail h3 { color: #e3f1ff; }
-.home-page #home .hero-orbit-detail > p:not(.kicker) { color: #b9d4e9; }
+.home-page #home .hero-orbit-detail h3 { color: var(--home-ink); }
+.home-page #home .hero-orbit-detail > p:not(.kicker) { color: #405e77; }
 @media (max-width: 800px) {
   .home-page #home .copy h1 { font-size: clamp(2.65rem, 8.6vw, 4.5rem); }
   .home-page #home .hero-orbit { border-radius: 14px; }
-  .hero-console-header { padding-inline: 12px; font-size: .61rem; }
+  .home-page #home .security-orbit-map { width: min(92%, 350px); }
 }
