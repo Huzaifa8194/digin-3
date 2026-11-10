@@ -6,7 +6,8 @@ html.mobile-story {
   scroll-padding-top: calc(var(--mobile-reading-top) + 8px);
 }
 .mobile-story #scene, .mobile-story .vignette { display: none; }
-.mobile-guided-story > .chapter {
+.mobile-guided-story > .chapter,
+.mobile-story #story > #connect {
   padding: clamp(32px, 6vw, 70px) 5%;
   min-height: 0;
   scroll-margin-top: 0;

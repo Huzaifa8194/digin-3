@@ -5,7 +5,6 @@ const chapterLabels = [
   ['protect', 'Protection'],
   ['watch', 'Monitoring'],
   ['people', 'Training'],
-  ['connect', 'Contact'],
 ] as const;
 
 /** Touch devices keep the browser's scroll physics. The guide only observes position. */
@@ -17,7 +16,7 @@ export function mountMobileStory() {
   }));
 
   root.classList.add('mobile-story');
-  // The contact chapter is the sticky guide's natural stopping point.
+  // The training chapter is the sticky guide's natural stopping point.
   const story = document.createElement('div');
   story.className = 'mobile-guided-story';
   chapters[0].section.before(story);

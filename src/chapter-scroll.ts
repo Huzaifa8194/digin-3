@@ -25,14 +25,14 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   const nearest = (y = scrollY) => stops.reduce((best, stop, i) =>
     Math.abs(stop.y - y) < Math.abs(stops[best].y - y) ? i : best, 0);
 
-  const contact = document.getElementById('connect');
+  const training = document.getElementById('people');
   let boundary = Infinity;
   const enabled = () => !reduced.matches;
   const inGuidedStory = () => scrollY < boundary - 2;
   const setMode = () => {
     document.documentElement.classList.toggle('guided-scroll', enabled() && (active !== null || inGuidedStory()));
   };
-  // Team, FAQs and the footer use native scrolling after the contact chapter.
+  // Release input before the contact chapter enters the viewport.
   const controlsInput = () => enabled() && (active !== null || inGuidedStory());
 
   function updateFeedback() {
@@ -45,26 +45,28 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   function refresh() {
     cancel();
     stops = [];
-    boundary = contact ? contact.offsetTop + contact.offsetHeight : Infinity;
+    boundary = training ? clamp(training.offsetTop + training.offsetHeight - innerHeight) : Infinity;
+    const limit = (y: number) => Math.min(clamp(y), boundary);
     const sections = [...document.querySelectorAll<HTMLElement>('main > section')];
     for (const section of sections) {
       const start = section.offsetTop;
+      if (start >= boundary) break;
       const pinned = section.classList.contains('chapter') && !section.classList.contains('flow-chapter');
       if (pinned) {
         // Land after the assembly beat, inside the fully readable hold.
-        stops.push({ y: clamp(start + (section.id === 'home' ? 0 : section.offsetHeight * .32)), section });
+        stops.push({ y: limit(start + (section.id === 'home' ? 0 : section.offsetHeight * .32)), section });
       } else {
-        stops.push({ y: clamp(start), section });
+        stops.push({ y: limit(start), section });
         // Long cards/forms are read in overlapping viewport steps, never skipped.
-        const last = Math.min(start + section.offsetHeight - innerHeight + 40, maxScroll());
+        const last = Math.min(start + section.offsetHeight - innerHeight + 40, boundary, maxScroll());
         for (let y = start + innerHeight * .72; y < last; y += innerHeight * .72)
-          stops.push({ y: clamp(y), section });
-        if (last > start + 80) stops.push({ y: clamp(last), section });
+          stops.push({ y: limit(y), section });
+        if (last > start + 80) stops.push({ y: limit(last), section });
       }
-      if (section === contact) {
-        stops.push({ y: clamp(boundary), section });
-        break;
-      }
+    }
+    if (training) {
+      stops = stops.filter(stop => stop.y < boundary - 24);
+      stops.push({ y: boundary, section: training });
     }
     stops.sort((a, b) => a.y - b.y);
     stops = stops.filter((stop, i) => i === 0 || stop.y - stops[i - 1].y > 24);
@@ -189,9 +191,10 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   window.addEventListener('popstate', () => { cancel(); }, { signal });
   window.addEventListener('hashchange', () => {
     cancel(); const target = document.getElementById(location.hash.slice(1));
-    if (target) goTo(target);
+    if (target && handles(target)) goTo(target);
   }, { signal });
   reduced.addEventListener('change', refresh, { signal });
+  const handles = (section: HTMLElement) => section.offsetTop < boundary;
   function goTo(section: HTMLElement) {
     cancel();
     const index = stops.findIndex(stop => stop.section === section);
@@ -199,7 +202,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     else window.scrollTo({ top: section.offsetTop, behavior: reduced.matches ? 'instant' : 'smooth' });
   }
   refresh();
-  return { refresh, goTo, cancel, destroy() {
+  return { refresh, handles, goTo, cancel, destroy() {
     cancel(); destroyed = true; abort.abort(); feedback.destroy();
     document.documentElement.classList.remove('guided-scroll');
   } };

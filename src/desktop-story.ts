@@ -70,14 +70,15 @@ document.fonts.ready.then(()=>{
  sizeReadingStages();updateHeroHandoff();configureContentMotion();ScrollTrigger.refresh();
  chapterScroll.refresh();
  const initialTarget=document.getElementById(location.hash.slice(1));
- if(initialTarget)chapterScroll.goTo(initialTarget);
+ if(initialTarget && chapterScroll.handles(initialTarget))chapterScroll.goTo(initialTarget);
+ else initialTarget?.scrollIntoView({behavior:'instant'});
 });
 // Tall sticky sections need an explicit destination: browser anchor heuristics
 // can otherwise land near the end of a section, after its content has faded.
 document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(link=>{
  link.addEventListener('click',event=>{
   const target=document.getElementById(link.hash.slice(1));
-  if(!target)return;
+  if(!target || !chapterScroll.handles(target))return;
   event.preventDefault();
   history.replaceState(null,'',link.hash);
   chapterScroll.goTo(target);
