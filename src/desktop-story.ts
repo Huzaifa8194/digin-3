@@ -92,7 +92,11 @@ reduced.addEventListener('change', () => { paused = reduced.matches; });
 const host = document.querySelector<HTMLDivElement>('#scene')!;
 try {
 const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'low-power' });
-renderer.setClearColor(0xedf3f8, 1);
+const theme = getComputedStyle(document.body);
+const canvasColor = new THREE.Color(theme.getPropertyValue('--canvas').trim());
+const inkColor = new THREE.Color(theme.getPropertyValue('--ink').trim());
+const sageColor = new THREE.Color(theme.getPropertyValue('--sage').trim());
+renderer.setClearColor(canvasColor, 1);
 host.append(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42, 1, .1, 100);
@@ -154,7 +158,7 @@ for(let i=0;i<count;i++){
  orbit[j]=Math.cos(u)*radarRadius; orbit[j+1]=Math.sin(u)*radarRadius; orbit[j+2]=(random()-.5)*.035;
  const cluster=i%6, theta=cluster*Math.PI/3;
  network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
- const shade=new THREE.Color(0x347eb8).lerp(new THREE.Color(0x7ab6df),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
+ const shade=inkColor.clone().lerp(sageColor, random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
 }
 // Sample the wordmark into the final pose so the same particles assemble
 // into both the surrounding ring and its lettering (no text overlay).
@@ -195,13 +199,13 @@ const monitoring = new THREE.Group();
 points.add(inspection,monitoring);
 const findings:THREE.Mesh[]=[];
 for(const [x,y,z] of [[.75,.8,.9],[-.65,-.6,.95],[.8,-.7,.7]]){
- const dot=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,depthWrite:false}));
+ const dot=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),new THREE.MeshBasicMaterial({color:inkColor,transparent:true,opacity:0,depthWrite:false}));
  dot.position.set(x,y,z); inspection.add(dot); findings.push(dot);
 }
-const sweepMaterial=new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
+const sweepMaterial=new THREE.MeshBasicMaterial({color:inkColor,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
 const sweep=new THREE.Mesh(new THREE.CircleGeometry(1.75,40,0,.45),sweepMaterial);
 monitoring.add(sweep);
-const crossMaterial=new THREE.LineBasicMaterial({color:0x555c66,transparent:true,opacity:0});
+const crossMaterial=new THREE.LineBasicMaterial({color:inkColor,transparent:true,opacity:0});
 const cross=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([
  new THREE.Vector3(-1.9,0,0),new THREE.Vector3(1.9,0,0),
  new THREE.Vector3(0,-1.9,0),new THREE.Vector3(0,1.9,0)
@@ -209,7 +213,7 @@ const cross=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([
 monitoring.add(cross);
 const signals:THREE.Mesh[]=[];
 for(const [x,y] of [[.9,.65],[-1.05,.35],[.4,-1.25]]){
- const signal=new THREE.Mesh(new THREE.RingGeometry(.055,.085,24),new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));
+ const signal=new THREE.Mesh(new THREE.RingGeometry(.055,.085,24),new THREE.MeshBasicMaterial({color:inkColor,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));
  signal.position.set(x,y,.06);monitoring.add(signal);signals.push(signal);
 }
 const pointer={x:0,y:0};
