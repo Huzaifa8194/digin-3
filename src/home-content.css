@@ -167,7 +167,7 @@
   overflow: clip;
   border: 1px solid #c8dceb;
   border-radius: 18px;
-  background: radial-gradient(ellipse at 50% 44%, #d4e8f9, #f1f7fce0 74%);
+  background: radial-gradient(ellipse at 50% 44%, #e5eff7, #f4f8fc 74%);
   box-shadow: 0 16px 42px #45688616;
   color: var(--home-ink);
 }
@@ -181,26 +181,27 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(#769abb24 1px, transparent 1px),
-    linear-gradient(90deg, #769abb24 1px, transparent 1px);
+    linear-gradient(#769abb15 1px, transparent 1px),
+    linear-gradient(90deg, #769abb15 1px, transparent 1px);
   background-size: 20px 20px;
 }
 .home-page #home .security-orbit-map {
-  background: radial-gradient(circle, #79b3e373, transparent 72%);
+  background: radial-gradient(circle, #d6e7f4, transparent 72%);
 }
-.home-page #home .orbit-track::before { border: 1.5px solid #4d7fa9; }
+.home-page #home .orbit-track::before { border: 1px solid #9fb8cc; }
 .home-page #home .orbit-track-2::before { border-style: dashed; }
 .home-page #home .orbit-center {
-  background: radial-gradient(circle at 35% 25%, #f4fbff, #a9d0ef);
-  border: 2px solid #4b7fa9;
-  box-shadow: 0 0 0 6px #4c8dc833, 0 0 34px #559bd58a;
+  background: radial-gradient(circle at 35% 25%, #f8fbfe, #e4eef6);
+  border: 1px solid #91aec5;
+  box-shadow: 0 0 0 5px #91aec51f;
   color: #142c45;
 }
+.home-page #home .orbit-brand-mark > span { color: #527994; }
 .home-page #home .orbit-node-icon {
-  background: #214f79;
-  border-color: #123653;
-  color: #fff;
-  box-shadow: 0 3px 9px #173e6652;
+  background: #f5f9fc;
+  border-color: #a8bfd1;
+  color: #365b76;
+  box-shadow: 0 2px 5px #365b7614;
 }
 .home-page #home .orbit-node > span:last-child {
   color: #193c5a;
@@ -208,10 +209,10 @@
   font-weight: 700;
 }
 .home-page #home .orbit-node:is(:hover, :focus-visible, [aria-pressed="true"]) .orbit-node-icon {
-  background: #af1236;
-  border-color: #8f102e;
-  color: #fff;
-  box-shadow: 0 0 0 3px #af12362e, 0 3px 11px #77102b4d;
+  background: #dceaf4;
+  border-color: #63849e;
+  color: #284c69;
+  box-shadow: 0 0 0 2px #63849e26;
 }
 .home-page #home .orbit-node:focus-visible { outline: 2px solid #326691; outline-offset: 3px; }
 .home-page #home .hero-orbit-detail {
