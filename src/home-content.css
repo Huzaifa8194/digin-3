@@ -258,3 +258,38 @@
     font-size: clamp(1.95rem, 8vw, 3.5rem);
   }
 }
+
+/* Expand across the reading lane first. Grow type when the viewport has headroom. */
+@media (min-width: 1000px) {
+  .home-page #story .chapter:not(.finale) .chapter-composition {
+    width: min(60%, 880px);
+  }
+  .home-page #story #test .chapter-composition {
+    width: min(64%, 940px);
+  }
+  .home-page #story .chapter-composition :is(.showcase-copy h3, .capability-copy h3, .spot-card h3) {
+    font-weight: 740;
+  }
+  .home-page #story .chapter-composition :is(.bento-link, .monitoring-workflow strong, .protection-layers summary) {
+    font-weight: 750;
+  }
+}
+@media (min-width: 1000px) and (min-height: 821px) {
+  .home-page #story .composition-heading h2 {
+    font-size: clamp(3.1rem, min(4.7vw, 7.3svh), 4.75rem);
+  }
+  .home-page #story .composition-heading .description {
+    font-size: clamp(.94rem, 1.8svh, 1.1rem);
+    line-height: 1.5;
+  }
+  .home-page #story .chapter-composition :is(.showcase-copy h3, .capability-copy h3) {
+    font-size: clamp(1.7rem, 3.35svh, 2.15rem);
+  }
+  .home-page #story .chapter-composition :is(.showcase-copy p, .showcase-copy li, .capability-copy > p, .spot-card p, .monitor-explanation, .protection-layers summary) {
+    font-size: clamp(.85rem, 1.65svh, 1rem);
+    line-height: 1.5;
+  }
+  .home-page #story .chapter-composition :is(.bento-link, .switcher button, .monitoring-workflow strong) {
+    font-size: clamp(.8rem, 1.5svh, .95rem);
+  }
+}
