@@ -42,3 +42,11 @@
   .standalone-page main { padding-top: 136px; }
   .service-category { grid-template-columns: 1fr; }
 }
+
+.catalog-kicker {
+  margin: 0 0 16px;
+  color: var(--catalog-blue, #285f91);
+  font: 650 .72rem/1.45 ui-monospace, Consolas, monospace;
+  letter-spacing: .095em;
+  text-transform: uppercase;
+}

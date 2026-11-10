@@ -11,12 +11,11 @@
 }
 .catalog-page main { padding-top: 80px; color: var(--catalog-ink); }
 .catalog-shell { width: min(88%, 1280px); margin-inline: auto; }
-.catalog-kicker, .catalog-figure figcaption, .catalog-index a span, .workflow-number {
+.catalog-figure figcaption, .catalog-index a span, .workflow-number {
   font: 650 .72rem/1.45 ui-monospace, Consolas, monospace;
   letter-spacing: .095em;
   text-transform: uppercase;
 }
-.catalog-kicker { margin: 0 0 16px; color: var(--catalog-blue); }
 
 .catalog-page .catalog-hero, .catalog-page #solutions.catalog-hero {
   background: var(--catalog-navy);
