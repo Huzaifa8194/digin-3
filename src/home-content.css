@@ -233,3 +233,28 @@
   .home-page #home .hero-orbit { border-radius: 14px; }
   .home-page #home .security-orbit-map { width: min(92%, 350px); }
 }
+
+/* Short, two-line statements reuse the hero's type and accent. */
+.home-page #story .composition-heading h2 {
+  font-size: clamp(2.15rem, 4vw, 3.85rem);
+  font-weight: 780;
+  line-height: .99;
+  letter-spacing: -.068em;
+  margin-bottom: .2em;
+  padding-bottom: .1em;
+}
+.home-page #story .composition-heading h2 em {
+  display: block;
+  color: #315f86;
+  font-style: normal;
+}
+@media (min-width: 1000px) and (max-height: 820px) {
+  .home-page #story .composition-heading h2 {
+    font-size: clamp(2rem, 5.4svh, 2.8rem);
+  }
+}
+@media (max-width: 700px) {
+  .home-page #story .composition-heading h2 {
+    font-size: clamp(1.95rem, 8vw, 3.5rem);
+  }
+}
