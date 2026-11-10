@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="SysBastion is DigiInn360’s planned Windows and Linux endpoint hardening product.">
+<title>SysBastion | Endpoint hardening</title>
+<style>
+  :root{color-scheme:light;--paper:#eaf0ed;--ink:#102c27;--muted:#405650;--line:#b6c6bf;--accent:#c9fa71;--mono:ui-monospace,Consolas,monospace}
+  *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,sans-serif}a{color:inherit}a:focus-visible,summary:focus-visible{outline:3px solid #397332;outline-offset:5px}.shell{width:min(1320px,calc(100% - 72px));margin:auto}.skip{position:absolute;left:1rem;top:1rem;transform:translateY(-200%);background:white;padding:.6rem;z-index:2}.skip:focus{transform:none}
+  .mast{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:82px;border-bottom:1px solid var(--line)}.logo{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:800;text-decoration:none;letter-spacing:-.07em}.logo svg{width:30px}.mast nav{display:flex;gap:clamp(16px,3vw,40px);font-size:14px}.mast nav a,.foot a{text-underline-offset:4px}.eyebrow,.label{font:700 12px/1.5 var(--mono);text-transform:uppercase;letter-spacing:.12em}.eyebrow{display:flex;align-items:center;gap:12px}.eyebrow::before{content:"";width:20px;height:2px;background:currentColor}
+  .hero{display:grid;grid-template-columns:1.07fr 1fr;align-items:center;gap:clamp(30px,6vw,100px);min-height:660px;padding:66px 0}.hero h1{margin:24px 0;font-size:clamp(3.1rem,7.3vw,7rem);font-weight:800;line-height:.91;letter-spacing:-.085em}.hero h1 span{display:block}.intro{max-width:39ch;font-size:clamp(1rem,1.6vw,1.25rem);color:var(--muted)}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-top:30px}.primary{display:inline-flex;justify-content:space-between;align-items:center;gap:24px;padding:13px 18px;background:var(--ink);color:white;font-weight:700;text-decoration:none}.primary:hover{background:#2c5044}.subtle{text-underline-offset:5px;font-size:14px;font-weight:700}
+  .plate{margin:0;background:#122d26;color:var(--accent);padding:20px;box-shadow:10px 10px 0 #c5d4cb}.plate svg{width:100%;height:auto;display:block}.plate-head,.plate figcaption{display:flex;justify-content:space-between;gap:10px;font:700 11px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}.plate-head{padding-bottom:12px;border-bottom:1px solid #426150}.plate figcaption{padding-top:12px;border-top:1px solid #426150}
+  .index{display:grid;grid-template-columns:1fr 2fr;gap:clamp(28px,6vw,92px);padding:76px 0;border-top:1px solid var(--line)}h2{font-size:clamp(2.35rem,5vw,4.75rem);line-height:.96;letter-spacing:-.075em;margin:15px 0 20px}.index p,.step p{color:var(--muted)}details{border-top:1px solid var(--line)}details:last-child{border-bottom:1px solid var(--line)}summary{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:10px;cursor:pointer;list-style:none;padding:20px 4px;font-size:clamp(1.05rem,2.2vw,1.5rem);font-weight:750;letter-spacing:-.035em}summary::-webkit-details-marker{display:none}summary::after{content:"+";font:22px var(--mono)}details[open] summary::after{content:"−"}.num{font:700 11px var(--mono);color:var(--muted)}.detail{margin:0 20px 23px 52px;max-width:63ch}
+  .workflow{background:#dce7dc;padding:72px 0}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin:36px 0 0;padding:0;list-style:none}.step{border-top:2px solid var(--ink);padding-top:18px}.step h3{font-size:1.4rem;letter-spacing:-.05em;margin:12px 0 0}.contact{padding:72px 0;display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:end}.contact p{max-width:58ch;color:var(--muted)}.contact .actions{justify-self:end;margin:0}.foot{border-top:1px solid var(--line);padding:22px 0 32px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font-size:13px}
+  @media(max-width:850px){.shell{width:calc(100% - 40px)}.hero{min-height:0;grid-template-columns:1fr;padding:50px 0}.plate{max-width:560px;width:100%}.index,.contact{grid-template-columns:1fr}.contact .actions{justify-self:start}}
+  @media(max-width:550px){.mast{min-height:70px}.mast nav{gap:13px;font-size:12px}.mast nav a:first-child{display:none}.steps{grid-template-columns:1fr;gap:15px}.index,.workflow,.contact{padding-block:50px}.plate{box-shadow:5px 5px 0 #c5d4cb}.plate-head,.plate figcaption{font-size:9px}.detail{margin-left:4px}}
+  @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}.primary{transition:background .18s}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="shell mast">
+  <a class="logo" href="./index.html" aria-label="SysBastion home"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2 28 7v9c0 6-5 11-12 14C9 27 4 22 4 16V7z" fill="#102c27"/><path d="M11 12h10v3H11zm0 6h10v3H11z" fill="#c9fa71"/></svg>SysBastion</a>
+  <nav aria-label="Page"><a href="#controls">Controls</a><a href="#workflow">Workflow</a><a href="#contact">Contact</a></nav>
+</header>
+<main id="main">
+  <section class="shell hero" aria-labelledby="hero-title">
+    <div>
+      <div class="eyebrow">Windows + Linux hardening</div>
+      <h1 id="hero-title">Build a stronger <span>baseline.</span></h1>
+      <p class="intro">Reduce unnecessary endpoint exposure with practical controls for settings, applications, file types and network behavior.</p>
+      <div class="actions"><a class="primary" href="#controls">Explore the controls <span aria-hidden="true">↘</span></a><a class="subtle" href="#workflow">See how it works</a></div>
+    </div>
+    <figure class="plate">
+      <div class="plate-head"><span>SysBastion / Control layers</span><span>Fig. 01</span></div>
+      <svg viewBox="0 0 480 390" fill="none" aria-hidden="true">
+        <defs><pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0v24" stroke="#335145" stroke-width="1"/></pattern></defs>
+        <path d="M0 0h480v390H0z" fill="url(#grid)"/>
+        <path d="M240 44v300M46 195h388" stroke="#668473" stroke-dasharray="4 6"/>
+        <path d="m240 170 162 70-162 84-162-84z" fill="#193f32" stroke="#759988" stroke-width="2"/>
+        <path d="m240 119 162 70-162 84-162-84z" fill="#265040" stroke="#9dbdaf" stroke-width="2"/>
+        <path d="m240 65 162 70-162 84-162-84z" fill="#c9fa71" stroke="#dcffad" stroke-width="2"/>
+        <path d="m240 90 107 46-107 55-107-55z" stroke="#417348" stroke-dasharray="4 5"/>
+        <path d="m240 103 38 16v16c0 13-14 26-38 38-24-12-38-25-38-38v-16z" fill="#102c27"/>
+        <path d="m224 134 11 10 22-22" stroke="#c9fa71" stroke-width="5"/>
+        <g fill="#c9fa71" font-family="monospace" font-size="12"><text x="18" y="37">+</text><text x="450" y="37">+</text><text x="18" y="360">+</text><text x="450" y="360">+</text></g>
+      </svg>
+      <figcaption><span>Settings / Applications / Network</span><span>Baseline</span></figcaption>
+    </figure>
+  </section>
+  <section class="shell index" id="controls" aria-labelledby="controls-title">
+    <div><div class="label">01 / Control index</div><h2 id="controls-title">Choose what to harden.</h2><p>Build a baseline around the controls your environment needs. The capabilities below describe the planned feature set.</p></div>
+    <div>
+      <details open><summary><span class="num">01</span>Windows security and privacy</summary><p class="detail">Manage AutoRun and AutoPlay, SmartScreen, LSA protection and selected mitigations. Configure selected telemetry, usage-data and automatic app installation settings.</p></details>
+      <details><summary><span class="num">02</span>File types and scripting</summary><p class="detail">Restrict selected script, disk-image and installer types, including JS, VBS, ISO, IMG and MSI. Manage Windows Script Host and selected PowerShell settings, including script-block logging where configured.</p></details>
+      <details><summary><span class="num">03</span>Services and built-in apps</summary><p class="detail">Disable selected services and features and remove built-in Windows apps your organization does not need.</p></details>
+      <details><summary><span class="num">04</span>Application security</summary><p class="detail">Restrict selected Office macro, OLE and ActiveX features and configure Adobe Reader security options.</p></details>
+      <details><summary><span class="num">05</span>Firewall policy</summary><p class="detail">Manage inbound and outbound rules for selected system utilities, Windows apps, .NET, Office and Adobe software.</p></details>
+    </div>
+  </section>
+  <section class="workflow" id="workflow" aria-labelledby="workflow-title"><div class="shell">
+    <div class="label">02 / Administration</div><h2 id="workflow-title">Select. Apply. Restore.</h2>
+    <ol class="steps">
+      <li class="step"><span class="label">01 / Select</span><h3>Choose policies</h3><p>Pick the hardening controls that fit your environment.</p></li>
+      <li class="step"><span class="label">02 / Apply</span><h3>Enforce selected changes</h3><p>Use repeatable command-line workflows to help standardize settings across managed PCs.</p></li>
+      <li class="step"><span class="label">03 / Restore</span><h3>Return to defaults</h3><p>Restore selected settings to their defaults where supported.</p></li>
+    </ol>
+  </div></section>
+  <section class="shell contact" id="contact" aria-labelledby="contact-title">
+    <div><div class="label">03 / Business inquiries</div><h2 id="contact-title">Plan your baseline.</h2><p>Final behavior and compatibility are subject to implementation and validation on supported Windows and Linux configurations.</p></div>
+    <div class="actions"><a class="primary" href="mailto:info@digiinn360.com?subject=SysBastion%20inquiry">Email DigiInn360 <span aria-hidden="true">↗</span></a><a class="subtle" href="tel:+92512748690">051 2748690</a></div>
+  </section>
+</main>
+<footer class="shell foot"><span>SysBastion · A DigiInn360 product</span><a href="tel:+923095624742">0309 5624742</a></footer>
+</body>
+</html>

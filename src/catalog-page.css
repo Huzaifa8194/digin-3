@@ -161,6 +161,21 @@
 
 .catalog-project { margin-top: clamp(38px, 6vw, 90px); }
 .catalog-project + .catalog-project { margin-top: 0; }
+.product-links { margin: 0; padding: 0; list-style: none; }
+.product-links li { border-bottom: 1px solid var(--catalog-line); }
+.product-links li:first-child { border-top: 1px solid var(--catalog-line); }
+.product-links a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 16px;
+  padding: 16px 12px;
+  color: var(--catalog-ink);
+}
+.product-links a::after { content: '→' / ''; grid-area: 1 / 2 / 3 / 3; }
+.product-links a:is(:hover, :focus-visible) { background: #e7f1fa; }
+.product-links strong { font-size: 1.15rem; }
+.product-links span { grid-column: 1; color: #455d75; }
 .project-intro > p:not(.catalog-kicker), .catalog-contact p:not(.catalog-kicker) {
   max-width: 46ch;
   margin: 10px 0 0;
