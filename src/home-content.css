@@ -1,0 +1,77 @@
+/* Homepage content treatment. Chapter stages and scene layers are styled elsewhere. */
+.home-page #story {
+  --home-ink: #142a42;
+  --home-blue: #285f91;
+  --home-line: #b9cfe1;
+  --home-paper: #f6faff;
+  --home-grid: linear-gradient(#789ebb14 1px, transparent 1px),
+               linear-gradient(90deg, #789ebb14 1px, transparent 1px);
+}
+.home-page #story :is(h1, h2, h3):not(.hero-orbit *) { color: var(--home-ink); }
+.home-page #story :is(h1, h2) {
+  font-weight: 680;
+  letter-spacing: -.055em;
+  overflow: visible;
+}
+.home-page #story .chapter .kicker {
+  color: #285478;
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: .07em;
+}
+.home-page #story .description { color: #405970; }
+.home-page #story .entry-points a {
+  border-color: var(--home-line);
+  border-radius: 4px;
+  background: #f5faff;
+  box-shadow: inset 2px 0 #799fc0;
+}
+.home-page #story .entry-points a:hover,
+.home-page #story .entry-points a:focus-visible { box-shadow: inset 3px 0 var(--home-blue); }
+
+.home-page #story #build { --sheet-number: "01"; }
+.home-page #story #test { --sheet-number: "02"; }
+.home-page #story #protect { --sheet-number: "03"; }
+.home-page #story #watch { --sheet-number: "04"; }
+.home-page #story #people { --sheet-number: "05"; }
+.home-page #story .composition-heading > .kicker::before {
+  content: var(--sheet-number, "") / "";
+  width: auto;
+  height: auto;
+  margin-right: .65em;
+  padding: 1px 4px;
+  border: 1px solid #8aabc7;
+  border-radius: 2px;
+  background: #edf5fc;
+  color: var(--home-blue);
+  font-size: .88em;
+  line-height: 1;
+}
+.home-page #story :is(.spot-card, .contact-form-surface) {
+  border-color: var(--home-line);
+  background-color: var(--home-paper);
+}
+.home-page #story :is(.spatial-art, .monitor-illustration, .contact-form-surface) {
+  background-image: var(--home-grid);
+  background-size: 19px 19px;
+}
+.home-page #story .monitor-illustration {
+  border-color: #b4cbdf;
+  background-color: #edf5fc;
+}
+.home-page #story :is(.switcher, .monitoring-workflow) button[aria-pressed="true"] {
+  border-color: #285f91;
+  box-shadow: inset 0 -2px #285f91;
+}
+.home-page #story .bento-link { color: #204e76; text-underline-offset: 4px; }
+.home-page #story .bento-link:hover { text-decoration: underline; }
+.home-page #story :is(.tags > span, .counter) { color: #365d7e; }
+.home-page #story .contact-form-surface :is(select, textarea) { border-color: #a8c2d8; }
+.home-page #story .faq-items details {
+  border-color: var(--home-line);
+  background: var(--home-paper);
+}
+.home-page #story .faq-items details[open] { box-shadow: inset 2px 0 var(--home-blue); }
+.home-page #story :is(a, button, summary, select, textarea):not(.hero-orbit *):focus-visible {
+  outline: 2px solid #3977ae;
+  outline-offset: 3px;
+}
