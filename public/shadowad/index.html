@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ShadowAD is an AI-assisted penetration testing workbench for Active Directory and Microsoft Entra ID. Prove attack paths, check fixes, and verify closure.">
+  <meta name="theme-color" content="#111210">
+  <title>ShadowAD — Active Directory penetration testing</title>
+  <link rel="icon" href="./mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./path.js" defer></script>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-head wrap">
+    <a class="wordmark" href="#top"><img src="./mark.svg" alt="" width="26" height="26">ShadowAD</a>
+    <nav aria-label="Main"><a href="#engagement">Workflow</a><a href="#coverage">Coverage</a><a href="#controls">Controls</a></nav>
+    <a class="button small" href="#contact">Book a walkthrough <span aria-hidden="true">↗</span></a>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="signal"></span> Hybrid identity penetration testing</p>
+        <h1 id="hero-title">Find the path.<br><em>Prove it’s closed.</em></h1>
+        <p class="lead">ShadowAD is the AI-assisted workbench for testing real attack paths across Active Directory and Microsoft Entra ID.</p>
+        <div class="actions"><a class="button primary" href="#engagement">Explore the workflow <span aria-hidden="true">↘</span></a><a class="quiet" href="#coverage">View attack coverage <span aria-hidden="true">↓</span></a></div>
+      </div>
+      <figure class="hero-art">
+        <div class="art-head"><span><i class="signal"></i> SHADOWAD / PATH MODEL</span><span>FIG. 01</span></div>
+        <svg viewBox="0 0 640 570" role="img" aria-labelledby="model-title">
+          <title id="model-title">Illustration of an attack path crossing an on-premises directory and a cloud identity layer</title>
+          <defs>
+            <linearGradient id="plane" x2="0" y2="1"><stop stop-color="#272c20"/><stop offset="1" stop-color="#151913"/></linearGradient>
+            <radialGradient id="halo"><stop stop-color="#cfff76" stop-opacity=".46"/><stop offset="1" stop-color="#cfff76" stop-opacity="0"/></radialGradient>
+            <pattern id="dots" width="17" height="17" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#b4c694" opacity=".28"/></pattern>
+            <path id="tile" d="M 0 0 L 263 -134 L 519 0 L 263 134 Z"/>
+            <clipPath id="tile-mask"><use href="#tile"/></clipPath>
+            <g id="layer">
+              <use href="#tile" transform="translate(0 13)" fill="#1d2418" stroke="#515b43"/>
+              <path d="M0 0v13l263 134v-13zM263 134v13l256-134V0z" fill="#21291a" stroke="#515b43"/>
+              <use href="#tile" fill="url(#plane)" stroke="#667355"/>
+              <g clip-path="url(#tile-mask)" fill="none" stroke="#7d8a6c" stroke-opacity=".22">
+                <path d="M-25 14L250 154M15-18L298 131M56-42L340 109M99-66L385 86M145-89L430 64M191-112L475 42M235-135L518 18M281-159L566-7M-9 14L273-131M34 38L316-108M76 61L359-85M120 84L404-61M162 107L448-40M204 129L491-17M249 152L535 7"/>
+              </g>
+              <use href="#tile" fill="url(#dots)"/>
+            </g>
+          </defs>
+          <circle cx="335" cy="278" r="248" fill="url(#halo)" opacity=".14"/>
+          <g stroke="#657457" stroke-opacity=".5" stroke-dasharray="3 8"><path d="M58 186v161m519-161v161M321 52v161m0 107v161"/></g>
+          <use href="#layer" transform="translate(58 347)"/>
+          <use href="#layer" transform="translate(58 266)" opacity=".65"/>
+          <use href="#layer" transform="translate(58 186)"/>
+          <g fill="none" stroke="#95a87a" stroke-opacity=".43">
+            <path d="M116 347l103-51 85 44 90-47 114 57m-347 27 106 55 84-42 83 44m-318-248 103-51 85 44 90-47 114 57m-347 27 106 55 84-42 83 44M219 135v161m175-164v161"/>
+            <circle cx="219" cy="135" r="6"/><circle cx="394" cy="132" r="6"/><circle cx="267" cy="271" r="6"/><circle cx="267" cy="432" r="6"/><circle cx="508" cy="350" r="6"/>
+          </g>
+          <path d="M161 377l92-47 51 26V179l99-50 72 37" fill="none" stroke="#beff67" stroke-width="8" opacity=".14"/>
+          <path id="route" d="M161 377l92-47 51 26V179l99-50 72 37" fill="none" stroke="#d4ff9a" stroke-width="2.5" stroke-linejoin="round"/>
+          <path class="route-pulse" d="M161 377l92-47 51 26V179l99-50 72 37" pathLength="100" fill="none" stroke="white" stroke-width="4"/>
+          <g fill="url(#halo)"><circle cx="161" cy="377" r="32"/><circle cx="304" cy="179" r="51"/><circle cx="475" cy="166" r="37"/></g>
+          <g fill="#d4ff9a" stroke="#15200a" stroke-width="2"><circle cx="161" cy="377" r="6"/><circle cx="253" cy="330" r="5"/><circle cx="304" cy="356" r="5"/><circle cx="304" cy="179" r="8"/><circle cx="403" cy="129" r="5"/><circle cx="475" cy="166" r="7"/></g>
+          <g fill="#d4ff9a" font-family="monospace" font-size="13" letter-spacing="1">
+            <path d="M475 166h56l16-15" fill="none" stroke="#d4ff9a" stroke-opacity=".6"/><text x="500" y="139">ENTRA ID</text>
+            <path d="M161 377h-45l-26 24" fill="none" stroke="#d4ff9a" stroke-opacity=".6"/><text x="56" y="423">ON-PREM AD</text>
+          </g>
+        </svg>
+        <figcaption class="art-foot"><span>01 / HYBRID IDENTITY</span><span>ILLUSTRATIVE TOPOLOGY</span></figcaption>
+      </figure>
+    </section>
+    <div class="wrap stats" aria-label="Coverage at a glance">
+      <div><strong>17</strong><span>AD CS escalation cases<br>ESC1–ESC17</span></div>
+      <div><strong>12</strong><span>Attack techniques<br>tested in chains</span></div>
+      <div><strong>05</strong><span>Safety tiers<br>from passive to blocked</span></div>
+    </div>
+    <section class="light" id="engagement" aria-labelledby="engagement-title">
+      <div class="wrap section">
+        <p class="eyebrow">01 / The engagement</p>
+        <div class="section-heading"><h2 id="engagement-title">From foothold<br>to verified closure.</h2><p>Follow an engagement through four stages, from the first working attack path to a retest that verifies the fix.</p></div>
+        <div class="workflow">
+          <div class="step-list" aria-label="Engagement stages">
+            <details name="workflow" data-stage="0" open><summary><span>01</span>Exploit</summary><p>Open-source engines run multi-step attack chains from an initial foothold to compromise, within the engagement’s approved scope.</p></details>
+            <details name="workflow" data-stage="1"><summary><span>02</span>Prove</summary><p>ShadowAD captures timestamped evidence as testing happens and feeds it into the report.</p></details>
+            <details name="workflow" data-stage="2"><summary><span>03</span>Fix</summary><p>Check who still relies on the affected access before applying a fix. Each fix pack includes a rollback snapshot.</p></details>
+            <details name="workflow" data-stage="3"><summary><span>04</span>Retest</summary><p>Replay the attack to verify the fix and record dated proof that the route to Domain Admin is closed.</p></details>
+          </div>
+          <div class="trace" data-state="0">
+            <div class="trace-bar"><span>EXAMPLE ENGAGEMENT</span><span id="trace-stage">01 / EXPLOIT</span></div>
+            <ol class="trace-path"><li><i></i>Initial foothold</li><li><i></i>Weak permission</li><li><i></i>Domain Admin</li></ol>
+            <p id="trace-result" aria-live="polite">An ordinary account has a working path to privileged access.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="wrap section" id="coverage" aria-labelledby="coverage-title">
+      <p class="eyebrow">02 / Attack coverage</p>
+      <div class="section-heading"><h2 id="coverage-title">Test how attacks<br>cross boundaries.</h2><p>Assess on-premises Active Directory and Microsoft Entra ID in one engagement. The certificate engine tests 17 AD CS escalation cases, from ESC1 through ESC17.</p></div>
+      <ul class="techniques"><li>Kerberoasting</li><li>AS-REP roasting</li><li>Delegation / RBCD</li><li>Shadow Credentials</li><li>dMSA BadSuccessor</li><li>AD CS abuse</li><li>ACL / ACE abuse</li><li>GPO / SYSVOL secrets</li><li>SCCM abuse</li><li>NTLM relay</li><li>Password spraying</li><li>Entra ID pivots</li></ul>
+    </section>
+    <section class="control-surface" id="controls" aria-labelledby="controls-title">
+      <div class="wrap section">
+        <p class="eyebrow">03 / Operator controls</p>
+        <div class="section-heading"><h2 id="controls-title">You decide<br>what runs.</h2><p>AI proposes the next move and explains it. Safety tiers determine which actions run automatically, which require approval, and which stay blocked.</p></div>
+        <div class="control-grid">
+          <table><caption>Action policy</caption><thead><tr><th scope="col">Tier</th><th scope="col">Action</th><th scope="col">Policy</th></tr></thead><tbody>
+            <tr><th scope="row">A</th><td>Passive, read-only</td><td><span class="status">Auto</span></td></tr>
+            <tr><th scope="row">B</th><td>Authentication validation</td><td><span class="status">Auto</span></td></tr>
+            <tr><th scope="row">C</th><td>Controlled change</td><td><span class="status">Auto-reverted</span></td></tr>
+            <tr><th scope="row">D</th><td>Coercion and relay</td><td><span class="status amber">Approval</span></td></tr>
+            <tr><th scope="row">E</th><td>Persistence and destructive actions</td><td><span class="status red">Blocked</span></td></tr>
+          </tbody></table>
+          <div class="control-notes"><article><h3>Change ledger</h3><p>ShadowAD snapshots directory objects before writes and journals every action.</p></article><article><h3>Stealth testing</h3><p>Use lockout-aware spraying and stealth collection to test what your blue team detects.</p></article></div>
+        </div>
+      </div>
+    </section>
+    <section class="light" aria-labelledby="deliverables-title">
+      <div class="wrap section">
+        <p class="eyebrow">04 / Client deliverables</p>
+        <h2 id="deliverables-title">Findings you can act on.</h2>
+        <div class="deliverables">
+          <article><span>01 / EVIDENCE</span><h3>Proven attack paths</h3><p>See how an ordinary account reaches privileged access, with evidence for each step.</p></article>
+          <article><span>02 / PRIORITY</span><h3>The choke point</h3><p>Identify the weak permission that most attack routes pass through.</p></article>
+          <article><span>03 / REMEDIATION</span><h3>Fix packs</h3><p>Get usage-checked fixes ready to apply, with a rollback snapshot.</p></article>
+          <article><span>04 / VERIFICATION</span><h3>Dated closure records</h3><p>Show when a retest verified that an attack path was closed.</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="wrap section" aria-labelledby="teams-title">
+      <p class="eyebrow">05 / Built for security teams</p>
+      <div class="teams"><h2 id="teams-title">An AD workbench for your next engagement.</h2><dl>
+        <div><dt>Penetration testers</dt><dd>Run internal AD engagements with evidence captured as you go.</dd></div>
+        <div><dt>Red teams</dt><dd>Chain approved steps toward Domain Admin and cloud admin access.</dd></div>
+        <div><dt>MSSPs</dt><dd>Repeat assessments across clients with retests and closure records.</dd></div>
+        <div><dt>In-house security teams</dt><dd>Find which attack paths work in your environment.</dd></div>
+      </dl></div>
+    </section>
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap section"><p class="eyebrow">06 / Product walkthrough</p><h2 id="contact-title">See ShadowAD<br>on a live engagement.</h2><p>Call to arrange a walkthrough of the testing, evidence, and retest workflow.</p><div class="actions"><a class="button dark" href="tel:+92512748690">051 2748690 <span aria-hidden="true">↗</span></a><a class="button" href="tel:+923095624742">0309 5624742 <span aria-hidden="true">↗</span></a></div></div>
+    </section>
+  </main>
+  <footer class="wrap site-foot"><a class="wordmark" href="#top"><img src="./mark.svg" alt="" width="26" height="26">ShadowAD</a><a href="#top">Back to top ↑</a></footer>
+</body>
+</html>
