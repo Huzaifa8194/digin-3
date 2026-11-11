@@ -10,7 +10,7 @@ export function mountComponentRefresh() {
  };
  for (const [id,path] of Object.entries(icons)) {
   const copy=document.querySelector(`#${id} .copy`);
-  if(!copy || copy.classList.contains('product-chapter-copy'))continue;
+  if(!copy)continue;
   const icon=document.createElement('span');icon.className='panel-icon';icon.setAttribute('aria-hidden','true');
   icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg>`;
   copy.prepend(icon);
