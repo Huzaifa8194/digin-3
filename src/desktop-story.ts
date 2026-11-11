@@ -111,6 +111,7 @@ const shield = new Float32Array(count * 3);
 const orbit = new Float32Array(count * 3);
 const network = new Float32Array(count * 3);
 const colors = new Float32Array(count * 3);
+const shieldOutline = [[-1.45,1.2],[0,1.65],[1.45,1.2],[1.25,-.35],[0,-1.7],[-1.25,-.35]];
 // Deterministic geometry keeps the composition stable through reloads.
 let seed = 37;
 const random = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
@@ -136,8 +137,7 @@ for(let i=0;i<count;i++){
  if(i%4===0){
   shield[j]=sphere[j]*.34; shield[j+1]=sphere[j+1]*.34; shield[j+2]=sphere[j+2]*.34;
  }else{
-  const outline=[[-1.45,1.2],[0,1.65],[1.45,1.2],[1.25,-.35],[0,-1.7],[-1.25,-.35]];
-  const edge=i%6, a=outline[edge], b=outline[(edge+1)%6], along=random();
+  const edge=i%6, a=shieldOutline[edge], b=shieldOutline[(edge+1)%6], along=random();
   const thickness=(random()-.5)*.09;
   shield[j]=THREE.MathUtils.lerp(a[0],b[0],along)+thickness;
   shield[j+1]=THREE.MathUtils.lerp(a[1],b[1],along)+thickness;
@@ -152,45 +152,34 @@ for(let i=0;i<count;i++){
  network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
  const shade=new THREE.Color(0x347eb8).lerp(new THREE.Color(0x7ab6df),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
 }
-// Identity badge and mobile app, drawn as dotted outlines on two depth planes.
-const auditPaths = [
- new THREE.Path().moveTo(-1.78,.85).lineTo(-.32,.85).quadraticCurveTo(-.18,.85,-.18,.71)
-  .lineTo(-.18,-.62).quadraticCurveTo(-.18,-.76,-.32,-.76).lineTo(-1.78,-.76)
-  .quadraticCurveTo(-1.92,-.76,-1.92,-.62).lineTo(-1.92,.71).quadraticCurveTo(-1.92,.85,-1.78,.85),
- new THREE.Path().absarc(-1.38,.28,.17,0,Math.PI*2,false),
- new THREE.Path().moveTo(-1.68,-.31).quadraticCurveTo(-1.67,.02,-1.38,.02)
-  .quadraticCurveTo(-1.09,.02,-1.08,-.31).closePath(),
- new THREE.Path().moveTo(-.91,.43).lineTo(-.45,.43),
- new THREE.Path().moveTo(-.91,.19).lineTo(-.57,.19),
- new THREE.Path().moveTo(-.91,-.32).lineTo(-.48,-.32),
- new THREE.Path().moveTo(.44,1.22).lineTo(1.5,1.22).quadraticCurveTo(1.69,1.22,1.69,1.03)
-  .lineTo(1.69,-1.03).quadraticCurveTo(1.69,-1.22,1.5,-1.22).lineTo(.44,-1.22)
-  .quadraticCurveTo(.25,-1.22,.25,-1.03).lineTo(.25,1.03).quadraticCurveTo(.25,1.22,.44,1.22),
- new THREE.Path().moveTo(.79,.98).lineTo(1.15,.98),
- new THREE.Path().moveTo(.56,.57).lineTo(1.39,.57).lineTo(1.39,-.01).lineTo(.56,-.01).closePath(),
- new THREE.Path().moveTo(.56,-.34).lineTo(1.38,-.34),
- new THREE.Path().moveTo(.56,-.59).lineTo(1.12,-.59),
- new THREE.Path().moveTo(.79,-.99).lineTo(1.15,-.99),
-];
-const auditLengths = auditPaths.map(path => path.getLength());
-const totalAuditLength = auditLengths.reduce((total, length) => total + length, 0);
-let particle = 0;
-let lengthSoFar = 0;
-auditPaths.forEach((path, pathIndex) => {
- const start = particle;
- lengthSoFar += auditLengths[pathIndex];
- const end = Math.round(count * lengthSoFar / totalAuditLength);
- const samples = path.getSpacedPoints(end - start);
- for (; particle < end; particle++) {
-  const sample = samples[particle - start];
-  const back = particle % 5 === 0;
-  const j = particle * 3;
-  audit[j] = sample.x + (back ? .07 : 0) + (random() - .5) * .025;
-  audit[j + 1] = sample.y + (back ? .05 : 0) + (random() - .5) * .025;
-  audit[j + 2] = back ? -.24 : .06 + (random() - .5) * .035;
+// Use the protection shield's outline, with an open edge marking the breach.
+const upperRight = new THREE.Vector2(...shieldOutline[2]);
+const lowerRight = new THREE.Vector2(...shieldOutline[3]);
+const gapStart = upperRight.clone().lerp(lowerRight,.22);
+const gapEnd = upperRight.clone().lerp(lowerRight,.69);
+const gapCenter = gapStart.clone().lerp(gapEnd,.5);
+const openShield = new THREE.Path().moveTo(gapEnd.x,gapEnd.y);
+for(const index of [3,4,5,0,1,2]){
+ const [x,y] = shieldOutline[index];
+ openShield.lineTo(x,y);
+}
+openShield.lineTo(gapStart.x,gapStart.y);
+const outlineSamples = openShield.getSpacedPoints(Math.floor(count*.75)-1);
+let outlineIndex = 0;
+for(let i=0;i<count;i++){
+ const j = i*3;
+ if(i%4===0){
+  audit[j] = sphere[j]*.34;
+  audit[j+1] = sphere[j+1]*.34;
+  audit[j+2] = sphere[j+2]*.34;
+  continue;
  }
-});
-
+ const sample = outlineSamples[outlineIndex++];
+ const thickness = (random()-.5)*.09;
+ audit[j] = sample.x+thickness;
+ audit[j+1] = sample.y+thickness;
+ audit[j+2] = (random()-.5)*.48;
+}
 // Sample the wordmark into the final pose so the same particles assemble
 // into both the surrounding ring and its lettering (no text overlay).
 const lettering=document.createElement('canvas');
@@ -228,11 +217,21 @@ scene.add(points);
 const inspection = new THREE.Group();
 const monitoring = new THREE.Group();
 points.add(inspection,monitoring);
-const findings:THREE.Mesh[]=[];
-for(const [x,y] of [[-.49,.19],[1.39,-.01]]){
- const dot=new THREE.Mesh(new THREE.RingGeometry(.105,.155,4),new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,depthWrite:false}));
- dot.position.set(x,y,.15); inspection.add(dot); findings.push(dot);
-}
+// Four red corners frame the missing edge without filling in the gap.
+const reticleCorners = [-1,1].flatMap(sx => [-1,1].map(sy => {
+ const x = sx*.32, y = sy*.49;
+ const leg = .14, stroke = .035;
+ return new THREE.Shape()
+  .moveTo(x,y).lineTo(x-sx*leg,y).lineTo(x-sx*leg,y-sy*stroke)
+  .lineTo(x-sx*stroke,y-sy*stroke).lineTo(x-sx*stroke,y-sy*leg)
+  .lineTo(x,y-sy*leg).closePath();
+}));
+const reticleMaterial = new THREE.MeshBasicMaterial({
+ color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false,
+});
+const reticle = new THREE.Mesh(new THREE.ShapeGeometry(reticleCorners),reticleMaterial);
+reticle.position.set(gapCenter.x,gapCenter.y,.28);
+inspection.add(reticle);
 const sweepMaterial=new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
 const sweep=new THREE.Mesh(new THREE.CircleGeometry(1.75,40,0,.45),sweepMaterial);
 monitoring.add(sweep);
@@ -310,7 +309,7 @@ function frame(now:number){
  const side=(index:number)=>Math.sign(shots[index][0]);
  const gutter=(index:number)=>index===2 ? .73 : .5;
  const x=THREE.MathUtils.lerp(side(chapter)*gutter(chapter),side(next)*gutter(next),blend)*halfWidth;
- const baseScale=(index:number)=>index===2 ? Math.min(.75,halfWidth*.13) : .95;
+ const baseScale=(index:number)=>index===2 ? Math.min(.88,halfWidth*.145) : .95;
  const shapeScale=THREE.MathUtils.lerp(baseScale(chapter),baseScale(next),blend);
  points.position.set((isMobile?0:x)+(frozen?0:pointer.x*.1),(isMobile?-1.9:interpolate(1))-(frozen?0:pointer.y*.08),-.4);
  points.scale.setScalar((isMobile?.65:Math.min(shapeScale,halfWidth*.38/1.8))*interpolate(3));
@@ -329,7 +328,7 @@ function frame(now:number){
  points.rotation.z=p*-.3*(1-wordmarkWeight);
  const weight=(index:number)=>(chapter===index?1-blend:0)+(next===index?blend:0);
  const auditWeight=weight(2), radarWeight=weight(4);
- findings.forEach(dot=>{(dot.material as THREE.MeshBasicMaterial).opacity=auditWeight*.95;});
+ reticleMaterial.opacity=auditWeight*.95;
  sweepMaterial.opacity=radarWeight*.22;
  crossMaterial.opacity=radarWeight*.4;
  const sweepAngle=frozen?local*Math.PI*2:time*.35+local*Math.PI*2;
