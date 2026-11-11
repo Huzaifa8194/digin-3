@@ -1,4 +1,38 @@
 /* Distinct reference components replace the repeated enclosing chapter card. */
+.product-composition .story-products {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.5vw, 18px);
+  max-width: 396px;
+}
+.story-product {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #a8c2d8;
+  border-radius: 10px;
+  background: #f5faff;
+  color: #203b55;
+  box-shadow: 0 12px 26px #203b551f;
+}
+.story-product:hover, .story-product:focus-visible { border-color: #285f91; background: #e8f3fb; }
+.story-product img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; }
+.story-product-caption {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  flex: 1;
+  padding: 10px 27px 12px 10px;
+  font-size: .72rem;
+  line-height: 1.25;
+}
+.story-product-caption strong { font-size: .84rem; line-height: 1.2; }
+.story-product-arrow { position: absolute; top: 10px; right: 10px; color: #285f91; }
+@media (max-height: 680px) and (min-width: 1000px) {
+  .product-composition .story-products { max-width: 330px; }
+}
 .copy.chapter-composition{width:min(56%,820px);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
 .copy.chapter-composition:before{display:none}.chapter-composition>.composition-heading{margin-bottom:28px}.chapter-composition .description{max-width:60ch}.chapter-composition h3{font-weight:500}.chapter-composition .kicker{font-size:12px}
 #test .chapter-composition{width:min(65%,960px)}.chapter-composition .security-bento{grid-template-columns:1.15fr 1fr 1fr;gap:14px;margin-top:28px}.chapter-composition .spot-card{padding:24px;box-shadow:0 12px 35px #314e6d08}.chapter-composition .spot-card h3{font-size:22px;line-height:1.25;margin:0 0 10px}.chapter-composition .spot-card p{font-size:12px;line-height:1.75;margin:0;color:#526c83}.chapter-composition .bento-monitor{min-height:0}.chapter-composition .monitor-illustration{margin:22px 0;padding:14px}.square-icon svg{width:22px;height:22px}.monitor-logo svg{width:15px;height:15px}.monitor-bottom>svg{width:13px;height:13px}.bento-link{position:relative;color:#365d7d;line-height:1.6}.chapter-composition .bento-code{background:#dceaf5;color:#203b55}.chapter-composition .bento-code p{color:#526c83}.bento-code .square-icon{background:#edf6fd;border-color:#bdd4e6;color:#51718e}.chapter-composition .code-window{background:#edf5fc;border-color:#bed5e8;box-shadow:0 12px 30px #456a8c12}.chapter-composition .code-window code{color:#365d7d}.chapter-composition .code-window code>span{color:#715a91}.chapter-composition .code-window em{color:#497568}.chapter-composition .code-window small{color:#617e96;border-color:#cedde9}.chapter-composition .code-window>div>span{color:#617e96}.chapter-composition .bento-privacy{min-height:205px;gap:22px}.chapter-composition .privacy-art{width:110px;height:110px}.chapter-composition .privacy-art>svg{width:76px;height:76px}.privacy-art>span svg{width:18px;height:18px}.network-art svg{width:22px;height:22px}.spot-card>*:not(.spot-glow){position:relative}.spot-glow{z-index:0}.spot-card:before{display:none}

@@ -2,9 +2,6 @@
 export function mountComponentRefresh() {
  const icons = {
   build:'m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18',
-  test:'M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Zm-2 5 6 6m-15-11 3 3 4-5',
-  protect:'m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4Zm-5 10 3 3 7-7',
-  watch:'M21 12a9 9 0 1 1-9-9m5 9a5 5 0 1 1-5-5m0 5 8-8',
   people:'m2 9 10-6 10 6-10 6L2 9Zm4 3v6c4 4 8 4 12 0v-6m4-3v10',
   connect:'M3 5h18v14H3zM3 5l9 8 9-8',
  };
