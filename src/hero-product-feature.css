@@ -137,7 +137,7 @@
   .mobile-story .home-page #home {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 0;
-    padding-inline: 0;
+    padding: var(--hero-header-height) 0 0;
   }
 
   .home-page #home .copy {
@@ -146,7 +146,11 @@
   }
 
   .home-page #home .hero-orbit.hero-product-feature {
-    min-height: min(62svh, 650px);
+    align-self: stretch;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .hero-feature-main { padding-inline: clamp(16px, 2.4vw, 46px); }
