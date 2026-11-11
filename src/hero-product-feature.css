@@ -10,30 +10,6 @@
   color: #f4f8fc;
 }
 
-.home-page:not(.hero-header-scrolled) > header .tube-nav {
-  gap: clamp(4px, 1.2vw, 18px);
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
-.home-page:not(.hero-header-scrolled) > header .tube-nav a {
-  padding: 9px clamp(7px, 1vw, 15px);
-  border-radius: 0;
-  border-bottom: 2px solid transparent;
-  color: #cbdbe9;
-  font-weight: 650;
-}
-
-.home-page:not(.hero-header-scrolled) > header .tube-nav a:is(:hover, [aria-current]) {
-  background: transparent;
-  border-bottom-color: #9dc8e9;
-  box-shadow: none;
-  color: #fff;
-}
-
-.home-page:not(.hero-header-scrolled) > header .tube-nav a[aria-current]::before { content: none; }
-
 .home-page:not(.hero-header-scrolled) > header :is(a, button):focus-visible {
   outline: 2px solid #c8e7ff;
   outline-offset: 3px;

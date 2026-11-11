@@ -1,0 +1,30 @@
+.home-page:not(.hero-header-scrolled) > header {
+  --header-nav-text: #cbdbe9;
+  --header-nav-active: #fff;
+  --header-nav-indicator: #9dc8e9;
+}
+
+:is(.home-page:not(.hero-header-scrolled), .standalone-page) > header .tube-nav {
+  gap: clamp(4px, 1.2vw, 18px);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+:is(.home-page:not(.hero-header-scrolled), .standalone-page) > header .tube-nav a {
+  padding: 9px clamp(7px, 1vw, 15px);
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--header-nav-text, inherit);
+  font-weight: 650;
+}
+
+:is(.home-page:not(.hero-header-scrolled), .standalone-page) > header .tube-nav a:is(:hover, [aria-current]) {
+  background: transparent;
+  border-bottom-color: var(--header-nav-indicator, #28618f);
+  box-shadow: none;
+  color: var(--header-nav-active, #28618f);
+}
+
+:is(.home-page:not(.hero-header-scrolled), .standalone-page) > header .tube-nav a[aria-current]::before { content: none; }

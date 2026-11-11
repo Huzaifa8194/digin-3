@@ -5,6 +5,7 @@ import './chapter-compositions.css';
 import './layout-refinement.css';
 import './mobile-story.css';
 import './hero-product-feature.css';
+import './header-navigation.css';
 import { mountMobileStory } from './mobile-story';
 import { mountReferenceComponents } from './reference-components';
 import { mountComponentRefresh } from './component-refresh';
