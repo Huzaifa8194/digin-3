@@ -5,8 +5,38 @@
 .home-page:has(.hero-product-feature[data-current-product="darkintel360"]) { --product-glow: #443165; }
 
 .home-page:not(.hero-header-scrolled) > header {
-  background: linear-gradient(to right, #f6faff 50%, var(--product-glow) 50%, #101c2c);
-  border-bottom-color: #a8bbcc;
+  background: #101c2c;
+  border-bottom-color: #31465a;
+  color: #f4f8fc;
+}
+
+.home-page:not(.hero-header-scrolled) > header .tube-nav {
+  gap: clamp(4px, 1.2vw, 18px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.home-page:not(.hero-header-scrolled) > header .tube-nav a {
+  padding: 9px clamp(7px, 1vw, 15px);
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  color: #cbdbe9;
+  font-weight: 650;
+}
+
+.home-page:not(.hero-header-scrolled) > header .tube-nav a:is(:hover, [aria-current]) {
+  background: transparent;
+  border-bottom-color: #9dc8e9;
+  box-shadow: none;
+  color: #fff;
+}
+
+.home-page:not(.hero-header-scrolled) > header .tube-nav a[aria-current]::before { content: none; }
+
+.home-page:not(.hero-header-scrolled) > header :is(a, button):focus-visible {
+  outline: 2px solid #c8e7ff;
+  outline-offset: 3px;
 }
 
 .home-page:not(.hero-header-scrolled) > header .header-contact {
@@ -183,10 +213,6 @@
 
 @media (max-width: 700px) {
   .home-page #home { --hero-header-height: var(--mobile-header-height, 112px); }
-  .home-page:not(.hero-header-scrolled) > header {
-    background: linear-gradient(115deg, #101c2c, var(--product-glow));
-  }
-  .home-page:not(.hero-header-scrolled) > header .brand { color: #f4f8fc; }
 
   .home-page #home > .chapter-stage,
   .mobile-story .home-page #home {
