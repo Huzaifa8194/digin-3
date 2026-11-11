@@ -234,3 +234,184 @@
     gap: clamp(24px, 3vw, 52px);
   }
 }
+
+
+#build .development-composition {
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(16px, 2.5vw, 26px);
+}
+.development-banners {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 1.2vw, 16px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.development-banner .story-product-caption {
+  flex: 1;
+  padding: 12px;
+}
+.development-banner h3 {
+  margin: 0;
+  font-size: clamp(.95rem, 1.15vw, 1.15rem);
+  font-weight: 750;
+  line-height: 1.25;
+}
+.development-banner p {
+  margin: 0;
+  color: #c4d7e7;
+}
+.development-art {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 6 / 5;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 55%, var(--art-glow), transparent 72%),
+    repeating-linear-gradient(0deg, transparent 0 19px, #ffffff0a 19px 20px),
+    repeating-linear-gradient(90deg, transparent 0 19px, #ffffff0a 19px 20px),
+    var(--art-bg);
+}
+.development-art::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--art-edge);
+  pointer-events: none;
+}
+.development-art-web {
+  --art-bg: #101d2e;
+  --art-glow: #254b68;
+  --art-edge: #86c8ff45;
+  --art-line: #a4dbff;
+}
+.development-art-mobile {
+  --art-bg: #1b132b;
+  --art-glow: #483161;
+  --art-edge: #c2a5fd45;
+  --art-line: #d2baff;
+}
+.development-art-desktop {
+  --art-bg: #142521;
+  --art-glow: #2d5146;
+  --art-edge: #a3dfc045;
+  --art-line: #ade7c8;
+}
+.development-device {
+  position: relative;
+  border: 1px solid var(--art-line);
+  background: var(--art-bg);
+  box-shadow: 0 12px 28px #0007;
+}
+.browser-art {
+  width: 72%;
+  aspect-ratio: 1.46;
+  border-radius: 7px;
+  overflow: hidden;
+  transform: rotate(-8deg);
+}
+.browser-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 21%;
+  padding-inline: 8%;
+  border-bottom: 1px solid var(--art-edge);
+}
+.browser-toolbar i {
+  width: 4px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--art-line);
+}
+.browser-layout, .desktop-layout {
+  display: grid;
+  gap: 5px;
+  padding: 8%;
+}
+.browser-layout {
+  height: 79%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: 1.5fr 1fr;
+}
+.browser-layout i, .phone-layout i, .desktop-layout i {
+  border: 1px solid var(--art-edge);
+  border-radius: 3px;
+  background: var(--art-glow);
+}
+.browser-layout i:first-child { grid-column: 1 / -1; }
+.phone-art {
+  width: 37%;
+  aspect-ratio: .56;
+  border-radius: 12px;
+  padding: 9% 5% 5%;
+  transform: rotate(11deg);
+}
+.phone-camera {
+  position: absolute;
+  top: 7%;
+  left: 39%;
+  width: 22%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--art-line);
+}
+.phone-layout {
+  display: grid;
+  height: 100%;
+  gap: 4px;
+  grid-template-rows: 1.8fr 1fr 1fr;
+}
+.desktop-art {
+  display: grid;
+  grid-template-columns: 25% 1fr;
+  width: 70%;
+  aspect-ratio: 1.5;
+  margin-bottom: 9%;
+  border-radius: 6px;
+  transform: rotate(-6deg);
+}
+.desktop-art::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 34%;
+  width: 32%;
+  height: 18%;
+  border-bottom: 2px solid var(--art-line);
+  background: linear-gradient(90deg, transparent 42%, var(--art-line) 42% 58%, transparent 58%);
+}
+.desktop-sidebar {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  padding: 28% 20%;
+  border-right: 1px solid var(--art-edge);
+}
+.desktop-sidebar i {
+  height: 2px;
+  border-radius: 2px;
+  background: var(--art-line);
+}
+.desktop-layout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: 1.5fr 1fr;
+}
+.desktop-layout i:first-child { grid-column: 1 / -1; }
+@media (max-width: 560px) {
+  .development-banners { grid-template-columns: minmax(0, 1fr); }
+  .development-banner {
+    display: grid;
+    grid-template-columns: 35% minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .development-banner .story-product-caption {
+    align-content: center;
+    border-top: 0;
+    border-left: 1px solid #ffffff26;
+  }
+  .development-art { aspect-ratio: auto; min-height: 108px; }
+}
