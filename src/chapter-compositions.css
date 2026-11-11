@@ -1,15 +1,23 @@
 /* Distinct reference components replace the repeated enclosing chapter card. */
 .product-composition .story-products {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(10px, 1.5vw, 18px);
-  max-width: 396px;
+  gap: 10px;
+  max-width: 610px;
+}
+.story-product-intro {
+  max-width: 55ch;
+  margin: 0;
+  color: #405970;
+  font-size: clamp(.875rem, 1.3vw, 1rem);
+  line-height: 1.5;
 }
 .story-product {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(12px, 2vw, 22px);
   min-width: 0;
-  overflow: hidden;
+  padding: 8px 12px 8px 8px;
   border: 1px solid #a8c2d8;
   border-radius: 10px;
   background: #f5faff;
@@ -17,21 +25,25 @@
   box-shadow: 0 12px 26px #203b551f;
 }
 .story-product:hover, .story-product:focus-visible { border-color: #285f91; background: #e8f3fb; }
-.story-product img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; }
+.story-product img { display: block; width: clamp(58px, 7vw, 84px); height: auto; border-radius: 5px; }
 .story-product-caption {
   position: relative;
   display: grid;
   align-content: start;
-  gap: 4px;
-  flex: 1;
-  padding: 10px 27px 12px 10px;
-  font-size: .72rem;
-  line-height: 1.25;
+  gap: 5px;
+  padding-right: 22px;
+  font-size: clamp(.81rem, 1.2vw, .95rem);
+  line-height: 1.4;
 }
-.story-product-caption strong { font-size: .84rem; line-height: 1.2; }
-.story-product-arrow { position: absolute; top: 10px; right: 10px; color: #285f91; }
+.story-product-caption strong { font-size: clamp(.93rem, 1.5vw, 1.15rem); line-height: 1.2; }
+.story-product-arrow { position: absolute; top: 0; right: 0; color: #285f91; }
+#protect .story-product img { width: clamp(74px, 10vw, 116px); }
 @media (max-height: 680px) and (min-width: 1000px) {
-  .product-composition .story-products { max-width: 330px; }
+  .story-product img { width: 66px; }
+}
+@media (max-width: 500px) {
+  .story-product { gap: 10px; }
+  .story-product-caption { padding-right: 16px; }
 }
 .copy.chapter-composition{width:min(56%,820px);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
 .copy.chapter-composition:before{display:none}.chapter-composition>.composition-heading{margin-bottom:28px}.chapter-composition .description{max-width:60ch}.chapter-composition h3{font-weight:500}.chapter-composition .kicker{font-size:12px}
