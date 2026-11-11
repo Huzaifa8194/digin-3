@@ -1,9 +1,9 @@
 const chapterLabels = [
   ['home', 'Overview'],
-  ['build', 'Development'],
   ['test', 'Security testing'],
   ['protect', 'Protection'],
   ['watch', 'Monitoring'],
+  ['build', 'Development'],
   ['people', 'Training'],
 ] as const;
 

@@ -31,11 +31,10 @@ html:has(> .home-page) { background: #fff; }
 .home-page #story .entry-points a:hover,
 .home-page #story .entry-points a:focus-visible { box-shadow: inset 3px 0 var(--home-blue); }
 
-.home-page #story #build { --sheet-number: "01"; }
-.home-page #story #test { --sheet-number: "02"; }
-.home-page #story #protect { --sheet-number: "03"; }
-.home-page #story #watch { --sheet-number: "04"; }
-.home-page #story #people { --sheet-number: "05"; }
+.home-page #story #test { --sheet-number: "01"; }
+.home-page #story #protect { --sheet-number: "02"; }
+.home-page #story #watch { --sheet-number: "03"; }
+.home-page #story #people { --sheet-number: "04"; }
 .home-page #story .composition-heading > .kicker::before {
   content: var(--sheet-number, "") / "";
   width: auto;
@@ -296,3 +295,24 @@ html:has(> .home-page) { background: #fff; }
     font-size: clamp(.8rem, 1.5svh, .95rem);
   }
 }
+
+/* Match each chapter's copy to its illustration's position. */
+@media (min-width: 1000px) {
+  .home-page #story :is(#test, #watch) > .chapter-stage { justify-content: flex-start; }
+  .home-page #story :is(#protect, #build, #people) > .chapter-stage { justify-content: flex-end; }
+}
+.chapter-service-links {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin-top: 16px;
+}
+.chapter-service-links a {
+  color: #214f76;
+  font-size: .875rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: underline;
+  text-underline-offset: .22em;
+}
+.chapter-service-links a:hover { color: var(--accent); }
