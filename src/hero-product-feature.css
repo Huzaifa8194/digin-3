@@ -5,7 +5,7 @@
 .home-page:has(.hero-product-feature[data-current-product="darkintel360"]) { --product-glow: #443165; }
 
 .home-page:not(.hero-header-scrolled) > header {
-  background: #101c2c;
+  background: var(--product-glow);
   border-bottom-color: #31465a;
   color: #f4f8fc;
 }
