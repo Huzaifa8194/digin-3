@@ -1,4 +1,30 @@
+.home-page #home {
+  --hero-header-height: 80px;
+}
+
+.home-page #home > .chapter-stage,
+.mobile-story .home-page #home {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 72px);
+  min-height: 100svh;
+  height: auto;
+  padding: calc(var(--hero-header-height) + 12px) 5% 20px;
+}
+
+.home-page #home .copy {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .home-page #home .hero-orbit.hero-product-feature {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  width: 100%;
+  min-height: min(59svh, 560px);
+  margin: 0;
   border-color: #32495d;
   background: radial-gradient(ellipse at 20% 35%, #25455b, #101c2c 68%);
   color: #f4f8fc;
@@ -17,7 +43,7 @@
 
 .hero-feature-poster {
   display: block;
-  width: min(100%, clamp(115px, 26svh, 220px));
+  width: min(100%, clamp(115px, 37svh, 290px));
   height: auto;
   margin-inline: auto;
   border: 1px solid #ffffff38;
@@ -90,4 +116,35 @@
 .hero-product-feature :is(a, button):focus-visible {
   outline: 2px solid #c8e7ff;
   outline-offset: 2px;
+}
+
+@media (max-width: 999px) {
+  .home-page #home { --hero-header-height: 70px; }
+}
+
+@media (max-width: 700px) {
+  .home-page #home { --hero-header-height: var(--mobile-header-height, 112px); }
+
+  .home-page #home > .chapter-stage,
+  .mobile-story .home-page #home {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: space-evenly;
+    justify-items: center;
+    gap: 14px;
+    padding-bottom: 14px;
+  }
+
+  .home-page #home .copy h1 {
+    font-size: clamp(1.9rem, min(9.4vw, 6.3svh), 3.25rem);
+  }
+
+  .home-page #home .copy .kicker { margin-bottom: 9px; }
+  .home-page #home .action-row { margin-top: 12px; gap: 8px 14px; }
+  .home-page #home .action-row .service-cta { width: auto; min-height: 40px; padding: 8px 12px; }
+  .home-page #home .entry-points { margin-top: 12px; }
+  .home-page #home .entry-points a { padding: 6px 8px; }
+  .home-page #home .entry-points span { margin-top: 2px; }
+  .home-page #home .location-note { margin-top: 8px; }
+  .home-page #home .hero-orbit.hero-product-feature { min-height: 0; max-width: 600px; }
+  .hero-feature-poster { width: min(100%, clamp(88px, 21svh, 150px)); }
 }
