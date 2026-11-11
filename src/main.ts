@@ -6,6 +6,7 @@ import './layout-refinement.css';
 import './mobile-story.css';
 import './hero-product-feature.css';
 import './header-navigation.css';
+import './inquiry';
 import { mountMobileStory } from './mobile-story';
 import { mountReferenceComponents } from './reference-components';
 import { mountComponentRefresh } from './component-refresh';
@@ -18,14 +19,6 @@ const touchLayout = matchMedia('(pointer: coarse) and (hover: none)').matches;
 mountHeroProductFeature();
 mountComponentRefresh();
 mountReferenceComponents();
-
-document.querySelector<HTMLFormElement>('#inquiry')!.addEventListener('submit',event=>{
- event.preventDefault();
- const interest=document.querySelector<HTMLSelectElement>('#interest')!.value;
- const brief=document.querySelector<HTMLTextAreaElement>('#brief')!.value.trim();
- if(!brief)return;
- location.href=`mailto:info@digiinn360.com?subject=${encodeURIComponent(interest+' inquiry')}&body=${encodeURIComponent('Hello Digiinn360,\n\nI would like to discuss: '+interest+'\n\n'+brief+'\n\nCompany / name:\nContact details:')}`;
-});
 
 if (touchLayout) {
   mountMobileStory();

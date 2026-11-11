@@ -1,0 +1,76 @@
+.contact-hero {
+  padding-block: clamp(52px, 7vw, 100px);
+  background: radial-gradient(ellipse at 85% 0%, #234b70, #11263e 68%);
+  color: #f4f9ff;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(28px, 6vw, 96px);
+}
+
+.contact-intro-copy .catalog-kicker { color: #b4d8f3; }
+.contact-intro-copy h1 {
+  max-width: none;
+  margin: 0;
+  font-size: clamp(3.2rem, 7.5vw, 8rem);
+  line-height: .94;
+  letter-spacing: -.075em;
+}
+.contact-intro-copy h1 span { color: #a3d4f7; }
+.contact-intro-copy > p:last-of-type {
+  margin: 24px 0 32px;
+  color: #d3e3f1;
+  line-height: 1.6;
+}
+
+.contact-details { display: block; margin: 0; color: inherit; font-size: .95rem; }
+.contact-details > div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 12px;
+  border-top: 1px solid #49627a;
+  padding-block: 14px;
+}
+.contact-details span { color: #b4d8f3; font-size: .85rem; }
+.contact-details a { color: inherit; text-underline-offset: .2em; }
+.contact-details a:hover { color: #a3d4f7; }
+.contact-details p { margin: 0; line-height: 1.5; }
+.contact-details p a { display: block; overflow-wrap: anywhere; }
+
+.contact-inquiry {
+  min-width: 0;
+  padding: clamp(22px, 4vw, 48px);
+  border-radius: 18px;
+  background: #f6faff;
+  color: #142a42;
+}
+.contact-inquiry h2 {
+  margin: 0 0 24px;
+  font-size: clamp(1.75rem, 3vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -.045em;
+}
+.contact-inquiry form { display: grid; gap: 12px; }
+.contact-inquiry #inquiry label { margin: 0; font-size: .92rem; font-weight: 700; }
+.contact-inquiry :is(select, textarea) {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #9bb2c8;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+.contact-inquiry textarea { resize: vertical; }
+.contact-inquiry :focus-visible { outline: 2px solid #285f91; outline-offset: 3px; }
+.contact-inquiry #inquiry .service-cta { margin-top: 6px; }
+.contact-inquiry .form-note { margin: 0; color: #426483; }
+
+@media (max-width: 760px) {
+  .contact-layout { grid-template-columns: minmax(0, 1fr); }
+  .contact-intro-copy h1 { font-size: clamp(3rem, 11vw, 5.2rem); }
+}
