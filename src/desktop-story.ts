@@ -152,34 +152,41 @@ for(let i=0;i<count;i++){
  network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
  const shade=new THREE.Color(0x347eb8).lerp(new THREE.Color(0x7ab6df),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
 }
-// Use the protection shield's outline, with an open edge marking the breach.
-const upperRight = new THREE.Vector2(...shieldOutline[2]);
-const lowerRight = new THREE.Vector2(...shieldOutline[3]);
-const gapStart = upperRight.clone().lerp(lowerRight,.22);
-const gapEnd = upperRight.clone().lerp(lowerRight,.69);
-const gapCenter = gapStart.clone().lerp(gapEnd,.5);
-const openShield = new THREE.Path().moveTo(gapEnd.x,gapEnd.y);
-for(const index of [3,4,5,0,1,2]){
- const [x,y] = shieldOutline[index];
- openShield.lineTo(x,y);
-}
-openShield.lineTo(gapStart.x,gapStart.y);
-const outlineSamples = openShield.getSpacedPoints(Math.floor(count*.75)-1);
-let outlineIndex = 0;
-for(let i=0;i<count;i++){
- const j = i*3;
- if(i%4===0){
-  audit[j] = sphere[j]*.34;
-  audit[j+1] = sphere[j+1]*.34;
-  audit[j+2] = sphere[j+2]*.34;
-  continue;
+// A magnifier isolates an open circuit on a board with two incoming test paths.
+const auditPaths = [
+ new THREE.Path().moveTo(-1.7,-.94).lineTo(-1.7,.92).lineTo(-1.42,1.2)
+  .lineTo(1.47,1.2).lineTo(1.72,.95).lineTo(1.72,-.94)
+  .lineTo(1.47,-1.19).lineTo(-1.45,-1.19).closePath(),
+ new THREE.Path().moveTo(-1.4,.66).lineTo(-1.07,.66).lineTo(-.77,.18).lineTo(.03,.18),
+ new THREE.Path().moveTo(-1.4,-.57).lineTo(-1.07,-.57).lineTo(-.77,.18),
+ new THREE.Path().moveTo(.53,.18).lineTo(1.17,.18).lineTo(1.39,.53),
+ new THREE.Path().moveTo(-1.4,.9).lineTo(-.83,.9).lineTo(-.62,.7),
+ new THREE.Path().moveTo(-1.41,-.87).lineTo(-.7,-.87).lineTo(-.45,-.62),
+ new THREE.Path().absarc(-1.4,.66,.07,0,Math.PI*2,false),
+ new THREE.Path().absarc(-1.4,-.57,.07,0,Math.PI*2,false),
+ new THREE.Path().absarc(1.39,.53,.07,0,Math.PI*2,false),
+ new THREE.Path().absarc(.28,.18,.73,0,Math.PI*2,false),
+ new THREE.Path().moveTo(.79,-.34).lineTo(1.35,-.92).lineTo(1.24,-1.02)
+  .lineTo(.68,-.44).closePath(),
+];
+const auditLengths = auditPaths.map(path => path.getLength());
+const auditLength = auditLengths.reduce((total,length) => total+length,0);
+let auditIndex = 0;
+let pathLengthSoFar = 0;
+auditPaths.forEach((path,pathIndex) => {
+ const start = auditIndex;
+ pathLengthSoFar += auditLengths[pathIndex];
+ const end = Math.round(count*pathLengthSoFar/auditLength);
+ const samples = path.getSpacedPoints(end-start);
+ const isLens = pathIndex >= auditPaths.length-2;
+ for(;auditIndex<end;auditIndex++){
+  const sample = samples[auditIndex-start];
+  const j = auditIndex*3;
+  audit[j] = sample.x+(random()-.5)*.035;
+  audit[j+1] = sample.y+(random()-.5)*.035;
+  audit[j+2] = (isLens?.23:-.08)+(random()-.5)*.16;
  }
- const sample = outlineSamples[outlineIndex++];
- const thickness = (random()-.5)*.09;
- audit[j] = sample.x+thickness;
- audit[j+1] = sample.y+thickness;
- audit[j+2] = (random()-.5)*.48;
-}
+});
 // Sample the wordmark into the final pose so the same particles assemble
 // into both the surrounding ring and its lettering (no text overlay).
 const lettering=document.createElement('canvas');
@@ -217,21 +224,25 @@ scene.add(points);
 const inspection = new THREE.Group();
 const monitoring = new THREE.Group();
 points.add(inspection,monitoring);
-// Four red corners frame the missing edge without filling in the gap.
-const reticleCorners = [-1,1].flatMap(sx => [-1,1].map(sy => {
- const x = sx*.32, y = sy*.49;
- const leg = .14, stroke = .035;
- return new THREE.Shape()
-  .moveTo(x,y).lineTo(x-sx*leg,y).lineTo(x-sx*leg,y-sy*stroke)
-  .lineTo(x-sx*stroke,y-sy*stroke).lineTo(x-sx*stroke,y-sy*leg)
-  .lineTo(x,y-sy*leg).closePath();
-}));
-const reticleMaterial = new THREE.MeshBasicMaterial({
- color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false,
+// The open contacts turn green and a bridge grows across them during retest.
+const faultColor = new THREE.Color(0xd60027);
+const passColor = new THREE.Color(0x08784f);
+const contactMaterial = new THREE.MeshBasicMaterial({
+ color:faultColor,transparent:true,opacity:0,depthWrite:false,
 });
-const reticle = new THREE.Mesh(new THREE.ShapeGeometry(reticleCorners),reticleMaterial);
-reticle.position.set(gapCenter.x,gapCenter.y,.28);
-inspection.add(reticle);
+const contactGeometry = new THREE.PlaneGeometry(.105,.105);
+for(const x of [.03,.53]){
+ const contact = new THREE.Mesh(contactGeometry,contactMaterial);
+ contact.position.set(x,.18,.18);
+ contact.rotation.z = Math.PI/4;
+ inspection.add(contact);
+}
+const bridgeMaterial = new THREE.MeshBasicMaterial({
+ color:passColor,transparent:true,opacity:0,depthWrite:false,
+});
+const bridge = new THREE.Mesh(new THREE.PlaneGeometry(.5,.055),bridgeMaterial);
+bridge.position.set(.03,.18,.17);
+inspection.add(bridge);
 const sweepMaterial=new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
 const sweep=new THREE.Mesh(new THREE.CircleGeometry(1.75,40,0,.45),sweepMaterial);
 monitoring.add(sweep);
@@ -328,7 +339,12 @@ function frame(now:number){
  points.rotation.z=p*-.3*(1-wordmarkWeight);
  const weight=(index:number)=>(chapter===index?1-blend:0)+(next===index?blend:0);
  const auditWeight=weight(2), radarWeight=weight(4);
- reticleMaterial.opacity=auditWeight*.95;
+ const repair = chapter===2 ? smooth(THREE.MathUtils.clamp((local-.17)/.18,0,1)) : 0;
+ contactMaterial.color.copy(faultColor).lerp(passColor,repair);
+ contactMaterial.opacity=auditWeight;
+ bridge.scale.x=repair;
+ bridge.position.x=.03+.25*repair;
+ bridgeMaterial.opacity=auditWeight*repair;
  sweepMaterial.opacity=radarWeight*.22;
  crossMaterial.opacity=radarWeight*.4;
  const sweepAngle=frozen?local*Math.PI*2:time*.35+local*Math.PI*2;
