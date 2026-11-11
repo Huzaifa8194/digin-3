@@ -128,6 +128,31 @@
   outline-offset: 2px;
 }
 
+@media (min-width: 701px) {
+  .home-page #home {
+    background: linear-gradient(to right, #fff 50%, transparent 50%);
+  }
+
+  .home-page #home > .chapter-stage,
+  .mobile-story .home-page #home {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 0;
+    padding-inline: 0;
+  }
+
+  .home-page #home .copy {
+    max-width: none;
+    padding-inline: 5vw clamp(16px, 3vw, 58px);
+  }
+
+  .home-page #home .hero-orbit.hero-product-feature {
+    min-height: min(62svh, 650px);
+  }
+
+  .hero-feature-main { padding-inline: clamp(16px, 2.4vw, 46px); }
+  .hero-feature-poster { width: min(100%, clamp(115px, 38svh, 360px)); }
+}
+
 @media (max-width: 999px) {
   .home-page #home { --hero-header-height: 70px; }
 }
