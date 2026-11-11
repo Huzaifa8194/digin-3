@@ -277,7 +277,22 @@ window.addEventListener('pointermove',event=>{
 const centerPointer=()=>{pointerTarget.x=0;pointerTarget.y=0;};
 document.documentElement.addEventListener('pointerleave',centerPointer);
 window.addEventListener('blur',centerPointer);
-function resize(){const w=innerWidth,h=innerHeight;renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();points.position.set(w<700?.35:1.65,w<700?-1.35:0,0);points.scale.setScalar(w<700?.76:1);}
+const auditProducts = document.querySelector<HTMLElement>('#test .story-products')!;
+let auditCenter = .5;
+let auditSpace = 0;
+function resize() {
+ const width = document.documentElement.clientWidth;
+ const height = innerHeight;
+ renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+ renderer.setSize(width,height,false);
+ camera.aspect = width/height;
+ camera.updateProjectionMatrix();
+
+ const left = Math.max(width*.55,auditProducts.getBoundingClientRect().right+24);
+ const right = width*.95;
+ auditSpace = Math.max(0,(right-left)/width);
+ auditCenter = (left+right)/width-1;
+}
 window.addEventListener('resize',resize); resize();
 let time=0, previous=0, lastProgress=-1;
 function frame(now:number){
@@ -318,11 +333,19 @@ function frame(now:number){
  // Anchor visuals in the outer reading gutters rather than close to the copy.
  const halfWidth=Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*7.4*camera.aspect;
  const side=(index:number)=>Math.sign(shots[index][0]);
- const gutter=(index:number)=>index===2 ? .73 : .5;
+ const weight=(index:number)=>(chapter===index?1-blend:0)+(next===index?blend:0);
+ const auditWeight=weight(2), radarWeight=weight(4);
+ const fitAuditInGutter=document.documentElement.clientWidth>=1000;
+ const gutter=(index:number)=>index===2 && fitAuditInGutter ? auditCenter : .5;
  const x=THREE.MathUtils.lerp(side(chapter)*gutter(chapter),side(next)*gutter(next),blend)*halfWidth;
- const baseScale=(index:number)=>index===2 ? Math.min(.88,halfWidth*.145) : .95;
+ // Leave clearance for the corners when the board tilts.
+ const auditScale=fitAuditInGutter ? Math.min(.88,halfWidth*auditSpace/2.35) : .55;
+ const baseScale=(index:number)=>index===2 ? auditScale : .95;
  const shapeScale=THREE.MathUtils.lerp(baseScale(chapter),baseScale(next),blend);
- points.position.set((isMobile?0:x)+(frozen?0:pointer.x*.1),(isMobile?-1.9:interpolate(1))-(frozen?0:pointer.y*.08),-.4);
+ const pointerInfluence=THREE.MathUtils.lerp(1,.2,auditWeight);
+ const pointerX=frozen ? 0 : pointer.x*pointerInfluence;
+ const pointerY=frozen ? 0 : pointer.y*pointerInfluence;
+ points.position.set((isMobile?0:x)+pointerX*.1,(isMobile?-1.9:interpolate(1))-pointerY*.08,-.4);
  points.scale.setScalar((isMobile?.65:Math.min(shapeScale,halfWidth*.38/1.8))*interpolate(3));
  const particleOpacity=chapter===0?THREE.MathUtils.lerp(.62,.95,blend):.95;
  material.opacity=particleOpacity*(1-.8*Math.sin(blend*Math.PI));
@@ -331,14 +354,12 @@ function frame(now:number){
  const yaw=[.3,-.4,.14,.05,.4,.15,0];
  // One continuous, bounded idle angle. Changing chapters must never switch
  // between accumulated rotation and a near-zero wobble (the previous snap).
- const idleAmplitude=[.12,.035,.08,.035,.015,.08,0];
+ const idleAmplitude=[.12,.035,.02,.035,.015,.08,0];
  const idle=Math.sin(time*.25)*THREE.MathUtils.lerp(idleAmplitude[chapter],idleAmplitude[next],blend);
  const wordmarkWeight=next===6?blend:0;
- points.rotation.y=THREE.MathUtils.lerp(yaw[chapter],yaw[next],blend)+(frozen?0:idle+pointer.x*(1-wordmarkWeight));
- points.rotation.x=(frozen?.1:pointer.y+interpolate(4))*(1-wordmarkWeight);
- points.rotation.z=p*-.3*(1-wordmarkWeight);
- const weight=(index:number)=>(chapter===index?1-blend:0)+(next===index?blend:0);
- const auditWeight=weight(2), radarWeight=weight(4);
+ points.rotation.y=THREE.MathUtils.lerp(yaw[chapter],yaw[next],blend)+(frozen?0:idle+pointerX*(1-wordmarkWeight));
+ points.rotation.x=(frozen?.1:pointerY+interpolate(4))*(1-wordmarkWeight);
+ points.rotation.z=THREE.MathUtils.lerp(p*-.3,-.025,auditWeight)*(1-wordmarkWeight);
  const repair = chapter===2 ? smooth(THREE.MathUtils.clamp((local-.17)/.18,0,1)) : 0;
  contactMaterial.color.copy(faultColor).lerp(passColor,repair);
  contactMaterial.opacity=auditWeight;
