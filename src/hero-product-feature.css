@@ -1,3 +1,22 @@
+.home-page { --product-glow: #25455b; }
+.home-page:has(.hero-product-feature[data-current-product="mobile-pentest"]) { --product-glow: #413468; }
+.home-page:has(.hero-product-feature[data-current-product="sysbastion"]) { --product-glow: #254b42; }
+.home-page:has(.hero-product-feature[data-current-product="aegis-shield"]) { --product-glow: #3c4852; }
+.home-page:has(.hero-product-feature[data-current-product="darkintel360"]) { --product-glow: #443165; }
+
+.home-page:not(.hero-header-scrolled) > header {
+  background: linear-gradient(to right, #f6faff 50%, var(--product-glow) 50%, #101c2c);
+  border-bottom-color: #a8bbcc;
+}
+
+.home-page:not(.hero-header-scrolled) > header .header-contact {
+  background: #f4f8fc;
+  color: #142436;
+  border-color: #a8bbcc;
+}
+
+.home-page:not(.hero-header-scrolled) > header .header-contact:hover { background: #dceaf6; }
+
 .home-page #home {
   --hero-header-height: 80px;
 }
@@ -30,11 +49,6 @@
   color: #f4f8fc;
   box-shadow: 0 20px 48px #14283c32;
 }
-
-.hero-product-feature[data-current-product="mobile-pentest"] { --product-glow: #413468; }
-.hero-product-feature[data-current-product="sysbastion"] { --product-glow: #254b42; }
-.hero-product-feature[data-current-product="aegis-shield"] { --product-glow: #3c4852; }
-.hero-product-feature[data-current-product="darkintel360"] { --product-glow: #443165; }
 
 .home-page #home .hero-product-feature::before { content: none; }
 
@@ -153,8 +167,14 @@
     box-shadow: none;
   }
 
-  .hero-feature-main { padding-inline: clamp(16px, 2.4vw, 46px); }
-  .hero-feature-poster { width: min(100%, clamp(115px, 38svh, 360px)); }
+  .hero-feature-main {
+    grid-template-columns: minmax(0, 55%) minmax(0, 1fr);
+    padding: 20px clamp(16px, 2.4vw, 46px);
+  }
+  .hero-feature-poster {
+    width: min(100%, max(115px, calc((100svh - var(--hero-header-height) - 100px) * .8)));
+  }
+  .home-page:not(.hero-header-scrolled) .chapter-scroll-feedback { left: 5%; right: auto; }
 }
 
 @media (max-width: 999px) {
@@ -163,6 +183,10 @@
 
 @media (max-width: 700px) {
   .home-page #home { --hero-header-height: var(--mobile-header-height, 112px); }
+  .home-page:not(.hero-header-scrolled) > header {
+    background: linear-gradient(115deg, #101c2c, var(--product-glow));
+  }
+  .home-page:not(.hero-header-scrolled) > header .brand { color: #f4f8fc; }
 
   .home-page #home > .chapter-stage,
   .mobile-story .home-page #home {

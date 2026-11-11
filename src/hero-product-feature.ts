@@ -1,4 +1,11 @@
 export function mountHeroProductFeature() {
+  function updateHeader() {
+    document.body.classList.toggle('hero-header-scrolled', window.scrollY > 32);
+  }
+
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
+
   const feature = document.querySelector<HTMLElement>('.hero-product-feature')!;
   const picker = feature.querySelector<HTMLElement>('.hero-feature-picker')!;
   const poster = feature.querySelector<HTMLImageElement>('.hero-feature-poster')!;
