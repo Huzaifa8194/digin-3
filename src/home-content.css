@@ -303,16 +303,36 @@ html:has(> .home-page) { background: #fff; }
 }
 .chapter-service-links {
   display: grid;
-  justify-items: start;
-  gap: 8px;
+  gap: 6px;
   margin-top: 16px;
 }
-.chapter-service-links a {
-  color: #214f76;
-  font-size: .875rem;
+.chapter-service-links p {
+  margin: 0 0 2px;
+  color: #405970;
+  font-size: .8125rem;
   font-weight: 700;
-  line-height: 1.4;
-  text-decoration: underline;
-  text-underline-offset: .22em;
 }
-.chapter-service-links a:hover { color: var(--accent); }
+.chapter-service-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 11px;
+  border: 1px solid #91acc5;
+  border-radius: 8px;
+  background: #edf5fc;
+  color: #163f63;
+  font-size: .875rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+.chapter-service-links a span {
+  flex: none;
+  font-size: 1rem;
+}
+.chapter-service-links a:is(:hover, :focus-visible) {
+  border-color: #214f76;
+  background: #214f76;
+  color: #fff;
+}
