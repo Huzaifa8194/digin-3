@@ -1,8 +1,6 @@
 // DOM adaptations of the user's digiinn360 component project. No new runtime dependencies.
 export function mountComponentRefresh() {
  const icons = {
-  build:'m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18',
-  people:'m2 9 10-6 10 6-10 6L2 9Zm4 3v6c4 4 8 4 12 0v-6m4-3v10',
   connect:'M3 5h18v14H3zM3 5l9 8 9-8',
  };
  for (const [id,path] of Object.entries(icons)) {

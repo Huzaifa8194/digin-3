@@ -190,3 +190,47 @@
 @media (prefers-reduced-motion: reduce) {
   .team-panel, .team-panel[aria-pressed="true"] { transition: none; }
 }
+
+
+.copy.service-composition {
+  display: grid;
+  gap: 24px;
+}
+.copy.service-composition > .composition-heading {
+  margin-bottom: 0;
+}
+.service-summary {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.service-summary > li {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.service-summary h3 {
+  margin: 0 0 4px;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.service-summary p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.55;
+}
+.service-details .service-link {
+  min-height: 44px;
+  margin-top: 6px;
+  font-size: .85rem;
+}
+@media (min-width: 1000px) {
+  .chapter .copy.service-composition {
+    width: min(60%, 820px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(24px, 3vw, 52px);
+  }
+}
