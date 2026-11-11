@@ -6,7 +6,7 @@
 
 .home-page:not(.hero-header-scrolled) > header {
   background: var(--product-glow);
-  border-bottom-color: #31465a;
+  border-bottom-color: transparent;
   color: #f4f8fc;
 }
 
@@ -195,6 +195,10 @@
     border: 0;
     border-radius: 0;
     box-shadow: none;
+    /* Keep the panel's top edge identical to the solid header above it. */
+    background:
+      linear-gradient(to bottom, var(--product-glow) 3%, transparent 38%),
+      radial-gradient(ellipse at 20% 35%, var(--product-glow), #101c2c 68%);
   }
 
   .hero-feature-main {
