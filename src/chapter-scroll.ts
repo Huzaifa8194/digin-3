@@ -59,8 +59,10 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
         stops.push({ y: limit(start), section });
         // Long cards/forms are read in overlapping viewport steps, never skipped.
         const last = Math.min(start + section.offsetHeight - innerHeight + 40, boundary, maxScroll());
-        for (let y = start + innerHeight * .72; y < last; y += innerHeight * .72)
-          stops.push({ y: limit(y), section });
+        if (!section.classList.contains('product-chapter')) {
+          for (let y = start + innerHeight * .72; y < last; y += innerHeight * .72)
+            stops.push({ y: limit(y), section });
+        }
         if (last > start + 80) stops.push({ y: limit(last), section });
       }
     }

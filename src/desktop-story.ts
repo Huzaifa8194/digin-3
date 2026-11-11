@@ -21,7 +21,7 @@ function sizeReadingStages(){
  chapters.forEach(chapter=>{
   const stage=chapter.querySelector<HTMLElement>('.chapter-stage')!;
   const copy=chapter.querySelector<HTMLElement>('.copy')!;
-  const fits=chapter.id!=='connect' && innerWidth>=1000 && innerHeight>=640 && copy.offsetHeight<=innerHeight-150 && !reduced.matches;
+  const fits=chapter.id!=='connect' && !chapter.classList.contains('product-chapter') && innerWidth>=1000 && innerHeight>=640 && copy.offsetHeight<=innerHeight-150 && !reduced.matches;
   chapter.classList.toggle('flow-chapter',!fits);
   stage.style.minHeight=fits?`${innerHeight}px`:'auto';
   chapter.style.minHeight=fits?`${innerHeight*2.35}px`:'auto';

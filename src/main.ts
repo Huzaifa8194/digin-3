@@ -4,6 +4,7 @@ import './reference-components.css';
 import './chapter-compositions.css';
 import './layout-refinement.css';
 import './mobile-story.css';
+import './home-products.css';
 import { mountMobileStory } from './mobile-story';
 import { mountReferenceComponents } from './reference-components';
 import { mountComponentRefresh } from './component-refresh';
