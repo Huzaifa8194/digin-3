@@ -82,7 +82,7 @@
 
 /* Keep the full assessment bento in a compact reading composition. */
 @media(min-width:1000px){
- #test .chapter-composition{width:min(76%,1080px)}
+ #test .chapter-composition{width:min(68%,1080px)}
  #test .chapter-stage{padding-top:95px;padding-bottom:45px;align-items:center}
  #test .composition-heading{margin-bottom:16px}
  #test .composition-heading h2{font-size:clamp(30px,2.8vw,40px);margin-bottom:10px}

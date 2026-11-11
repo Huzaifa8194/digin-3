@@ -106,7 +106,7 @@ const software = new Float32Array(count * 3);
 const buildOffsets = new Float32Array(count * 3);
 const guardOffsets = new Float32Array(count * 3);
 const ring = new Float32Array(count * 3);
-const scan = new Float32Array(count * 3);
+const audit = new Float32Array(count * 3);
 const shield = new Float32Array(count * 3);
 const orbit = new Float32Array(count * 3);
 const network = new Float32Array(count * 3);
@@ -125,10 +125,6 @@ for(let i=0;i<count;i++){
  const radius=1.65+(random()-.5)*.24;
  ring[j]=Math.cos(u)*radius; ring[j+1]=Math.sin(u)*radius; ring[j+2]=(random()-.5)*.22;
  // Each service gets a distinct silhouette, with a shared particle identity.
- // Audit: pull the system into separated octants to inspect its interior.
- scan[j]=sphere[j]*.82+Math.sign(sphere[j])*.25;
- scan[j+1]=sphere[j+1]*.82+Math.sign(sphere[j+1])*.25;
- scan[j+2]=sphere[j+2]*.65+Math.sign(sphere[j+2])*.22;
  // Development: three rectangular modules stack into an application.
  const module=i%3, face=Math.floor(i/3)%6;
  const box=[(random()-.5)*2.5,(random()-.5)*.5,(random()-.5)*1.4];
@@ -156,6 +152,45 @@ for(let i=0;i<count;i++){
  network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
  const shade=new THREE.Color(0x347eb8).lerp(new THREE.Color(0x7ab6df),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
 }
+// Identity badge and mobile app, drawn as dotted outlines on two depth planes.
+const auditPaths = [
+ new THREE.Path().moveTo(-1.78,.85).lineTo(-.32,.85).quadraticCurveTo(-.18,.85,-.18,.71)
+  .lineTo(-.18,-.62).quadraticCurveTo(-.18,-.76,-.32,-.76).lineTo(-1.78,-.76)
+  .quadraticCurveTo(-1.92,-.76,-1.92,-.62).lineTo(-1.92,.71).quadraticCurveTo(-1.92,.85,-1.78,.85),
+ new THREE.Path().absarc(-1.38,.28,.17,0,Math.PI*2,false),
+ new THREE.Path().moveTo(-1.68,-.31).quadraticCurveTo(-1.67,.02,-1.38,.02)
+  .quadraticCurveTo(-1.09,.02,-1.08,-.31).closePath(),
+ new THREE.Path().moveTo(-.91,.43).lineTo(-.45,.43),
+ new THREE.Path().moveTo(-.91,.19).lineTo(-.57,.19),
+ new THREE.Path().moveTo(-.91,-.32).lineTo(-.48,-.32),
+ new THREE.Path().moveTo(.44,1.22).lineTo(1.5,1.22).quadraticCurveTo(1.69,1.22,1.69,1.03)
+  .lineTo(1.69,-1.03).quadraticCurveTo(1.69,-1.22,1.5,-1.22).lineTo(.44,-1.22)
+  .quadraticCurveTo(.25,-1.22,.25,-1.03).lineTo(.25,1.03).quadraticCurveTo(.25,1.22,.44,1.22),
+ new THREE.Path().moveTo(.79,.98).lineTo(1.15,.98),
+ new THREE.Path().moveTo(.56,.57).lineTo(1.39,.57).lineTo(1.39,-.01).lineTo(.56,-.01).closePath(),
+ new THREE.Path().moveTo(.56,-.34).lineTo(1.38,-.34),
+ new THREE.Path().moveTo(.56,-.59).lineTo(1.12,-.59),
+ new THREE.Path().moveTo(.79,-.99).lineTo(1.15,-.99),
+];
+const auditLengths = auditPaths.map(path => path.getLength());
+const totalAuditLength = auditLengths.reduce((total, length) => total + length, 0);
+let particle = 0;
+let lengthSoFar = 0;
+auditPaths.forEach((path, pathIndex) => {
+ const start = particle;
+ lengthSoFar += auditLengths[pathIndex];
+ const end = Math.round(count * lengthSoFar / totalAuditLength);
+ const samples = path.getSpacedPoints(end - start);
+ for (; particle < end; particle++) {
+  const sample = samples[particle - start];
+  const back = particle % 5 === 0;
+  const j = particle * 3;
+  audit[j] = sample.x + (back ? .07 : 0) + (random() - .5) * .025;
+  audit[j + 1] = sample.y + (back ? .05 : 0) + (random() - .5) * .025;
+  audit[j + 2] = back ? -.24 : .06 + (random() - .5) * .035;
+ }
+});
+
 // Sample the wordmark into the final pose so the same particles assemble
 // into both the surrounding ring and its lettering (no text overlay).
 const lettering=document.createElement('canvas');
@@ -194,9 +229,9 @@ const inspection = new THREE.Group();
 const monitoring = new THREE.Group();
 points.add(inspection,monitoring);
 const findings:THREE.Mesh[]=[];
-for(const [x,y,z] of [[.75,.8,.9],[-.65,-.6,.95],[.8,-.7,.7]]){
- const dot=new THREE.Mesh(new THREE.SphereGeometry(.075,8,8),new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,depthWrite:false}));
- dot.position.set(x,y,z); inspection.add(dot); findings.push(dot);
+for(const [x,y] of [[-.49,.19],[1.39,-.01]]){
+ const dot=new THREE.Mesh(new THREE.RingGeometry(.105,.155,4),new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,depthWrite:false}));
+ dot.position.set(x,y,.15); inspection.add(dot); findings.push(dot);
 }
 const sweepMaterial=new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
 const sweep=new THREE.Mesh(new THREE.CircleGeometry(1.75,40,0,.45),sweepMaterial);
@@ -214,13 +249,13 @@ for(const [x,y] of [[.9,.65],[-1.05,.35],[.4,-1.25]]){
 }
 const pointer={x:0,y:0};
 const pointerTarget={x:0,y:0};
-const poses=[scattered,software,scan,shield,orbit,network,ring];
+const poses=[scattered,software,audit,shield,orbit,network,ring];
 const smooth=(value:number)=>value*value*(3-2*value);
 // Per-chapter art direction: x, y, depth, scale, tilt. Alternate the visual
 // across the reading plane, then approach the camera between chapters.
 const shots = [
  [1.8,0,0,1,0],[-1.85,-.1,-.6,.85,-.25],
- [1.9,.1,.6,1.08,.25],[-1.8,-.2,-.5,.92,-.15],
+ [1.9,.1,.6,1.08,.08],[-1.8,-.2,-.5,.92,-.15],
  [1.7,.1,0,1.04,.05],[-1.7,0,-.3,.95,-.2],
  [2.1,0,.4,1.12,.5]
 ];
@@ -273,9 +308,9 @@ function frame(now:number){
  // Anchor visuals in the outer reading gutters rather than close to the copy.
  const halfWidth=Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*7.4*camera.aspect;
  const side=(index:number)=>Math.sign(shots[index][0]);
- const gutter=(_index:number)=>.5;
+ const gutter=(index:number)=>index===2 ? .73 : .5;
  const x=THREE.MathUtils.lerp(side(chapter)*gutter(chapter),side(next)*gutter(next),blend)*halfWidth;
- const baseScale=(index:number)=>index===2?.75:.95;
+ const baseScale=(index:number)=>index===2 ? Math.min(.75,halfWidth*.13) : .95;
  const shapeScale=THREE.MathUtils.lerp(baseScale(chapter),baseScale(next),blend);
  points.position.set((isMobile?0:x)+(frozen?0:pointer.x*.1),(isMobile?-1.9:interpolate(1))-(frozen?0:pointer.y*.08),-.4);
  points.scale.setScalar((isMobile?.65:Math.min(shapeScale,halfWidth*.38/1.8))*interpolate(3));
@@ -283,7 +318,7 @@ function frame(now:number){
  material.opacity=particleOpacity*(1-.8*Math.sin(blend*Math.PI));
  inspection.visible=monitoring.visible=true;
  // Keep application layers and the protective boundary readable from the front.
- const yaw=[.3,-.4,.35,.05,.4,.15,0];
+ const yaw=[.3,-.4,.14,.05,.4,.15,0];
  // One continuous, bounded idle angle. Changing chapters must never switch
  // between accumulated rotation and a near-zero wobble (the previous snap).
  const idleAmplitude=[.12,.035,.08,.035,.015,.08,0];
