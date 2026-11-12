@@ -278,14 +278,17 @@
 }
 
 .hero-schematic-grid {
+  --grid-spacing: 48px;
   position: absolute;
   inset: 20% -30% -10%;
   transform: perspective(440px) rotateX(42deg);
   background-image:
     linear-gradient(#99b8cd28 1px, transparent 1px),
     linear-gradient(90deg, #99b8cd28 1px, transparent 1px);
-  background-size: 48px 48px;
+  background-size: var(--grid-spacing) var(--grid-spacing);
   mask-image: radial-gradient(ellipse at 50% 57%, #000 6%, #000b 34%, transparent 67%);
+  animation: hero-grid-flow 3.8s linear infinite;
+  animation-play-state: paused;
 }
 
 .hero-schematic-track {
@@ -324,17 +327,22 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, currentColor 50%, transparent) 0 0 / 30% 100% no-repeat;
   mask-image: linear-gradient(90deg, transparent, #000 15% 85%, transparent);
-  animation: hero-signal-pass 6s linear infinite;
+  animation: hero-signal-pass 4s linear infinite;
   animation-play-state: paused;
 }
 
-.hero-schematic-track + .hero-schematic-track::after { animation-delay: -3s; }
+.hero-schematic-track + .hero-schematic-track::after { animation-delay: -2s; }
+#home[data-moving] .hero-schematic-grid,
 #home[data-moving] .hero-schematic-track::after { animation-play-state: running; }
 
+@keyframes hero-grid-flow {
+  to { background-position: 0 var(--grid-spacing), 0 0; }
+}
+
 @keyframes hero-signal-pass {
-  from { transform: translateX(-28%); opacity: 0; }
-  25%, 75% { opacity: .8; }
-  to { transform: translateX(100%); opacity: 0; }
+  from { background-position: -45% 0; opacity: 0; }
+  22%, 78% { opacity: 1; }
+  to { background-position: 145% 0; opacity: 0; }
 }
 
 .home-page #home :is(.hero-intro, .hero-product-feature) { position: relative; }
@@ -342,12 +350,13 @@
 .mobile-story .home-page #home > .hero-orbit { margin: 12px auto 0; }
 
 @media (max-width: 700px) {
-  .hero-schematic-grid { background-size: 36px 36px; }
+  .hero-schematic-grid { --grid-spacing: 36px; }
   .hero-schematic-track { top: 45%; left: 3%; width: 20%; }
   .hero-schematic-track + .hero-schematic-track { inset: 64% 3% auto auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-schematic-grid { animation: none; }
   .hero-schematic-track { transition: none; }
   .hero-schematic-track::after { animation: none; opacity: .35; }
 }
