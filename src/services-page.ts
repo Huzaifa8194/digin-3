@@ -1,3 +1,4 @@
+import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 import './standalone-page';
 import './services-page.css';
 
@@ -95,6 +96,75 @@ function drawDiagram(ctx: CanvasRenderingContext2D, diagram: number, time = 0) {
   ctx.restore();
 }
 
+// SimplexNoise is reused directly from the installed MIT-licensed Three.js package.
+const noise = new SimplexNoise();
+const strands = Array.from({ length: 66 }, (_, row) => {
+  const latitude = (row / 65 - .5) * Math.PI;
+  return Array.from({ length: 137 }, (_, column) => {
+    const longitude = column / 136 * tau;
+    const x = Math.cos(latitude) * Math.cos(longitude);
+    const y = Math.sin(latitude);
+    const z = Math.cos(latitude) * Math.sin(longitude);
+    return { x, y, z, texture: noise.noise3d(x * 2.2, y * 2.2, z * 2.2) };
+  });
+});
+
+function drawSculpture(
+  ctx: CanvasRenderingContext2D, diagram: number, time = 0, pointerX = 0, pointerY = 0,
+) {
+  const { width, height } = ctx.canvas;
+  ctx.clearRect(0, 0, width, height);
+  const scale = Math.min(width * .39, height * .37);
+  const centerX = width * .52;
+  const centerY = height * .50;
+  const angle = time * .00019 + diagram * .83 + pointerX * .34;
+  const pitch = .46 + pointerY * .23;
+  const cosAngle = Math.cos(angle);
+  const sinAngle = Math.sin(angle);
+  const cosPitch = Math.cos(pitch);
+  const sinPitch = Math.sin(pitch);
+  const glow = ctx.createRadialGradient(centerX, centerY, scale * .12, centerX, centerY, scale * 1.48);
+  glow.addColorStop(0, '#82233375');
+  glow.addColorStop(.63, '#39142550');
+  glow.addColorStop(1, '#11152200');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, width, height);
+
+  const bands = Array.from({ length: 9 }, () => new Path2D());
+  const palette = ['#532b44', '#77334d', '#a7495e', '#c94e61', '#f4646e', '#fd867c', '#ffab91', '#ffe1c7', '#fff3e0'];
+  strands.forEach((strand, row) => {
+    let lastX = 0;
+    let lastY = 0;
+    strand.forEach(({ x, y, z, texture }, column) => {
+      const ripple = Math.sin(y * (9 + diagram) + z * 4 - time * .0008);
+      const radius = .89 + texture * .22 + ripple * .135;
+      const spinX = (x * cosAngle - z * sinAngle) * radius;
+      const spinZ = (x * sinAngle + z * cosAngle) * radius;
+      const spinY = y * radius;
+      const depth = spinZ * cosPitch + spinY * sinPitch;
+      const screenY = spinY * cosPitch - spinZ * sinPitch;
+      const perspective = 2.8 / (2.8 - depth);
+      const px = centerX + (spinX - screenY * .18) * scale * perspective;
+      const py = centerY + screenY * scale * perspective;
+      const tone = Math.max(0, Math.min(8, Math.floor((depth + .9) * 4.2 - x * .85 + 1)));
+      if (column && (row % 3 !== 0 || depth > -.4)) {
+        bands[tone].moveTo(lastX, lastY);
+        bands[tone].lineTo(px, py);
+      }
+      lastX = px;
+      lastY = py;
+    });
+  });
+  bands.forEach((band, index) => {
+    ctx.strokeStyle = palette[index];
+    ctx.globalAlpha = .38 + index * .073;
+    ctx.lineWidth = Math.max(.65, scale / 225);
+    ctx.stroke(band);
+  });
+  ctx.globalAlpha = 1;
+}
+
+
 function fitCanvas(canvas: HTMLCanvasElement) {
   const scale = Math.min(devicePixelRatio || 1, 2);
   const { width, height } = canvas.getBoundingClientRect();
@@ -114,28 +184,47 @@ if (hero && heroContext) {
   let selection = 0;
   let frame = 0;
   let visible = false;
+  let pointerX = 0;
+  let pointerY = 0;
+  let easedX = 0;
+  let easedY = 0;
+  const stage = hero.closest('.services-hero');
+
+  stage?.addEventListener('pointermove', event => {
+    const pointer = event as PointerEvent;
+    if (pointer.pointerType !== 'mouse') return;
+    const bounds = stage.getBoundingClientRect();
+    pointerX = (pointer.clientX - bounds.left) / bounds.width * 2 - 1;
+    pointerY = (pointer.clientY - bounds.top) / bounds.height * 2 - 1;
+  });
+  stage?.addEventListener('pointerleave', () => {
+    pointerX = 0;
+    pointerY = 0;
+  });
 
   function select(index: number) {
     selection = index;
     previewLinks.forEach((link, linkIndex) => link.classList.toggle('is-previewed', linkIndex === index));
     if (label) label.textContent = `0${index + 1} / ${diagrams[index].label}`;
-    drawDiagram(heroContext!, selection);
+    drawSculpture(heroContext!, selection);
   }
 
   function animate(time: number) {
-    drawDiagram(heroContext!, selection, time);
+    easedX += (pointerX - easedX) * .045;
+    easedY += (pointerY - easedY) * .045;
+    drawSculpture(heroContext!, selection, time, easedX, easedY);
     frame = requestAnimationFrame(animate);
   }
 
   function syncMotion() {
     cancelAnimationFrame(frame);
     if (visible && !reducedMotion.matches) frame = requestAnimationFrame(animate);
-    else drawDiagram(heroContext!, selection);
+    else drawSculpture(heroContext!, selection);
   }
 
   new ResizeObserver(() => {
     fitCanvas(hero);
-    drawDiagram(heroContext, selection);
+    drawSculpture(heroContext, selection);
   }).observe(hero);
   new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
