@@ -27,30 +27,30 @@ if (touchLayout) {
   void import('./desktop-story');
 }
 
-const productVideos = document.querySelectorAll<HTMLVideoElement>('.story-product-video video');
+const loopingVideos = document.querySelectorAll<HTMLVideoElement>('.story-product-video video, .service-loop video');
 const reduceVideoMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const visibleProductVideos = new Set<HTMLVideoElement>();
+const visibleLoopingVideos = new Set<HTMLVideoElement>();
 
-function updateProductVideo(video: HTMLVideoElement) {
-  if (visibleProductVideos.has(video) && !document.hidden && !reduceVideoMotion.matches) {
+function updateLoopingVideo(video: HTMLVideoElement) {
+  if (visibleLoopingVideos.has(video) && !document.hidden && !reduceVideoMotion.matches) {
     void video.play().catch(() => { /* Keep the poster if autoplay is blocked. */ });
   } else {
     video.pause();
   }
 }
 
-const productVideoObserver = new IntersectionObserver(entries => {
+const loopingVideoObserver = new IntersectionObserver(entries => {
   for (const entry of entries) {
     const video = entry.target as HTMLVideoElement;
     if (entry.intersectionRatio >= 0.3) {
-      visibleProductVideos.add(video);
+      visibleLoopingVideos.add(video);
     } else {
-      visibleProductVideos.delete(video);
+      visibleLoopingVideos.delete(video);
     }
-    updateProductVideo(video);
+    updateLoopingVideo(video);
   }
 }, { threshold: 0.3 });
 
-productVideos.forEach(video => productVideoObserver.observe(video));
-reduceVideoMotion.addEventListener('change', () => productVideos.forEach(updateProductVideo));
-document.addEventListener('visibilitychange', () => productVideos.forEach(updateProductVideo));
+loopingVideos.forEach(video => loopingVideoObserver.observe(video));
+reduceVideoMotion.addEventListener('change', () => loopingVideos.forEach(updateLoopingVideo));
+document.addEventListener('visibilitychange', () => loopingVideos.forEach(updateLoopingVideo));
