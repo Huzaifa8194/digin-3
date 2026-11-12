@@ -25,6 +25,23 @@ const links = [...gallery.querySelectorAll<HTMLAnchorElement>('.catalog-index a'
 const cards = [...stage.querySelectorAll<HTMLImageElement>('.gallery-deck-card')];
 const stageName = stage.querySelector<HTMLElement>('.gallery-stage-name')!;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const trailer = document.querySelector<HTMLVideoElement>('.exhibit-trailer');
+if (trailer) {
+  let trailerVisible = false;
+  const updateTrailer = () => {
+    if (trailerVisible && !document.hidden && !reducedMotion.matches) {
+      void trailer.play().catch(() => { /* The poster stays visible if autoplay is blocked. */ });
+    } else {
+      trailer.pause();
+    }
+  };
+  new IntersectionObserver(([entry]) => {
+    trailerVisible = entry.intersectionRatio >= 0.25;
+    updateTrailer();
+  }, { threshold: 0.25 }).observe(trailer);
+  reducedMotion.addEventListener('change', updateTrailer);
+  document.addEventListener('visibilitychange', updateTrailer);
+}
 let active = 0;
 let visible = false;
 let previewing = false;
