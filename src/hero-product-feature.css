@@ -334,3 +334,19 @@
 @media (prefers-reduced-motion: reduce) {
   #home .hero-atmosphere :is(.hero-atmosphere-light, .hero-atmosphere-orbits) { animation: none; }
 }
+
+.hero-atmosphere-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .36;
+  filter: saturate(.72);
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(ellipse at 50% 61%, #000 18%, #000c 55%, transparent 91%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-atmosphere-video { display: none; }
+}

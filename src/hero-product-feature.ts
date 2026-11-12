@@ -10,7 +10,8 @@ export function mountHeroProductFeature() {
   new ResizeObserver(updateHeader).observe(hero);
   updateHeader();
 
-  const feature = document.querySelector<HTMLElement>('.hero-product-feature')!;
+  const feature = hero.querySelector<HTMLElement>('.hero-product-feature')!;
+  const background = hero.querySelector<HTMLVideoElement>('.hero-atmosphere-video')!;
   const picker = feature.querySelector<HTMLElement>('.hero-feature-picker')!;
   const cards = [...feature.querySelectorAll<HTMLElement>('.hero-product-card')];
   const name = feature.querySelector<HTMLElement>('#hero-feature-name')!;
@@ -51,7 +52,14 @@ export function mountHeroProductFeature() {
     const hovered = canHover.matches && (picker.matches(':hover') || link.matches(':hover'));
     const rotating = playing && inView && !document.hidden && !reading && !hovered;
     status.setAttribute('aria-live', rotating ? 'off' : 'polite');
-    hero.toggleAttribute('data-moving', playing && inView && !document.hidden);
+    const motionActive = playing && !reducedMotion.matches && inView && !document.hidden;
+    hero.toggleAttribute('data-moving', motionActive);
+    if (motionActive) {
+      if (!background.hasAttribute('src')) background.src = background.dataset.src!;
+      if (background.paused) void background.play().catch(() => {});
+    } else {
+      background.pause();
+    }
     if (rotating) {
       timer = window.setTimeout(() => {
         showProduct((selected + 1) % buttons.length);
