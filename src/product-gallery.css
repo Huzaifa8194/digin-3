@@ -326,8 +326,8 @@
 
 }
 
-/* Keep the product index close to the gallery. */
 .product-gallery .gallery-intro {
+  min-height: 100vh;
   display: grid;
   grid-template-rows: 1fr auto;
 }
