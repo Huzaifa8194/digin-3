@@ -6,7 +6,7 @@
   background: var(--gallery-paper);
 }
 
-.product-gallery main { color: var(--gallery-ink); }
+.product-gallery main { color: var(--gallery-ink); background: var(--gallery-paper); }
 .gallery-intro { background: #18232c; color: #f9f8f0; }
 .gallery-intro-copy { padding-block: clamp(45px, 7vw, 102px) clamp(30px, 4vw, 64px); }
 .gallery-intro .catalog-kicker { color: #adcedc; }
@@ -36,6 +36,7 @@
 }
 .exhibit-heading .catalog-kicker { margin-bottom: 9px; }
 .product-gallery .exhibit-heading h2 {
+  color: var(--gallery-ink);
   max-width: 25ch;
   margin: 0;
   font-size: clamp(2rem, 5.2vw, 4.9rem);
@@ -265,3 +266,82 @@
 
 .gallery-stage[data-paused] .gallery-orbit::after { animation-play-state: paused; }
 #product-collection { scroll-margin-top: 32px; }
+
+/* Each exhibit frames the existing website and poster as a matched pair. */
+.product-gallery .exhibits {
+  width: min(90%, 1320px);
+}
+.product-gallery .product-exhibit {
+  --exhibit-accent: #c9ed91;
+  --exhibit-tint: #212d1c;
+  --exhibit-dark: #10141a;
+  padding-block: clamp(48px, 7vw, 92px);
+}
+.product-gallery #sysbastion { --exhibit-accent: #b8f2ce; --exhibit-tint: #142e29; }
+.product-gallery #aegis-shield { --exhibit-accent: #b8dcff; --exhibit-tint: #142945; }
+.product-gallery #mobile-pentest { --exhibit-accent: #f5cfab; --exhibit-tint: #34252d; }
+.product-gallery #darkintel360 { --exhibit-accent: #dbc4ff; --exhibit-tint: #281b40; }
+
+.product-gallery .exhibit-heading {
+  align-items: flex-end;
+  gap: 16px 24px;
+  margin-bottom: clamp(20px, 3vw, 34px);
+}
+.product-gallery .exhibit-heading .catalog-kicker { color: var(--gallery-accent); }
+.product-gallery .exhibit-summary { color: #60535b; line-height: 1.55; }
+.product-gallery .exhibit-heading .catalog-button {
+  min-height: 48px;
+  border-radius: 0;
+}
+
+.product-gallery .exhibit-media {
+  grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(12px, 2.4vw, 32px);
+  padding: clamp(14px, 3.7vw, 50px);
+  background: radial-gradient(ellipse at 76% 20%, var(--exhibit-tint), var(--exhibit-dark) 74%);
+  border: 1px solid color-mix(in srgb, var(--exhibit-accent) 20%, var(--exhibit-dark));
+  overflow: clip;
+}
+.product-gallery .exhibit-media figure {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.product-gallery .exhibit-media figcaption {
+  margin-top: 12px;
+  color: var(--exhibit-accent);
+  letter-spacing: .06em;
+}
+.product-gallery .preview-bar {
+  min-height: 36px;
+  background: color-mix(in srgb, var(--exhibit-accent) 12%, var(--exhibit-dark));
+  color: #f7f0f1;
+  border: 1px solid #ffffff26;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+}
+.product-gallery .preview-dots { color: var(--exhibit-accent); }
+.product-gallery .preview-window {
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 16px 32px #0006;
+}
+.product-gallery .exhibit-poster a {
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 16px 32px #0006;
+}
+.product-gallery .exhibit-media a { transition: box-shadow 220ms ease; }
+.product-gallery :is(.preview-hit, .exhibit-poster a):hover {
+  box-shadow: 0 0 0 2px var(--exhibit-accent);
+}
+.product-gallery .exhibit-media a:focus-visible { outline-color: var(--exhibit-accent); }
+.product-gallery .preview-hit { bottom: 28px; border-radius: 8px; }
+
+@media (max-width: 620px) {
+  .product-gallery .exhibit-heading { align-items: flex-start; }
+  .product-gallery .exhibit-media { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .product-gallery .exhibit-poster { width: min(72%, 290px); justify-self: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-gallery .exhibit-media a { transition: none; }
+}
