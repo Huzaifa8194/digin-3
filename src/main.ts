@@ -6,6 +6,7 @@ import './layout-refinement.css';
 import './mobile-story.css';
 import './hero-product-feature.css';
 import './header-navigation.css';
+import './home-palette.css';
 import './inquiry';
 import { mountMobileStory } from './mobile-story';
 import { mountReferenceComponents } from './reference-components';
