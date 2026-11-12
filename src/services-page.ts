@@ -1,6 +1,7 @@
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 import './standalone-page';
 import './services-page.css';
+import { drawServiceArtwork } from './service-artwork';
 
 const diagrams = [
   { label: 'Perimeter' },
@@ -163,7 +164,7 @@ let lastDraw = 0;
 
 function drawChapter(canvas: HTMLCanvasElement, time = 0) {
   const artwork = chapterArtwork.get(canvas);
-  if (artwork) drawSculpture(artwork.context, artwork.diagram, time);
+  if (artwork) drawServiceArtwork(artwork.context, artwork.diagram, time);
 }
 
 function animateChapters(time: number) {

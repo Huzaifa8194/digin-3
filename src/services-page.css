@@ -348,3 +348,58 @@
 @media (prefers-reduced-motion: reduce) {
   .services-route > header { transition: none; }
 }
+
+/* The chapter artwork is staged like an editorial image rather than a thumbnail. */
+.services-chapter {
+  --art-field: #271525;
+  --art-edge: #10111f;
+  --art-glint: #f68a9a;
+  padding-block: clamp(28px, 5vw, 68px);
+}
+#grc { --art-field: #25254d; --art-edge: #101226; --art-glint: #bcb6ff; }
+#managed-security { --art-field: #143b3b; --art-edge: #081d27; --art-glint: #82e8ce; }
+#infrastructure-security { --art-field: #183962; --art-edge: #0b182b; --art-glint: #9dceff; }
+#data-application-security { --art-field: #40273a; --art-edge: #1e1425; --art-glint: #ffca94; }
+.services-chapter-top { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); }
+.services-chapter-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .68fr);
+  align-items: end;
+  column-gap: clamp(22px, 4vw, 60px);
+}
+.services-chapter-copy .services-label { grid-column: 1 / -1; }
+.services-chapter h3 {
+  font-size: clamp(2.55rem, 5.7vw, 6.4rem);
+  letter-spacing: -.077em;
+  margin: 12px 0 0;
+}
+.services-chapter-copy > p:last-child { padding-bottom: 4px; }
+.services-chapter-art {
+  isolation: isolate;
+  position: relative;
+  border: 0;
+  background: radial-gradient(ellipse at 51% 48%, var(--art-field), var(--art-edge) 73%);
+}
+.services-chapter-art::before {
+  content: "";
+  position: absolute;
+  inset: 6%;
+  background: repeating-linear-gradient(90deg, var(--art-glint) 0 1px, transparent 1px 36px),
+              repeating-linear-gradient(0deg, var(--art-glint) 0 1px, transparent 1px 36px);
+  opacity: .13;
+  mask-image: radial-gradient(ellipse, #000, transparent 76%);
+}
+.services-chapter-art canvas {
+  position: relative;
+  aspect-ratio: 2.25;
+}
+:where(#grc) .services-chapter-art canvas { aspect-ratio: 2.48; }
+:where(#managed-security) .services-chapter-art canvas { aspect-ratio: 2.6; }
+:where(#infrastructure-security) .services-chapter-art canvas { aspect-ratio: 2.1; }
+:where(#data-application-security) .services-chapter-art canvas { aspect-ratio: 2.32; }
+.services-chapter h4 { margin-top: clamp(22px, 4vw, 44px); }
+@media (max-width: 700px) {
+  .services-chapter-copy { grid-template-columns: minmax(0, 1fr); row-gap: 12px; }
+  .services-chapter h3 { margin: 0; }
+  .services-chapter[id] .services-chapter-art canvas { aspect-ratio: 1.58; }
+}
