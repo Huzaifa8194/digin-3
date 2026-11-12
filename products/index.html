@@ -7,13 +7,27 @@
 </head>
 <body id="top" class="standalone-page catalog-page product-gallery">
 <a class="skip" href="#story">Skip to content</a>
-<header><a class="brand" href="/" aria-label="Digiinn360 home"><img class="brand-logo" src="/brand/digiinn360.png" width="764" height="228" alt=""></a><nav class="tube-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/services/">Services</a><a href="/products/" aria-current="page">Our Products</a><a href="/about/">About</a></nav><div class="header-actions"><a class="header-contact" href="/contact/">Let’s talk</a></div></header>
+<header><a class="brand" href="/" aria-label="Digiinn360 home"><img class="brand-logo" src="/brand/digiinn360.png" width="764" height="228" alt=""><img class="brand-logo brand-logo-light" src="/brand/digiinn360-light.png" width="764" height="228" alt=""></a><nav class="tube-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/services/">Services</a><a href="/products/" aria-current="page">Our Products</a><a href="/about/">About</a></nav><div class="header-actions"><a class="header-contact" href="/contact/">Let’s talk</a></div></header>
 <main id="story">
 <section class="gallery-intro" aria-labelledby="catalog-title">
-  <div class="catalog-shell gallery-intro-copy">
-    <p class="catalog-kicker">DigiInn360 / Product gallery</p>
-    <h1 id="catalog-title">Tools to test,<br>defend, and investigate<span>.</span></h1>
-    <p>Explore the collection through website previews and posters drawn from each product’s hero.</p>
+  <div class="catalog-shell gallery-hero-layout">
+    <div class="gallery-intro-copy">
+      <p class="catalog-kicker">DigiInn360 / Product gallery</p>
+      <h1 id="catalog-title">Tools to test,<br><em>defend, and<br>investigate.</em></h1>
+      <p>Explore five cybersecurity products through their websites and original product artwork.</p>
+      <a class="gallery-hero-cta" href="#product-collection">Explore the collection <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="gallery-stage" aria-hidden="true">
+      <div class="gallery-orbit"></div>
+      <div class="gallery-deck">
+        <img class="gallery-deck-card" data-position="0" data-name="ShadowAD" src="/product-posters/shadowad.svg" alt="" width="480" height="600">
+        <img class="gallery-deck-card" data-position="1" data-name="SysBastion" src="/product-posters/sysbastion.svg" alt="" width="480" height="600">
+        <img class="gallery-deck-card" data-position="2" data-name="AEGIS-SHIELD" src="/product-posters/aegis-shield.svg" alt="" width="480" height="600">
+        <img class="gallery-deck-card" data-position="3" data-name="Mobile App Penetration Testing" src="/product-posters/mobile-pentest.svg" alt="" width="480" height="600">
+        <img class="gallery-deck-card" data-position="4" data-name="DarkIntel360" src="/product-posters/darkintel360.svg" alt="" width="480" height="600">
+      </div>
+      <p class="gallery-stage-name">ShadowAD</p>
+    </div>
   </div>
   <nav class="catalog-shell catalog-index" aria-label="Product gallery index">
     <a href="#shadowad"><span>01</span>ShadowAD</a>
@@ -23,7 +37,7 @@
     <a href="#darkintel360"><span>05</span>DarkIntel360</a>
   </nav>
 </section>
-<section class="catalog-shell exhibits" aria-label="Cybersecurity products">
+<section id="product-collection" class="catalog-shell exhibits" aria-label="Cybersecurity products">
 <article class="product-exhibit" id="shadowad" aria-labelledby="shadowad-title">
   <div class="exhibit-heading">
     <div><p class="catalog-kicker">Hybrid identity / 01</p><h2 id="shadowad-title">ShadowAD</h2><p class="exhibit-summary">Active Directory and Microsoft Entra ID penetration testing.</p></div>
