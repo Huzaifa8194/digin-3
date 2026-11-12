@@ -80,3 +80,19 @@ html:has(> .home-page) { background: #fff; }
 }
 .home-page .hero-orbit .orbit-node[aria-pressed="true"] .orbit-node-icon { background: var(--surface); }
 .home-page .hero-orbit #orbit-motion { background: var(--surface); }
+
+.home-page #story .story-product-intro,
+.home-page .footer-directory h3 { color: var(--muted); }
+
+.home-page #story .story-product {
+  background: #1d1720;
+  border-color: #574047;
+  color: #fff5f3;
+}
+.home-page #story .story-product:is(:hover, :focus-visible) {
+  background: #35212a;
+  border-color: var(--home-coral);
+}
+.home-page #story .story-product-caption :is(strong, h3) { color: #fff5f3; }
+.home-page #story .story-product-caption > :is(p, span:not(.story-product-arrow)) { color: #e4dce3; }
+.home-page #story .story-product-arrow { color: var(--home-coral); }
