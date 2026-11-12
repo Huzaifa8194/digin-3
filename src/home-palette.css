@@ -17,7 +17,7 @@
 html:has(> .home-page) { background: #fff; }
 
 .home-page #home {
-  background: radial-gradient(ellipse at 82% 50%, #1c1522, var(--hero-navy) 62%);
+  background: radial-gradient(ellipse at 82% 50%, #271827, var(--hero-navy) 62%);
 }
 
 .home-page #home :is(.hero-eyebrow, .hero-schematic-track) { color: var(--home-coral); }
