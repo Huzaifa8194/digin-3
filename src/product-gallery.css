@@ -327,7 +327,8 @@
 }
 
 .product-gallery .gallery-intro {
-  min-height: 100vh;
+  min-height: calc(100vh - var(--catalog-header-offset));
+  min-height: calc(100dvh - var(--catalog-header-offset));
   display: grid;
   grid-template-rows: 1fr auto;
 }

@@ -1,4 +1,5 @@
 .catalog-page {
+  --catalog-header-offset: 80px;
   --catalog-navy: #11263e;
   --catalog-ink: #142a42;
   --catalog-blue: #285f91;
@@ -9,7 +10,7 @@
   --ease-page: cubic-bezier(.4, 0, .2, 1);
   background: var(--catalog-paper);
 }
-.catalog-page main { padding-top: 80px; color: var(--catalog-ink); }
+.catalog-page main { padding-top: var(--catalog-header-offset); color: var(--catalog-ink); }
 .catalog-shell { width: min(88%, 1280px); margin-inline: auto; }
 .catalog-figure figcaption, .catalog-index a span, .workflow-number {
   font: 650 .72rem/1.45 ui-monospace, Consolas, monospace;
@@ -278,10 +279,10 @@
 @keyframes catalog-detail-in { from { opacity: .4; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
 
 @media (max-width: 999px) {
-  .catalog-page main { padding-top: 70px; }
+  .catalog-page { --catalog-header-offset: 70px; }
 }
 @media (max-width: 700px) {
-  .catalog-page main { padding-top: 112px; }
+  .catalog-page { --catalog-header-offset: 112px; }
   .catalog-hero-layout, .catalog-page .service-category, .catalog-project { grid-template-columns: minmax(0, 1fr); }
   .catalog-hero-layout { padding-block: 40px 24px; gap: 24px; }
   .catalog-hero h1, .catalog-hero:has(.product-figure) h1 { font-size: clamp(2.65rem, 9vw, 4.2rem); }
