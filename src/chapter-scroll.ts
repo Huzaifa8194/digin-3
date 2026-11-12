@@ -4,12 +4,20 @@ import { gsap } from 'gsap';
 import { ScrollIntent, normalizeWheel, transitionDuration } from './scroll-policy';
 
 type Stop = { y: number; section: HTMLElement };
-type Options = { reduced: MediaQueryList; onUpdate: () => void };
+type Options = {
+  reduced: MediaQueryList;
+  onUpdate: () => void;
+  mobile?: {
+    chapters: readonly HTMLElement[];
+    end: HTMLElement;
+    headerHeight: () => number;
+  };
+};
 
 /** One animation owner for wheel, touch, keys, links and browser navigation. */
-export function createChapterScroll({ reduced, onUpdate }: Options) {
+export function createChapterScroll({ reduced, onUpdate, mobile }: Options) {
   const intent = new ScrollIntent();
-  const feedback = mountScrollFeedback();
+  const feedback = mobile ? undefined : mountScrollFeedback();
   let transitionProgress = 0;
   let stops: Stop[] = [];
   let active: gsap.core.Tween | null = null;
@@ -38,11 +46,40 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   function updateFeedback() {
     setMode();
     const index = active ? destination : nearest();
-    feedback.update(stops[index]?.section,index,stops.length,active ? transitionProgress : intent.progress,active !== null,enabled() && inGuidedStory());
+    feedback?.update(stops[index]?.section,index,stops.length,active ? transitionProgress : intent.progress,active !== null,enabled() && inGuidedStory());
   }
 
 
+  function measureMobileStops(layout: NonNullable<Options['mobile']>) {
+    const header = layout.headerHeight();
+    const viewport = Math.max(1, innerHeight - header);
+    const pageTop = (section: HTMLElement) => section.getBoundingClientRect().top + scrollY;
+    boundary = clamp(pageTop(layout.end) - header);
+    const measured: Stop[] = [];
+    for (const [index, section] of layout.chapters.entries()) {
+      const start = index === 0 ? 0 : clamp(pageTop(section) - header);
+      measured.push({ y: start, section });
+      // Leave some overlap when a chapter needs more than one screen of reading.
+      // Decorative space after the copy never gets its own stop.
+      const content = index === 0 ? section : section.querySelector<HTMLElement>('.copy') ?? section;
+      const last = Math.min(boundary, content.getBoundingClientRect().bottom + scrollY - innerHeight + 12);
+      for (let y = start; last - y > 24;) {
+        y = Math.min(last, y + viewport * .9);
+        measured.push({ y, section });
+      }
+    }
+    measured.push({ y: boundary, section: layout.end });
+    return measured;
+  }
+
   function refresh() {
+    if (mobile) {
+      cancel();
+      stops = measureMobileStops(mobile);
+      destination = nearest();
+      updateFeedback();
+      return;
+    }
     cancel();
     stops = [];
     boundary = training ? clamp(training.offsetTop + training.offsetHeight - innerHeight) : Infinity;
@@ -162,13 +199,13 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
     if (!controlsInput() || !touch || event.touches.length !== 1) return;
     const point = event.touches[0], delta = touch.y - point.clientY;
     if (nestedCanScroll(event.target, delta, true) || Math.abs(point.clientX - touch.x) > Math.abs(delta)) return;
-    if (Math.abs(delta) > 10 && event.cancelable) {
+    if (Math.abs(delta) > (mobile ? 0 : 10) && event.cancelable) {
       event.preventDefault(); touch.delta = delta; touch.captured = true;
-      feedback.update(stops[nearest()]?.section,nearest(),stops.length,Math.min(1,Math.abs(delta)/24),false,enabled());
+      feedback?.update(stops[nearest()]?.section,nearest(),stops.length,Math.min(1,Math.abs(delta)/24),false,enabled());
     }
   }, { passive: false, capture: true, signal });
   window.addEventListener('touchend', () => {
-    if (touch?.captured && Math.abs(touch.delta) >= 24) request(Math.sign(touch.delta));
+    if (touch?.captured && Math.abs(touch.delta) >= (mobile ? 14 : 24)) request(Math.sign(touch.delta));
     touch = null;
   }, { passive: true, signal });
   window.addEventListener('touchcancel', () => { touch = null; }, { signal });
@@ -189,7 +226,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   window.addEventListener('popstate', () => { cancel(); }, { signal });
   window.addEventListener('hashchange', () => {
     cancel(); const target = document.getElementById(location.hash.slice(1));
-    if (target && handles(target)) goTo(target);
+    if (!mobile && target && handles(target)) goTo(target);
   }, { signal });
   reduced.addEventListener('change', refresh, { signal });
   const handles = (section: HTMLElement) => section.offsetTop < boundary;
@@ -201,7 +238,7 @@ export function createChapterScroll({ reduced, onUpdate }: Options) {
   }
   refresh();
   return { refresh, handles, goTo, cancel, destroy() {
-    cancel(); destroyed = true; abort.abort(); feedback.destroy();
+    cancel(); destroyed = true; abort.abort(); feedback?.destroy();
     document.documentElement.classList.remove('guided-scroll');
   } };
 }
