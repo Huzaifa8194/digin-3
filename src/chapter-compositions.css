@@ -28,7 +28,42 @@
   background: #213c56;
   box-shadow: 0 16px 34px #152d4845;
 }
-.story-product img { display: block; width: 100%; height: auto; }
+.story-product-video {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  border-radius: 0;
+  isolation: isolate;
+}
+.story-product-video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 180ms ease;
+}
+.story-video-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: end;
+  gap: 10px;
+  padding: clamp(12px, 2vw, 24px);
+  background: linear-gradient(transparent 14%, #100d17ee);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.story-video-overlay strong {
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  line-height: 1.12;
+}
+.story-video-overlay > span { font-size: .85rem; }
+.story-product-video:is(:hover, :focus-visible) video { filter: brightness(.64) blur(3px); }
+.story-product-video:is(:hover, :focus-visible) .story-video-overlay { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .story-product-video video, .story-video-overlay { transition: none; }
+}
 .story-product-caption {
   position: relative;
   display: grid;
