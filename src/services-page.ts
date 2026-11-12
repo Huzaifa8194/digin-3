@@ -1,3 +1,4 @@
+import { drawServiceArtwork } from './service-artwork';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 import './standalone-page';
 import './services-page.css';
@@ -146,6 +147,55 @@ if (hero && heroContext) {
   });
   select(0);
 }
+
+const chapterMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const chapterArtwork = new Map<HTMLCanvasElement, { context: CanvasRenderingContext2D; diagram: number }>();
+const visibleArtwork = new Set<HTMLCanvasElement>();
+let chapterFrame = 0;
+let lastDraw = 0;
+
+function drawChapter(canvas: HTMLCanvasElement, time = 0) {
+  const artwork = chapterArtwork.get(canvas);
+  if (artwork) drawServiceArtwork(artwork.context, artwork.diagram, time);
+}
+
+function animateChapters(time: number) {
+  if (time - lastDraw >= 32) {
+    visibleArtwork.forEach(canvas => drawChapter(canvas, time));
+    lastDraw = time;
+  }
+  chapterFrame = requestAnimationFrame(animateChapters);
+}
+
+function syncChapterMotion() {
+  cancelAnimationFrame(chapterFrame);
+  if (chapterMotion.matches) visibleArtwork.forEach(canvas => drawChapter(canvas));
+  else if (visibleArtwork.size) chapterFrame = requestAnimationFrame(animateChapters);
+}
+
+const chapterResize = new ResizeObserver(entries => {
+  entries.forEach(({ target }) => {
+    const canvas = target as HTMLCanvasElement;
+    fitCanvas(canvas);
+    drawChapter(canvas);
+  });
+});
+const artworkObserver = new IntersectionObserver(entries => {
+  entries.forEach(({ target, isIntersecting }) => {
+    const canvas = target as HTMLCanvasElement;
+    if (isIntersecting) visibleArtwork.add(canvas);
+    else visibleArtwork.delete(canvas);
+  });
+  syncChapterMotion();
+});
+document.querySelectorAll<HTMLCanvasElement>('.services-explainer canvas').forEach(canvas => {
+  const context = canvas.getContext('2d');
+  if (!context) return;
+  chapterArtwork.set(canvas, { context, diagram: Number(canvas.dataset.serviceArt) });
+  chapterResize.observe(canvas);
+  artworkObserver.observe(canvas);
+});
+chapterMotion.addEventListener('change', syncChapterMotion);
 
 function syncServicesHeader() {
   document.body.classList.toggle('services-header-compact', window.scrollY > 72);
