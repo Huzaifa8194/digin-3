@@ -70,22 +70,27 @@ export function mountParticleStory(
    network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
    const shade=new THREE.Color(0x000000).lerp(new THREE.Color(0x282828),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
   }
-  // A magnifier isolates an open circuit on a board with two incoming test paths.
+  // A brick firewall protects the shield on the trusted side.
   const auditPaths = [
-   new THREE.Path().moveTo(-1.7,-.94).lineTo(-1.7,.92).lineTo(-1.42,1.2)
-    .lineTo(1.47,1.2).lineTo(1.72,.95).lineTo(1.72,-.94)
-    .lineTo(1.47,-1.19).lineTo(-1.45,-1.19).closePath(),
-   new THREE.Path().moveTo(-1.4,.66).lineTo(-1.07,.66).lineTo(-.77,.18).lineTo(.03,.18),
-   new THREE.Path().moveTo(-1.4,-.57).lineTo(-1.07,-.57).lineTo(-.77,.18),
-   new THREE.Path().moveTo(.53,.18).lineTo(1.17,.18).lineTo(1.39,.53),
-   new THREE.Path().moveTo(-1.4,.9).lineTo(-.83,.9).lineTo(-.62,.7),
-   new THREE.Path().moveTo(-1.41,-.87).lineTo(-.7,-.87).lineTo(-.45,-.62),
-   new THREE.Path().absarc(-1.4,.66,.07,0,Math.PI*2,false),
-   new THREE.Path().absarc(-1.4,-.57,.07,0,Math.PI*2,false),
-   new THREE.Path().absarc(1.39,.53,.07,0,Math.PI*2,false),
-   new THREE.Path().absarc(.28,.18,.73,0,Math.PI*2,false),
-   new THREE.Path().moveTo(.79,-.34).lineTo(1.35,-.92).lineTo(1.24,-1.02)
-    .lineTo(.68,-.44).closePath(),
+   new THREE.Path().moveTo(-1.72,-.99).lineTo(-1.72,.99)
+    .lineTo(.22,.99).lineTo(.22,-.99).closePath(),
+   new THREE.Path().moveTo(-1.72,-.5).lineTo(.22,-.5),
+   new THREE.Path().moveTo(-1.72,0).lineTo(.22,0),
+   new THREE.Path().moveTo(-1.72,.5).lineTo(.22,.5),
+   new THREE.Path().moveTo(-1.08,.99).lineTo(-1.08,.5),
+   new THREE.Path().moveTo(-.43,.99).lineTo(-.43,.5),
+   new THREE.Path().moveTo(-1.4,.5).lineTo(-1.4,0),
+   new THREE.Path().moveTo(-.75,.5).lineTo(-.75,0),
+   new THREE.Path().moveTo(-.1,.5).lineTo(-.1,0),
+   new THREE.Path().moveTo(-1.08,0).lineTo(-1.08,-.5),
+   new THREE.Path().moveTo(-.43,0).lineTo(-.43,-.5),
+   new THREE.Path().moveTo(-1.4,-.5).lineTo(-1.4,-.99),
+   new THREE.Path().moveTo(-.75,-.5).lineTo(-.75,-.99),
+   new THREE.Path().moveTo(-.1,-.5).lineTo(-.1,-.99),
+   new THREE.Path().moveTo(1.04,.68).lineTo(1.67,.44).lineTo(1.67,.03)
+    .quadraticCurveTo(1.67,-.49,1.04,-.76)
+    .quadraticCurveTo(.41,-.49,.41,.03).lineTo(.41,.44).closePath(),
+   new THREE.Path().moveTo(.77,-.01).lineTo(.98,-.22).lineTo(1.34,.18),
   ];
   const auditLengths = auditPaths.map(path => path.getLength());
   const auditLength = auditLengths.reduce((total,length) => total+length,0);
@@ -96,13 +101,13 @@ export function mountParticleStory(
    pathLengthSoFar += auditLengths[pathIndex];
    const end = Math.round(count*pathLengthSoFar/auditLength);
    const samples = path.getSpacedPoints(end-start);
-   const isLens = pathIndex >= auditPaths.length-2;
+   const isShield = pathIndex >= auditPaths.length-2;
    for(;auditIndex<end;auditIndex++){
     const sample = samples[auditIndex-start];
     const j = auditIndex*3;
     audit[j] = sample.x+(random()-.5)*.035;
     audit[j+1] = sample.y+(random()-.5)*.035;
-    audit[j+2] = (isLens?.23:-.08)+(random()-.5)*.16;
+    audit[j+2] = (isShield?.23:-.08)+(random()-.5)*.16;
    }
   });
   // Sample the wordmark into the final pose so the same particles assemble
@@ -149,17 +154,17 @@ export function mountParticleStory(
    color:faultColor,transparent:true,opacity:0,depthWrite:false,
   });
   const contactGeometry = new THREE.PlaneGeometry(.105,.105);
-  for(const x of [.03,.53]){
+  for(const x of [.22,.41]){
    const contact = new THREE.Mesh(contactGeometry,contactMaterial);
-   contact.position.set(x,.18,.18);
+   contact.position.set(x,0,.18);
    contact.rotation.z = Math.PI/4;
    inspection.add(contact);
   }
   const bridgeMaterial = new THREE.MeshBasicMaterial({
    color:passColor,transparent:true,opacity:0,depthWrite:false,
   });
-  const bridge = new THREE.Mesh(new THREE.PlaneGeometry(.5,.055),bridgeMaterial);
-  bridge.position.set(.03,.18,.17);
+  const bridge = new THREE.Mesh(new THREE.PlaneGeometry(.19,.045),bridgeMaterial);
+  bridge.position.set(.22,0,.17);
   inspection.add(bridge);
   const sweepMaterial=new THREE.MeshBasicMaterial({color:0xd60027,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
   const sweep=new THREE.Mesh(new THREE.CircleGeometry(1.75,40,0,.45),sweepMaterial);
@@ -289,7 +294,7 @@ export function mountParticleStory(
    contactMaterial.color.copy(faultColor).lerp(passColor,repair);
    contactMaterial.opacity=auditWeight;
    bridge.scale.x=repair;
-   bridge.position.x=.03+.25*repair;
+   bridge.position.x=.22+.095*repair;
    bridgeMaterial.opacity=auditWeight*repair;
    sweepMaterial.opacity=radarWeight*.22;
    crossMaterial.opacity=radarWeight*.4;
