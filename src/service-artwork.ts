@@ -97,10 +97,113 @@ const artworks = [
   { strokes: vault(), colors: ['#e9a364', '#b46b88', '#ffedd1'], pitch: .29, yaw: -.35 },
 ];
 
+type PanelEffect = (ctx: CanvasRenderingContext2D, time: number) => void;
+
+function line(ctx: CanvasRenderingContext2D, points: number[][]) {
+  ctx.beginPath();
+  points.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+  ctx.stroke();
+}
+
+function dot(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, circle);
+  ctx.fill();
+}
+
+// These layers use a normalized 100 x 100 stage so they work at any aspect ratio.
+const panelEffects: PanelEffect[] = [
+  (ctx, t) => {
+    const scan = 18 + 64 * t;
+    const glow = ctx.createLinearGradient(0, scan - 15, 0, scan);
+    glow.addColorStop(0, '#ff648300');
+    glow.addColorStop(1, '#ff64832e');
+    ctx.fillStyle = glow;
+    ctx.fillRect(17, scan - 15, 66, 15);
+    line(ctx, [[17, scan], [83, scan]]);
+    for (const [x, y] of [[37, 34], [64, 53], [47, 71]]) {
+      const reveal = Math.max(0, Math.min(1, (scan - y) / 9));
+      ctx.globalAlpha = reveal * .9;
+      ctx.strokeRect(x - 2, y - 3, 4, 6);
+      ctx.fillStyle = '#ffe2bf';
+      dot(ctx, x, y, .55);
+    }
+  },
+  (ctx, t) => {
+    for (let row = 0; row < 5; row++) {
+      const y = 29 + row * 10;
+      const progress = Math.max(0, Math.min(1, (t - row * .12) * 5));
+      ctx.globalAlpha = .3 + progress * .6;
+      line(ctx, [[12, y], [21, y], [25, y - 4]]);
+      ctx.strokeRect(78, y - 2, 3, 5);
+      if (progress > .8) line(ctx, [[78.5, y], [79.3, y + 1], [80.6, y - 1]]);
+    }
+  },
+  (ctx, t) => {
+    const x = 13 + t * 74;
+    ctx.globalAlpha = .68;
+    line(ctx, [[x, 18], [x, 79]]);
+    const bars = [3, 6, 4, 10, 6, 13, 5, 9, 4, 7, 3, 5, 9, 3];
+    bars.forEach((height, index) => {
+      const left = 13 + index * 5.55;
+      ctx.globalAlpha = left <= x ? .82 : .19;
+      ctx.fillRect(left, 81 - height, 1.2, height);
+    });
+    ctx.globalAlpha = 1;
+    dot(ctx, x, 79, .65);
+  },
+  (ctx, t) => {
+    const paths = [
+      [[13, 38], [22, 38], [30, 51], [41, 51]],
+      [[59, 51], [70, 51], [78, 38], [87, 38]],
+      [[13, 65], [23, 65], [30, 56], [41, 56]],
+      [[59, 56], [70, 56], [77, 65], [87, 65]],
+    ];
+    paths.forEach((route, index) => {
+      ctx.globalAlpha = .42;
+      line(ctx, route);
+      const step = ((t * 3 + index * .55) % 3);
+      const segment = Math.floor(step);
+      const fraction = step - segment;
+      const [ax, ay] = route[segment];
+      const [bx, by] = route[segment + 1];
+      ctx.globalAlpha = 1;
+      dot(ctx, ax + (bx - ax) * fraction, ay + (by - ay) * fraction, .82);
+    });
+  },
+  (ctx, t) => {
+    for (let ring = 0; ring < 3; ring++) {
+      const progress = (t + ring / 3) % 1;
+      ctx.globalAlpha = .7 * (1 - progress);
+      ctx.beginPath();
+      ctx.ellipse(50, 51, 12 + progress * 32, 10 + progress * 26, 0, 0, circle);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = .75;
+    line(ctx, [[12, 51], [27, 51]]);
+    line(ctx, [[73, 51], [88, 51]]);
+    dot(ctx, 27, 51, .63);
+    dot(ctx, 73, 51, .63);
+  },
+];
+
+function drawPanelEffect(ctx: CanvasRenderingContext2D, service: number, time: number, color: string) {
+  const { width, height } = ctx.canvas;
+  ctx.save();
+  ctx.scale(width / 100, height / 100);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = .2;
+  ctx.globalAlpha = .75;
+  panelEffects[service](ctx, (time % 6400) / 6400);
+  ctx.restore();
+}
+
+
 export function drawServiceArtwork(context: CanvasRenderingContext2D, service: number, time: number) {
   const art = artworks[service];
   const { width, height } = context.canvas;
-  const scale = Math.min(width * .29, height * .32);
+  const scale = Math.min(width * .32, height * .39);
   const tick = time * .001;
   const yaw = art.yaw + Math.sin(tick * .4) * .28;
   const pitch = art.pitch + Math.sin(tick * .32) * .09;
@@ -110,6 +213,7 @@ export function drawServiceArtwork(context: CanvasRenderingContext2D, service: n
   const pitchSine = Math.sin(pitch);
   context.clearRect(0, 0, width, height);
   context.lineJoin = 'round';
+  drawPanelEffect(context, service, time || 3800, art.colors[0]);
 
   art.strokes.forEach(({ points, ink }, line) => {
     context.beginPath();

@@ -403,3 +403,36 @@
   .services-chapter h3 { margin: 0; }
   .services-chapter[id] .services-chapter-art canvas { aspect-ratio: 1.58; }
 }
+
+.services-chapter-art canvas { aspect-ratio: 2.05; }
+:where(#grc, #managed-security, #infrastructure-security, #data-application-security) .services-chapter-art canvas { aspect-ratio: 2.05; }
+.services-art-workflow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #eef4ff;
+  background: color-mix(in srgb, var(--art-edge) 90%, var(--art-glint));
+  border-top: 1px solid color-mix(in srgb, var(--art-glint) 26%, transparent);
+  position: relative;
+}
+.services-chapter .services-art-workflow li {
+  display: block;
+  border: 0;
+  padding: 14px clamp(9px, 2vw, 24px);
+  font-size: clamp(.69rem, 1.02vw, .9rem);
+  line-height: 1.35;
+}
+.services-chapter .services-art-workflow li + li { border-left: 1px solid #ffffff22; }
+.services-chapter .services-art-workflow li::before { content: none; }
+.services-art-workflow span {
+  display: block;
+  color: var(--art-glint);
+  font: 600 .67rem/1.3 var(--services-mono);
+  margin-bottom: 5px;
+}
+@media (max-width: 700px) {
+  .services-chapter[id] .services-chapter-art canvas { aspect-ratio: 1.48; }
+  .services-chapter .services-art-workflow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
