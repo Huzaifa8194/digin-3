@@ -28,16 +28,10 @@ function sizeReadingStages(){
  });
  measureChapters();
 }
-const heroOrbit=document.querySelector<HTMLElement>('.hero-orbit')!;
 const heroChapter=document.querySelector<HTMLElement>('#home')!;
 function updateHeroHandoff(){
  const distance=Math.max(1,(chapterOffsets[1]??innerHeight)-heroChapter.offsetTop);
  const progress=THREE.MathUtils.clamp((scrollY-heroChapter.offsetTop)/distance,0,1);
- const fade=THREE.MathUtils.smoothstep(progress,.24,.72);
- heroOrbit.style.opacity=String(1-fade);
- heroOrbit.style.filter=reduced.matches?'none':`blur(${fade*8}px)`;
- heroOrbit.style.transform=reduced.matches?'none':`scale(${1+fade*.06})`;
- heroOrbit.inert=fade>.75;
  document.documentElement.classList.toggle('past-hero',progress>.24);
 }
 window.addEventListener('scroll',updateHeroHandoff,{passive:true});

@@ -1,14 +1,18 @@
 export function mountHeroProductFeature() {
+  const hero = document.querySelector<HTMLElement>('#home')!;
+  const header = document.querySelector<HTMLElement>('body > header')!;
+
   function updateHeader() {
-    document.body.classList.toggle('hero-header-scrolled', window.scrollY > 32);
+    document.body.classList.toggle('hero-header-scrolled', hero.getBoundingClientRect().bottom <= header.offsetHeight);
   }
 
   window.addEventListener('scroll', updateHeader, { passive: true });
+  new ResizeObserver(updateHeader).observe(hero);
   updateHeader();
 
   const feature = document.querySelector<HTMLElement>('.hero-product-feature')!;
   const picker = feature.querySelector<HTMLElement>('.hero-feature-picker')!;
-  const poster = feature.querySelector<HTMLImageElement>('.hero-feature-poster')!;
+  const cards = [...feature.querySelectorAll<HTMLElement>('.hero-product-card')];
   const name = feature.querySelector<HTMLElement>('#hero-feature-name')!;
   const summary = feature.querySelector<HTMLElement>('#hero-feature-summary')!;
   const link = feature.querySelector<HTMLAnchorElement>('.hero-feature-link')!;
@@ -29,8 +33,11 @@ export function mountHeroProductFeature() {
     buttons[selected].setAttribute('aria-pressed', 'false');
     selected = index;
     button.setAttribute('aria-pressed', 'true');
-    feature.dataset.currentProduct = product;
-    poster.src = `/product-posters/${product}.svg`;
+    const midpoint = Math.floor(cards.length / 2);
+    cards.forEach((card, cardIndex) => {
+      const slot = (cardIndex - selected + cards.length + midpoint) % cards.length - midpoint;
+      card.dataset.slot = String(slot);
+    });
     name.textContent = title;
     summary.textContent = button.dataset.summary!;
     link.href = `/${product}/`;
@@ -41,9 +48,10 @@ export function mountHeroProductFeature() {
     window.clearTimeout(timer);
     const focused = document.activeElement;
     const reading = feature.contains(focused) && focused !== rotation;
-    const hovered = canHover.matches && feature.matches(':hover');
+    const hovered = canHover.matches && (picker.matches(':hover') || link.matches(':hover'));
     const rotating = playing && inView && !document.hidden && !reading && !hovered;
     status.setAttribute('aria-live', rotating ? 'off' : 'polite');
+    hero.toggleAttribute('data-moving', playing && inView && !document.hidden);
     if (rotating) {
       timer = window.setTimeout(() => {
         showProduct((selected + 1) % buttons.length);
@@ -56,7 +64,7 @@ export function mountHeroProductFeature() {
     playing = value;
     const action = playing ? 'Pause' : 'Play';
     rotation.textContent = action;
-    rotation.setAttribute('aria-label', `${action} product rotation`);
+    rotation.setAttribute('aria-label', `${action} product animation`);
     scheduleRotation();
   }
 
@@ -67,8 +75,10 @@ export function mountHeroProductFeature() {
     });
   });
   rotation.addEventListener('click', () => setPlaying(!playing));
-  feature.addEventListener('pointerenter', scheduleRotation);
-  feature.addEventListener('pointerleave', scheduleRotation);
+  [picker, link].forEach(control => {
+    control.addEventListener('pointerenter', scheduleRotation);
+    control.addEventListener('pointerleave', scheduleRotation);
+  });
   feature.addEventListener('focusin', scheduleRotation);
   feature.addEventListener('focusout', () => queueMicrotask(scheduleRotation));
   document.addEventListener('visibilitychange', scheduleRotation);
@@ -76,9 +86,9 @@ export function mountHeroProductFeature() {
     if (event.matches) setPlaying(false);
   });
   const visibility = new IntersectionObserver(([entry]) => {
-    inView = entry.intersectionRatio >= .5;
+    inView = entry.isIntersecting;
     scheduleRotation();
-  }, { threshold: .5 });
+  }, { threshold: .25 });
   visibility.observe(feature);
   picker.hidden = false;
   setPlaying(playing);
