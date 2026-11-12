@@ -60,19 +60,36 @@ document.addEventListener('visibilitychange', () => loopingVideos.forEach(update
 
 const servicePreviews = [...document.querySelectorAll<HTMLLIElement>('#service-previews > li')];
 const previewPicker = document.querySelector('.service-preview-picker');
-const [previousPreview, nextPreview] = previewPicker?.querySelectorAll('button') ?? [];
-const previewStatus = previewPicker?.querySelector('[role="status"]');
-const previewStarts = [0, 2, 3];
-let previewPage = 0;
+const previousPreview = previewPicker?.firstElementChild;
+const nextPreview = previewPicker?.lastElementChild;
+const previewDots = previewPicker?.querySelectorAll('.service-preview-dots button');
+let firstPreview = 0;
 
-function browseServicePreviews(direction: number) {
-  previewPage = (previewPage + direction + previewStarts.length) % previewStarts.length;
-  const start = previewStarts[previewPage];
-  servicePreviews.forEach((preview, index) => {
-    preview.hidden = index < start || index >= start + 2;
+function showServicePreviews(index: number) {
+  const total = servicePreviews.length;
+  firstPreview = (index + total) % total;
+  servicePreviews.forEach((preview, position) => {
+    const slot = (position - firstPreview + total + 1) % total;
+    preview.hidden = slot > 3;
+    preview.dataset.slot = String(slot);
+    const link = preview.querySelector('a')!;
+    link.tabIndex = slot === 1 || slot === 2 ? 0 : -1;
   });
-  if (previewStatus) previewStatus.textContent = `${start + 1}–${start + 2} of ${servicePreviews.length}`;
+  previewDots?.forEach((dot, position) => {
+    dot.setAttribute('aria-current', String(position === firstPreview));
+  });
 }
 
-previousPreview?.addEventListener('click', () => browseServicePreviews(-1));
-nextPreview?.addEventListener('click', () => browseServicePreviews(1));
+if (servicePreviews.length) {
+  showServicePreviews(0);
+  previousPreview?.addEventListener('click', () => showServicePreviews(firstPreview - 1));
+  nextPreview?.addEventListener('click', () => showServicePreviews(firstPreview + 1));
+  previewDots?.forEach((dot, index) => dot.addEventListener('click', () => showServicePreviews(index)));
+  servicePreviews.forEach(preview => preview.addEventListener('click', event => {
+    const slot = Number(preview.dataset.slot);
+    if (slot === 0 || slot === 3) {
+      event.preventDefault();
+      showServicePreviews(firstPreview + (slot === 0 ? -1 : 1));
+    }
+  }));
+}

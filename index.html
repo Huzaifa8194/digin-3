@@ -170,8 +170,8 @@
     </div>
     <div class="service-details">
         <ul class="service-loops" id="service-previews" role="list">
-          <li>
-            <a class="service-card" href="/services/#offensive-security" aria-labelledby="build-offensive-security">
+          <li data-slot="1">
+            <a class="service-card story-film-reel" href="/services/#offensive-security" aria-labelledby="build-offensive-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/offensive-security.webp" aria-hidden="true">
                 <source src="/service-loops/offensive-security.mp4" type="video/mp4">
@@ -183,8 +183,8 @@
               </span>
             </a>
           </li>
-          <li>
-            <a class="service-card" href="/services/#grc" aria-labelledby="build-grc">
+          <li data-slot="2">
+            <a class="service-card story-film-reel" href="/services/#grc" aria-labelledby="build-grc">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/grc.webp" aria-hidden="true">
                 <source src="/service-loops/grc.mp4" type="video/mp4">
@@ -196,8 +196,8 @@
               </span>
             </a>
           </li>
-          <li hidden>
-            <a class="service-card" href="/services/#managed-security" aria-labelledby="build-managed-security">
+          <li data-slot="3">
+            <a class="service-card story-film-reel" href="/services/#managed-security" aria-labelledby="build-managed-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/managed-security.webp" aria-hidden="true">
                 <source src="/service-loops/managed-security.mp4" type="video/mp4">
@@ -210,7 +210,7 @@
             </a>
           </li>
           <li hidden>
-            <a class="service-card" href="/services/#infrastructure-security" aria-labelledby="build-infrastructure-security">
+            <a class="service-card story-film-reel" href="/services/#infrastructure-security" aria-labelledby="build-infrastructure-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/infrastructure-security.webp" aria-hidden="true">
                 <source src="/service-loops/infrastructure-security.mp4" type="video/mp4">
@@ -222,8 +222,8 @@
               </span>
             </a>
           </li>
-          <li hidden>
-            <a class="service-card" href="/services/#data-application-security" aria-labelledby="build-data-application-security">
+          <li data-slot="0">
+            <a class="service-card story-film-reel" href="/services/#data-application-security" aria-labelledby="build-data-application-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/data-application-security.webp" aria-hidden="true">
                 <source src="/service-loops/data-application-security.mp4" type="video/mp4">
@@ -238,7 +238,13 @@
         </ul>
       <div class="service-preview-picker" aria-label="Browse service previews">
         <button type="button" aria-controls="service-previews" aria-label="Previous service previews">←</button>
-        <span role="status">1–2 of 5</span>
+        <div class="service-preview-dots" role="group" aria-label="Choose a service preview">
+          <button type="button" aria-controls="service-previews" aria-label="Start with Offensive Security Services" aria-current="true"></button>
+          <button type="button" aria-controls="service-previews" aria-label="Start with Governance, Risk &amp; Compliance (GRC)" aria-current="false"></button>
+          <button type="button" aria-controls="service-previews" aria-label="Start with Security Operations &amp; Managed Security" aria-current="false"></button>
+          <button type="button" aria-controls="service-previews" aria-label="Start with Network &amp; Infrastructure Security" aria-current="false"></button>
+          <button type="button" aria-controls="service-previews" aria-label="Start with Data &amp; Application Security" aria-current="false"></button>
+        </div>
         <button type="button" aria-controls="service-previews" aria-label="Next service previews">→</button>
       </div>
       <a class="bento-link service-link" href="/services/">Explore all services <span aria-hidden="true">↗</span></a>
