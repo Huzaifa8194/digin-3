@@ -39,31 +39,17 @@
   color: var(--gallery-ink);
   max-width: 25ch;
   margin: 0;
-  font-size: clamp(2rem, 5.2vw, 4.9rem);
+  font-size: clamp(1.45rem, min(3.4vw, 5svh), 2.85rem);
   line-height: 1;
   letter-spacing: -.065em;
   text-wrap: balance;
 }
 .exhibit-summary { margin: 9px 0 0; max-width: 55ch; color: #45515c; }
 .exhibit-heading .catalog-button { flex: none; gap: 10px; }
-.exhibit-media { display: grid; grid-template-columns: minmax(0, 2.35fr) minmax(0, 1fr); gap: clamp(14px, 2.4vw, 30px); }
-.exhibit-media figure { position: relative; min-width: 0; margin: 0; }
-.exhibit-media figcaption {
-  margin-top: 10px;
-  color: #475560;
-  font: 700 .69rem/1.5 var(--gallery-mono);
-  letter-spacing: .11em;
-  text-transform: uppercase;
-}
-.exhibit-poster a { display: block; background: #24262b; }
-.exhibit-poster img { display: block; width: 100%; height: auto; }
-.exhibit-poster a:hover { box-shadow: 0 0 0 2px #36748b; }
 .product-gallery .exhibit-media a:focus-visible { outline: 3px solid #266c88; outline-offset: 4px; }
 
 @media (max-width: 620px) {
   .exhibit-heading { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .exhibit-media { grid-template-columns: minmax(0, 1fr); }
-  .exhibit-poster { width: min(78%, 320px); }
   .product-exhibit { scroll-margin-top: 78px; }
 }
 
@@ -238,7 +224,7 @@
 .gallery-stage[data-paused] .gallery-orbit::after { animation-play-state: paused; }
 #product-collection { scroll-margin-top: 32px; }
 
-/* Give the trailer the main column and keep the linked poster alongside it. */
+/* Size the exhibit around a full, uncropped trailer. */
 .product-gallery .exhibits {
   width: min(94%, 1440px);
 }
@@ -246,7 +232,8 @@
   --exhibit-accent: #c9ed91;
   --exhibit-tint: #212d1c;
   --exhibit-dark: #10141a;
-  padding-block: clamp(24px, 3.5vw, 52px);
+  --exhibit-width: min(100%, max(160px, calc((100svh - 350px) * 16 / 9)));
+  padding-block: clamp(12px, 2svh, 20px);
 }
 .product-gallery #sysbastion { --exhibit-accent: #b8f2ce; --exhibit-tint: #142e29; }
 .product-gallery #aegis-shield { --exhibit-accent: #b8dcff; --exhibit-tint: #142945; }
@@ -256,7 +243,8 @@
 .product-gallery .exhibit-heading {
   align-items: flex-end;
   gap: 16px 24px;
-  margin-bottom: clamp(12px, 1.5vw, 22px);
+  width: var(--exhibit-width);
+  margin: 0 auto 12px;
 }
 .product-gallery .exhibit-heading .catalog-kicker { color: var(--gallery-accent); }
 .product-gallery .exhibit-summary { color: #60535b; line-height: 1.55; }
@@ -266,31 +254,16 @@
 }
 
 .product-gallery .exhibit-media {
-  grid-template-columns: minmax(0, 1fr) clamp(110px, 14%, 180px);
-  align-items: end;
-  gap: clamp(8px, 1vw, 14px);
+  width: var(--exhibit-width);
+  margin-inline: auto;
   padding: clamp(6px, .8vw, 12px);
   background: radial-gradient(ellipse at 76% 20%, var(--exhibit-tint), var(--exhibit-dark) 74%);
   border: 1px solid color-mix(in srgb, var(--exhibit-accent) 20%, var(--exhibit-dark));
   overflow: clip;
 }
 .product-gallery .exhibit-media figure {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-}
-.product-gallery .exhibit-media figcaption {
-  margin-top: 7px;
-  color: var(--exhibit-accent);
-  letter-spacing: .06em;
-}
-.product-gallery .exhibit-poster a {
-  overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 16px 32px #0006;
-}
-.product-gallery .exhibit-media a { transition: box-shadow 220ms ease; }
-.product-gallery .exhibit-poster a:hover {
-  box-shadow: 0 0 0 2px var(--exhibit-accent);
+  margin: 0;
+  min-width: 0;
 }
 .product-gallery .exhibit-media a:focus-visible { outline-color: var(--exhibit-accent); }
 
@@ -338,12 +311,7 @@
 
 @media (max-width: 620px) {
   .product-gallery .exhibit-heading { align-items: flex-start; }
-  .product-gallery .exhibit-media { grid-template-columns: minmax(0, 1fr); gap: 10px; }
-  .product-gallery .exhibit-media .exhibit-poster { grid-template-columns: 56px minmax(0, 1fr); align-items: center; gap: 10px; }
-  .product-gallery .exhibit-poster figcaption { margin-top: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .product-gallery .exhibit-media a { transition: none; }
+  .product-gallery .product-exhibit { --exhibit-width: min(100%, max(160px, calc((100svh - 390px) * 16 / 9))); }
 }
 
 /* Keep the product index close to the gallery. */
