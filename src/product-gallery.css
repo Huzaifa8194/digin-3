@@ -55,38 +55,9 @@
   letter-spacing: .11em;
   text-transform: uppercase;
 }
-.preview-bar {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  min-height: 32px;
-  padding: 5px 12px;
-  background: #26343f;
-  color: #e0edf2;
-  font: .67rem var(--gallery-mono);
-}
-.preview-dots { color: #a4c0ca; font-size: .49rem; letter-spacing: .12em; }
-.preview-window {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 1280 / 800;
-  background: #151a1d;
-}
-.preview-window iframe {
-  position: absolute;
-  inset: 0 auto auto 0;
-  width: 1280px;
-  height: 800px;
-  max-width: none;
-  border: 0;
-  transform: scale(var(--preview-scale, .5));
-  transform-origin: top left;
-  pointer-events: none;
-}
-.preview-hit { position: absolute; inset: 0; }
 .exhibit-poster a { display: block; background: #24262b; }
 .exhibit-poster img { display: block; width: 100%; height: auto; }
-.preview-hit:hover, .exhibit-poster a:hover { box-shadow: 0 0 0 2px #36748b; }
+.exhibit-poster a:hover { box-shadow: 0 0 0 2px #36748b; }
 .product-gallery .exhibit-media a:focus-visible { outline: 3px solid #266c88; outline-offset: 4px; }
 
 @media (max-width: 620px) {
@@ -312,30 +283,16 @@
   color: var(--exhibit-accent);
   letter-spacing: .06em;
 }
-.product-gallery .preview-bar {
-  min-height: 36px;
-  background: color-mix(in srgb, var(--exhibit-accent) 12%, var(--exhibit-dark));
-  color: #f7f0f1;
-  border: 1px solid #ffffff26;
-  border-bottom: 0;
-  border-radius: 8px 8px 0 0;
-}
-.product-gallery .preview-dots { color: var(--exhibit-accent); }
-.product-gallery .preview-window {
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 16px 32px #0006;
-}
 .product-gallery .exhibit-poster a {
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 16px 32px #0006;
 }
 .product-gallery .exhibit-media a { transition: box-shadow 220ms ease; }
-.product-gallery :is(.preview-hit, .exhibit-poster a):hover {
+.product-gallery .exhibit-poster a:hover {
   box-shadow: 0 0 0 2px var(--exhibit-accent);
 }
 .product-gallery .exhibit-media a:focus-visible { outline-color: var(--exhibit-accent); }
-.product-gallery .preview-hit { bottom: 28px; border-radius: 8px; }
 
 .trailer-link {
   position: relative;

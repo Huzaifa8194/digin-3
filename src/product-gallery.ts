@@ -1,47 +1,39 @@
 import './catalog-page';
 import './product-gallery.css';
 
-const previewWidth = 1280;
-const previews = document.querySelectorAll<HTMLElement>('.preview-window');
-
-const fitPreview = (preview: HTMLElement, width: number) => {
-  preview.style.setProperty('--preview-scale', String(width / previewWidth));
-};
-
-const resizeObserver = new ResizeObserver(entries => {
-  for (const entry of entries) {
-    fitPreview(entry.target as HTMLElement, entry.contentRect.width);
-  }
-});
-
-for (const preview of previews) {
-  fitPreview(preview, preview.clientWidth);
-  resizeObserver.observe(preview);
-}
-
 const gallery = document.querySelector<HTMLElement>('.gallery-intro')!;
 const stage = gallery.querySelector<HTMLElement>('.gallery-stage')!;
 const links = [...gallery.querySelectorAll<HTMLAnchorElement>('.catalog-index a')];
 const cards = [...stage.querySelectorAll<HTMLImageElement>('.gallery-deck-card')];
 const stageName = stage.querySelector<HTMLElement>('.gallery-stage-name')!;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const trailer = document.querySelector<HTMLVideoElement>('.exhibit-trailer');
-if (trailer) {
-  let trailerVisible = false;
-  const updateTrailer = () => {
-    if (trailerVisible && !document.hidden && !reducedMotion.matches) {
-      void trailer.play().catch(() => { /* The poster stays visible if autoplay is blocked. */ });
-    } else {
-      trailer.pause();
-    }
-  };
-  new IntersectionObserver(([entry]) => {
-    trailerVisible = entry.intersectionRatio >= 0.25;
-    updateTrailer();
-  }, { threshold: 0.25 }).observe(trailer);
-  reducedMotion.addEventListener('change', updateTrailer);
-  document.addEventListener('visibilitychange', updateTrailer);
+const trailers = document.querySelectorAll<HTMLVideoElement>('.exhibit-trailer');
+const visibleTrailers = new Set<HTMLVideoElement>();
+
+function updateTrailer(trailer: HTMLVideoElement) {
+  if (visibleTrailers.has(trailer) && !document.hidden && !reducedMotion.matches) {
+    void trailer.play().catch(() => { /* Keep the poster if autoplay is blocked. */ });
+  } else {
+    trailer.pause();
+  }
 }
+
+const trailerObserver = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    const trailer = entry.target as HTMLVideoElement;
+    if (entry.intersectionRatio >= 0.25) {
+      visibleTrailers.add(trailer);
+    } else {
+      visibleTrailers.delete(trailer);
+    }
+    updateTrailer(trailer);
+  }
+}, { threshold: 0.25 });
+
+trailers.forEach(trailer => trailerObserver.observe(trailer));
+reducedMotion.addEventListener('change', () => trailers.forEach(updateTrailer));
+document.addEventListener('visibilitychange', () => trailers.forEach(updateTrailer));
+
 let active = 0;
 let visible = false;
 let previewing = false;
