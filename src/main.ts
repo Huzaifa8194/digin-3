@@ -14,7 +14,7 @@ import { mountHeroProductFeature } from './hero-product-feature';
 
 if (location.hash === '#solutions') location.replace('/products/');
 
-const touchLayout = matchMedia('(pointer: coarse) and (hover: none)').matches;
+const touchLayout = matchMedia('(max-width: 700px), (pointer: coarse) and (hover: none)').matches;
 
 mountHeroProductFeature();
 mountComponentRefresh();

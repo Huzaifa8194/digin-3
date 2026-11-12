@@ -5,7 +5,17 @@ html.mobile-story {
   scroll-behavior: auto;
   scroll-padding-top: calc(var(--mobile-reading-top) + 8px);
 }
-.mobile-story #scene, .mobile-story .vignette { display: none; }
+.mobile-story #scene:not(.scene-in-story),
+.mobile-story .vignette { display: none; }
+.mobile-story #scene {
+  mask-image: linear-gradient(transparent 32%, #000 65%);
+}
+.mobile-story .fallback-orb {
+  width: min(56vw, 230px);
+  left: 50%;
+  top: 72%;
+  transform: translate(-50%, -50%);
+}
 .mobile-guided-story > .chapter,
 .mobile-story #story > #connect {
   padding: clamp(32px, 6vw, 70px) 5%;
@@ -33,11 +43,12 @@ html.mobile-story {
 }
 .mobile-story .hero .description { max-width: 46ch; }
 .mobile-story .hero-orbit { width: min(100%, 380px); margin: 0 auto; will-change: auto; }
+.mobile-story .hero > .hero-orbit:not(.hero-product-feature) { grid-column: 1 / -1; }
 .mobile-story .hero-orbit .security-orbit-map { width: min(86%, 320px); }
 .mobile-story .hero-orbit .orbit-track,
 .mobile-story .hero-orbit .orbit-node { animation-play-state: paused; }
 .mobile-story .chapter:not(.hero) { border-top: 1px solid var(--line); }
-.mobile-story .chapter:not(.hero):nth-of-type(odd) { background: var(--surface); }
+.mobile-guided-story > .chapter:not(.hero) { padding-bottom: clamp(120px, 23svh, 210px); }
 .mobile-story #test .security-bento { grid-template-columns: minmax(0, 1fr); }
 .mobile-story #test .security-bento > * { grid-column: auto; }
 .mobile-story .copy.contact-composition { grid-template-columns: minmax(0, 1fr); gap: 22px; }

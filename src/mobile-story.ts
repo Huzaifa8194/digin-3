@@ -1,3 +1,5 @@
+import { mountSecurityOrbit } from './security-orbit';
+
 const chapterLabels = [
   ['home', 'Overview'],
   ['test', 'Security testing'],
@@ -16,6 +18,17 @@ export function mountMobileStory() {
   }));
 
   root.classList.add('mobile-story');
+  const host = document.querySelector<HTMLElement>('#scene')!;
+  const orbit = document.querySelector<HTMLTemplateElement>('#mobile-orbit')!;
+  chapters[0].section.append(orbit.content.cloneNode(true));
+  mountSecurityOrbit();
+
+  const particleChapters = [...chapters.map(({ section }) => section), document.getElementById('connect')!];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let offsets: number[] = [];
+  void import('./particle-story').then(({ mountParticleStory }) => {
+    mountParticleStory(particleChapters, () => offsets, () => scrollY / Math.max(1, offsets[offsets.length - 1]), reduced, true);
+  });
   // The training chapter is the sticky guide's natural stopping point.
   const story = document.createElement('div');
   story.className = 'mobile-guided-story';
@@ -56,6 +69,7 @@ export function mountMobileStory() {
       active = index;
     }
     const bounds = story.getBoundingClientRect();
+    host.classList.toggle('scene-in-story', bounds.bottom > readingTop + 20);
     const distance = Math.max(1, bounds.height - innerHeight);
     track.style.transform = `scaleX(${Math.max(0, Math.min(1, -bounds.top / distance))})`;
   }
@@ -67,6 +81,8 @@ export function mountMobileStory() {
   function measure() {
     const headerHeight = header.getBoundingClientRect().height;
     readingTop = headerHeight + summary.getBoundingClientRect().height + 2;
+    offsets = particleChapters.map((section, index) =>
+      index === 0 ? 0 : section.getBoundingClientRect().top + scrollY - readingTop - 20);
     root.style.setProperty('--mobile-header-height', `${headerHeight}px`);
     root.style.setProperty('--mobile-reading-top', `${readingTop}px`);
     schedule();
