@@ -27,13 +27,23 @@
     <p>Five products for identity, mobile apps, system hardening, endpoint defense and threat intelligence.</p>
   </div>
   <section class="hero-product-feature" aria-label="Featured products">
-    <div class="hero-product-stage" aria-hidden="true">
-      <div class="hero-product-halo"></div>
-<div class="hero-product-card" data-slot="0"><img src="/product-posters/shadowad.svg" alt="" width="480" height="600" fetchpriority="high"></div>
-<div class="hero-product-card" data-slot="1"><img src="/product-posters/mobile-pentest.svg" alt="" width="480" height="600"></div>
-<div class="hero-product-card" data-slot="2"><img src="/product-posters/sysbastion.svg" alt="" width="480" height="600"></div>
-<div class="hero-product-card" data-slot="-2"><img src="/product-posters/aegis-shield.svg" alt="" width="480" height="600"></div>
-<div class="hero-product-card" data-slot="-1"><img src="/product-posters/darkintel360.svg" alt="" width="480" height="600"></div>
+    <div class="hero-product-stage" role="group" aria-label="Select a featured product">
+      <div class="hero-product-halo" aria-hidden="true"></div>
+      <button type="button" class="hero-product-card" data-slot="-2" data-product="aegis-shield" data-summary="Investigate and contain threats on Windows endpoints." aria-label="AEGIS-SHIELD" aria-pressed="false">
+        <img src="/product-posters/aegis-shield.svg" alt="" width="480" height="600">
+      </button>
+      <button type="button" class="hero-product-card" data-slot="-1" data-product="darkintel360" data-summary="Track emerging threats across underground and public sources." aria-label="DarkIntel360" aria-pressed="false">
+        <img src="/product-posters/darkintel360.svg" alt="" width="480" height="600">
+      </button>
+      <button type="button" class="hero-product-card" data-slot="0" data-product="shadowad" data-summary="Assess identity risk across Active Directory and Microsoft Entra ID." aria-label="ShadowAD" aria-pressed="true">
+        <img src="/product-posters/shadowad.svg" alt="" width="480" height="600" fetchpriority="high">
+      </button>
+      <button type="button" class="hero-product-card" data-slot="1" data-product="mobile-pentest" data-summary="Test Android and iOS apps and prioritize fixes." aria-label="Mobile App Penetration Testing" aria-pressed="false">
+        <img src="/product-posters/mobile-pentest.svg" alt="" width="480" height="600">
+      </button>
+      <button type="button" class="hero-product-card" data-slot="2" data-product="sysbastion" data-summary="Explore planned hardening controls for Windows and Linux." aria-label="SysBastion" aria-pressed="false">
+        <img src="/product-posters/sysbastion.svg" alt="" width="480" height="600">
+      </button>
     </div>
     <div class="hero-feature-detail">
       <div class="hero-feature-status" aria-live="polite" aria-atomic="true">
@@ -41,14 +51,6 @@
         <p id="hero-feature-summary">Assess identity risk across Active Directory and Microsoft Entra ID.</p>
       </div>
       <a class="hero-feature-link" href="/shadowad/" aria-label="Explore ShadowAD">Explore product <span aria-hidden="true">↗</span></a>
-    </div>
-    <div class="hero-feature-picker" role="group" aria-label="Choose a featured product" hidden>
-    <button type="button" data-product="shadowad" data-summary="Assess identity risk across Active Directory and Microsoft Entra ID." aria-pressed="true">ShadowAD</button>
-    <button type="button" data-product="mobile-pentest" data-title="Mobile App Penetration Testing" data-summary="Test Android and iOS apps and prioritize fixes." aria-pressed="false">Mobile testing</button>
-    <button type="button" data-product="sysbastion" data-summary="Explore planned hardening controls for Windows and Linux." aria-pressed="false">SysBastion</button>
-    <button type="button" data-product="aegis-shield" data-summary="Investigate and contain threats on Windows endpoints." aria-pressed="false">AEGIS-SHIELD</button>
-    <button type="button" data-product="darkintel360" data-summary="Track emerging threats across underground and public sources." aria-pressed="false">DarkIntel360</button>
-      <button class="hero-feature-rotation" type="button" aria-label="Pause product animation">Pause</button>
     </div>
   </section>
 </section>
