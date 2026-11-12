@@ -128,3 +128,97 @@ html:has(> .home-page) { background: #fff; }
 @media (prefers-reduced-motion: reduce) {
   .home-page > header { transition: none; }
 }
+
+/* Editorial treatment for the three product chapters. Keep the story lanes intact. */
+.home-page #story .product-composition .composition-heading > .kicker {
+  margin-bottom: 16px;
+  color: var(--home-coral-ink);
+  font-size: .69rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+.home-page #story .product-composition .composition-heading h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -.065em;
+  line-height: .94;
+}
+.home-page #story .product-composition .composition-heading h2 em {
+  margin-top: .07em;
+  font-style: italic;
+}
+.home-page #story .product-composition .story-product-intro {
+  max-width: 36ch;
+  margin-top: 16px;
+  line-height: 1.55;
+}
+.product-composition .chapter-service-links {
+  gap: 0;
+  margin-top: clamp(16px, 2.4vw, 26px);
+  border-top: 1px solid var(--line);
+}
+.product-composition .chapter-service-links p {
+  margin: 10px 0 3px;
+  font-size: .68rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.product-composition .chapter-service-links a {
+  padding-inline: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
+}
+.product-composition .chapter-service-links a span { color: var(--home-coral-ink); }
+.product-composition .chapter-service-links a:is(:hover, :focus-visible) {
+  background: transparent;
+  color: var(--home-coral-ink);
+}
+.home-page #story .story-product-video {
+  border: 0;
+  box-shadow: 0 12px 30px #231d2224;
+}
+.home-page #story .story-product-video:focus-visible {
+  outline: 2px solid var(--home-coral-ink);
+  outline-offset: 4px;
+}
+.product-composition .story-video-overlay {
+  align-content: end;
+  gap: 9px;
+  padding: clamp(13px, 1.8vw, 24px);
+  background: linear-gradient(180deg, transparent 20%, #120f18f5);
+}
+.product-composition .story-video-overlay strong {
+  max-width: 14ch;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.05rem, 2vw, 1.65rem);
+  font-weight: 400;
+  letter-spacing: -.035em;
+}
+.product-composition .story-video-overlay > span {
+  width: fit-content;
+  padding-top: 8px;
+  border-top: 1px solid #fff8;
+  font-size: .69rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+@media (min-width: 701px) {
+  #test .story-products, #watch .story-products { align-items: end; }
+  #test .story-product-video:last-child {
+    width: 88%;
+    justify-self: end;
+  }
+  #watch .story-product-video:first-child {
+    width: 88%;
+    justify-self: start;
+  }
+}
+@media (max-width: 700px) {
+  .home-page #story .product-composition .composition-heading > .kicker { margin-bottom: 12px; }
+  .home-page #story .product-composition .story-product-intro { margin-top: 12px; }
+  .product-composition .story-products { width: 100%; }
+}
