@@ -1,3 +1,5 @@
+html:has(> .about-page) { background: #fff; }
+
 .about-page {
   --about-dark: #0b101b;
   --about-ink: #231d22;
@@ -7,10 +9,16 @@
   --about-rule: #efdedb;
   --about-wash: #fff0ee;
   --canvas: #fff;
+  --ink: var(--about-ink);
+  --muted: var(--about-muted);
+  --accent: var(--about-accent);
+  --catalog-paper: #fff;
+  --catalog-ink: var(--about-ink);
+  --catalog-blue: var(--about-accent);
   --line: var(--about-rule);
   background: #fff;
 }
-.about-page main { color: var(--about-ink); background: #fff; }
+.about-page main { color: var(--about-ink); background: #fff; padding-bottom: clamp(48px, 7vw, 88px); }
 .about-hero {
   overflow: hidden;
   background: radial-gradient(ellipse at 80% 43%, #382131, var(--about-dark) 66%);
@@ -102,13 +110,14 @@
 .about-work-grid strong { font-size: clamp(1.25rem, 2.4vw, 2rem); letter-spacing: -.045em; }
 .about-work-grid span:first-of-type { grid-row: 2; color: var(--about-muted); line-height: 1.55; }
 .about-work-grid span:last-child { color: var(--about-accent); }
-.about-page .reference-team {
+.about-page #team.reference-team {
+  background: #fff;
   width: min(88%, 1280px);
   margin-inline: auto;
   padding: clamp(40px, 6vw, 78px) 0;
   scroll-margin-top: 16px;
 }
-.about-page .team-heading > p { color: var(--about-muted); }
+.about-page .team-heading > p, .about-page .team-caption > span { color: var(--about-muted); }
 .about-page .team-heading .kicker, .about-page .team-caption a { color: var(--about-accent); }
 .about-page .team-panel {
   background: var(--about-wash);
@@ -120,11 +129,12 @@
 .about-page .team-panel[aria-pressed="true"] .team-panel-bottom > span { color: #f4d9d9; }
 .about-page .team-panel:focus-visible { outline-color: var(--about-accent); }
 .about-page .team-arrow { background: var(--about-dark); color: #fff; }
-.about-contact { padding: clamp(28px, 5vw, 70px); margin-block: 0 clamp(48px, 7vw, 88px); background: var(--about-wash); }
-.about-contact h2 { margin-bottom: 14px; }
+.about-contact { padding: clamp(28px, 5vw, 70px); margin-block: 0; background: var(--about-wash); }
+.about-contact h2 { color: var(--about-ink); margin-bottom: 14px; }
 .about-contact .about-button { background: var(--about-coral); }
 .about-contact .about-button:hover { background: #ffaca5; }
 .about-page .new-footer { background: #fff; color: var(--about-ink); border-top: 1px solid var(--about-rule); }
+.about-page .footer-directory h3 { color: var(--about-ink); }
 .about-page .footer-word { color: #ffc5c0; }
 .about-page :is(.footer-directory, .footer-bottom, .footer-top > a) { border-color: var(--about-rule); }
 .about-page :is(.footer-directory, .footer-bottom) :is(a:not(.brand), address, span) { color: var(--about-muted); }
