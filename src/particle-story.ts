@@ -68,7 +68,7 @@ export function mountParticleStory(
    orbit[j]=Math.cos(u)*radarRadius; orbit[j+1]=Math.sin(u)*radarRadius; orbit[j+2]=(random()-.5)*.035;
    const cluster=i%6, theta=cluster*Math.PI/3;
    network[j]=Math.cos(theta)*1.3+sphere[j]*.3; network[j+1]=Math.sin(theta)*1.3+sphere[j+1]*.3; network[j+2]=sphere[j+2]*.3;
-   const shade=new THREE.Color(0xb34c58).lerp(new THREE.Color(0xff8b82),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
+   const shade=new THREE.Color(0x000000).lerp(new THREE.Color(0x282828),random()); colors[j]=shade.r; colors[j+1]=shade.g; colors[j+2]=shade.b;
   }
   // A magnifier isolates an open circuit on a board with two incoming test paths.
   const auditPaths = [

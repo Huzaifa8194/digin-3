@@ -1,6 +1,5 @@
 export function mountHeroProductFeature() {
   const hero = document.querySelector<HTMLElement>('#home')!;
-  const header = document.querySelector<HTMLElement>('body > header')!;
   const feature = hero.querySelector<HTMLElement>('.hero-product-feature')!;
   const cards = feature.querySelectorAll<HTMLButtonElement>('.hero-product-card');
   const name = feature.querySelector<HTMLElement>('#hero-feature-name')!;
@@ -11,7 +10,7 @@ export function mountHeroProductFeature() {
   let inView = false;
 
   function updateHeader() {
-    document.body.classList.toggle('hero-header-scrolled', hero.getBoundingClientRect().bottom <= header.offsetHeight);
+    document.body.classList.toggle('hero-header-scrolled', window.scrollY > 72);
   }
 
   function selectProduct(card: HTMLButtonElement) {
@@ -34,7 +33,7 @@ export function mountHeroProductFeature() {
   }
 
   window.addEventListener('scroll', updateHeader, { passive: true });
-  new ResizeObserver(updateHeader).observe(hero);
+  window.addEventListener('pageshow', updateHeader);
   updateHeader();
 
   cards.forEach(card => {

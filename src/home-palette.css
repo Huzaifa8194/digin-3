@@ -96,3 +96,35 @@ html:has(> .home-page) { background: #fff; }
 .home-page #story .story-product-caption :is(strong, h3) { color: #fff5f3; }
 .home-page #story .story-product-caption > :is(p, span:not(.story-product-arrow)) { color: #e4dce3; }
 .home-page #story .story-product-arrow { color: var(--home-coral); }
+
+/* Keep the homepage header in the same two states as the Services header. */
+.home-page > header {
+  transition: height 220ms ease, background-color 220ms ease, border-color 220ms ease;
+}
+.home-page.hero-header-scrolled > header {
+  --header-nav-text: var(--muted);
+  --header-nav-active: var(--home-coral-ink);
+  --header-nav-indicator: var(--home-coral-ink);
+  height: 60px;
+}
+.home-page.hero-header-scrolled > header .brand-logo { width: clamp(105px, 11vw, 140px); }
+.home-page.hero-header-scrolled > header .header-contact { min-height: 36px; padding-block: 6px; }
+.home-page .fallback-orb { background: radial-gradient(circle at 30% 30%, #535353, #171717 45%, #000 75%); }
+.home-page #home .hero-orbit .orbit-center,
+.home-page #home .hero-orbit .orbit-node-icon {
+  background: #111;
+  border-color: #474747;
+  color: #fff;
+  box-shadow: 0 0 24px #0003;
+}
+.home-page #home .hero-orbit .orbit-node:is(:hover, :focus-visible, [aria-pressed="true"]) .orbit-node-icon {
+  background: #000;
+  border-color: var(--home-coral);
+  color: #fff;
+}
+@media (max-width: 700px) {
+  .home-page.hero-header-scrolled > header { height: 94px; row-gap: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-page > header { transition: none; }
+}
