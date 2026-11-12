@@ -169,7 +169,7 @@
       <h2 id="build-heading">Build software. <em>Make it yours.</em></h2>
     </div>
     <div class="service-details">
-        <ul class="service-loops" role="list">
+        <ul class="service-loops" id="service-previews" role="list">
           <li>
             <a class="service-card" href="/services/#offensive-security" aria-labelledby="build-offensive-security">
               <span class="story-product-video service-loop">
@@ -179,7 +179,6 @@
               </span>
               <span class="service-card-copy">
                 <strong id="build-offensive-security">Offensive Security Services</strong>
-                <span>Test defenses and verify where they can fail.</span>
                 <span class="service-card-arrow" aria-hidden="true">↗</span>
               </span>
             </a>
@@ -193,12 +192,11 @@
               </span>
               <span class="service-card-copy">
                 <strong id="build-grc">Governance, Risk &amp; Compliance (GRC)</strong>
-                <span>Manage risk and prepare for compliance reviews.</span>
                 <span class="service-card-arrow" aria-hidden="true">↗</span>
               </span>
             </a>
           </li>
-          <li>
+          <li hidden>
             <a class="service-card" href="/services/#managed-security" aria-labelledby="build-managed-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/managed-security.webp" aria-hidden="true">
@@ -207,12 +205,11 @@
               </span>
               <span class="service-card-copy">
                 <strong id="build-managed-security">Security Operations &amp; Managed Security</strong>
-                <span>Monitor threats and respond to incidents.</span>
                 <span class="service-card-arrow" aria-hidden="true">↗</span>
               </span>
             </a>
           </li>
-          <li>
+          <li hidden>
             <a class="service-card" href="/services/#infrastructure-security" aria-labelledby="build-infrastructure-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/infrastructure-security.webp" aria-hidden="true">
@@ -221,12 +218,11 @@
               </span>
               <span class="service-card-copy">
                 <strong id="build-infrastructure-security">Network &amp; Infrastructure Security</strong>
-                <span>Secure networks, cloud environments, and infrastructure.</span>
                 <span class="service-card-arrow" aria-hidden="true">↗</span>
               </span>
             </a>
           </li>
-          <li>
+          <li hidden>
             <a class="service-card" href="/services/#data-application-security" aria-labelledby="build-data-application-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/data-application-security.webp" aria-hidden="true">
@@ -235,12 +231,16 @@
               </span>
               <span class="service-card-copy">
                 <strong id="build-data-application-security">Data &amp; Application Security</strong>
-                <span>Protect applications and sensitive data.</span>
                 <span class="service-card-arrow" aria-hidden="true">↗</span>
               </span>
             </a>
           </li>
         </ul>
+      <div class="service-preview-picker" aria-label="Browse service previews">
+        <button type="button" aria-controls="service-previews" aria-label="Previous service previews">←</button>
+        <span role="status">1–2 of 5</span>
+        <button type="button" aria-controls="service-previews" aria-label="Next service previews">→</button>
+      </div>
       <a class="bento-link service-link" href="/services/">Explore all services <span aria-hidden="true">↗</span></a>
     </div>
   </div>

@@ -52,8 +52,27 @@ const loopingVideoObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.3 });
 
 loopingVideos.forEach(video => {
-  if (video.closest('.service-loop')) video.defaultPlaybackRate = video.playbackRate = 0.75;
+  if (video.closest('.service-loop')) video.defaultPlaybackRate = video.playbackRate = 0.4;
   loopingVideoObserver.observe(video);
 });
 reduceVideoMotion.addEventListener('change', () => loopingVideos.forEach(updateLoopingVideo));
 document.addEventListener('visibilitychange', () => loopingVideos.forEach(updateLoopingVideo));
+
+const servicePreviews = [...document.querySelectorAll<HTMLLIElement>('#service-previews > li')];
+const previewPicker = document.querySelector('.service-preview-picker');
+const [previousPreview, nextPreview] = previewPicker?.querySelectorAll('button') ?? [];
+const previewStatus = previewPicker?.querySelector('[role="status"]');
+const previewStarts = [0, 2, 3];
+let previewPage = 0;
+
+function browseServicePreviews(direction: number) {
+  previewPage = (previewPage + direction + previewStarts.length) % previewStarts.length;
+  const start = previewStarts[previewPage];
+  servicePreviews.forEach((preview, index) => {
+    preview.hidden = index < start || index >= start + 2;
+  });
+  if (previewStatus) previewStatus.textContent = `${start + 1}–${start + 2} of ${servicePreviews.length}`;
+}
+
+previousPreview?.addEventListener('click', () => browseServicePreviews(-1));
+nextPreview?.addEventListener('click', () => browseServicePreviews(1));
