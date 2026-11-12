@@ -30,7 +30,11 @@ const trailerObserver = new IntersectionObserver(entries => {
   }
 }, { threshold: 0.25 });
 
-trailers.forEach(trailer => trailerObserver.observe(trailer));
+trailers.forEach(trailer => {
+  trailer.defaultPlaybackRate = 1.2;
+  trailer.playbackRate = 1.2;
+  trailerObserver.observe(trailer);
+});
 reducedMotion.addEventListener('change', () => trailers.forEach(updateTrailer));
 document.addEventListener('visibilitychange', () => trailers.forEach(updateTrailer));
 
