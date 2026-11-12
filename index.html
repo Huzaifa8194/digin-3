@@ -169,8 +169,9 @@
       <h2 id="build-heading">Build software. <em>Make it yours.</em></h2>
     </div>
     <div class="service-details">
+        <div class="service-carousel" role="region" aria-label="Service previews">
         <ul class="service-loops" id="service-previews" role="list">
-          <li data-slot="1">
+          <li>
             <a class="service-card story-film-reel" href="/services/#offensive-security" aria-labelledby="build-offensive-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/offensive-security.webp" aria-hidden="true">
@@ -183,7 +184,7 @@
               </span>
             </a>
           </li>
-          <li data-slot="2">
+          <li>
             <a class="service-card story-film-reel" href="/services/#grc" aria-labelledby="build-grc">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/grc.webp" aria-hidden="true">
@@ -196,7 +197,7 @@
               </span>
             </a>
           </li>
-          <li data-slot="3">
+          <li>
             <a class="service-card story-film-reel" href="/services/#managed-security" aria-labelledby="build-managed-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/managed-security.webp" aria-hidden="true">
@@ -209,7 +210,7 @@
               </span>
             </a>
           </li>
-          <li hidden>
+          <li>
             <a class="service-card story-film-reel" href="/services/#infrastructure-security" aria-labelledby="build-infrastructure-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/infrastructure-security.webp" aria-hidden="true">
@@ -222,7 +223,7 @@
               </span>
             </a>
           </li>
-          <li data-slot="0">
+          <li>
             <a class="service-card story-film-reel" href="/services/#data-application-security" aria-labelledby="build-data-application-security">
               <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/data-application-security.webp" aria-hidden="true">
@@ -236,7 +237,8 @@
             </a>
           </li>
         </ul>
-      <div class="service-preview-picker" aria-label="Browse service previews">
+      </div>
+      <div class="service-preview-picker" role="group" aria-label="Browse service previews">
         <button type="button" aria-controls="service-previews" aria-label="Previous service previews">←</button>
         <div class="service-preview-dots" role="group" aria-label="Choose a service preview">
           <button type="button" aria-controls="service-previews" aria-label="Start with Offensive Security Services" aria-current="true"></button>
