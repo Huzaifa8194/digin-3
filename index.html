@@ -168,88 +168,67 @@
     <div class="composition-heading">
       <h2 id="build-heading">Build software. <em>Make it yours.</em></h2>
     </div>
-    <div class="service-details">
-        <div class="service-carousel" role="region" aria-label="Service previews">
-        <ul class="service-loops" id="service-previews" role="list">
-          <li>
-            <a class="service-card story-film-reel" href="/services/#offensive-security" aria-labelledby="build-offensive-security">
-              <span class="story-product-video service-loop">
+    <div class="service-details service-preview-index">
+      <div class="service-preview-choices" role="group" aria-label="Preview a service">
+        <button type="button" aria-pressed="true" aria-controls="preview-offensive-security"><span aria-hidden="true">01</span><strong>Offensive Security Services</strong></button>
+        <button type="button" aria-pressed="false" aria-controls="preview-grc"><span aria-hidden="true">02</span><strong>Governance, Risk &amp; Compliance (GRC)</strong></button>
+        <button type="button" aria-pressed="false" aria-controls="preview-managed-security"><span aria-hidden="true">03</span><strong>Security Operations &amp; Managed Security</strong></button>
+        <button type="button" aria-pressed="false" aria-controls="preview-infrastructure-security"><span aria-hidden="true">04</span><strong>Network &amp; Infrastructure Security</strong></button>
+        <button type="button" aria-pressed="false" aria-controls="preview-data-application-security"><span aria-hidden="true">05</span><strong>Data &amp; Application Security</strong></button>
+        <a class="bento-link service-link" href="/services/">Explore all services <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="service-preview-stage">
+        <div id="preview-offensive-security">
+          <a class="service-preview-film story-film-reel" href="/services/#offensive-security" aria-label="Explore Offensive Security Services">
+            <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/offensive-security.webp" aria-hidden="true">
                 <source src="/service-loops/offensive-security.mp4" type="video/mp4">
               </video>
-              </span>
-              <span class="service-card-copy">
-                <strong id="build-offensive-security">Offensive Security Services</strong>
-                <span class="service-card-arrow" aria-hidden="true">↗</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a class="service-card story-film-reel" href="/services/#grc" aria-labelledby="build-grc">
-              <span class="story-product-video service-loop">
+            </span>
+            <span class="service-preview-caption"><strong>Offensive Security Services</strong><span aria-hidden="true">↗</span></span>
+          </a>
+        </div>
+        <div id="preview-grc" hidden>
+          <a class="service-preview-film story-film-reel" href="/services/#grc" aria-label="Explore Governance, Risk &amp; Compliance (GRC)">
+            <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/grc.webp" aria-hidden="true">
                 <source src="/service-loops/grc.mp4" type="video/mp4">
               </video>
-              </span>
-              <span class="service-card-copy">
-                <strong id="build-grc">Governance, Risk &amp; Compliance (GRC)</strong>
-                <span class="service-card-arrow" aria-hidden="true">↗</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a class="service-card story-film-reel" href="/services/#managed-security" aria-labelledby="build-managed-security">
-              <span class="story-product-video service-loop">
+            </span>
+            <span class="service-preview-caption"><strong>Governance, Risk &amp; Compliance (GRC)</strong><span aria-hidden="true">↗</span></span>
+          </a>
+        </div>
+        <div id="preview-managed-security" hidden>
+          <a class="service-preview-film story-film-reel" href="/services/#managed-security" aria-label="Explore Security Operations &amp; Managed Security">
+            <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/managed-security.webp" aria-hidden="true">
                 <source src="/service-loops/managed-security.mp4" type="video/mp4">
               </video>
-              </span>
-              <span class="service-card-copy">
-                <strong id="build-managed-security">Security Operations &amp; Managed Security</strong>
-                <span class="service-card-arrow" aria-hidden="true">↗</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a class="service-card story-film-reel" href="/services/#infrastructure-security" aria-labelledby="build-infrastructure-security">
-              <span class="story-product-video service-loop">
+            </span>
+            <span class="service-preview-caption"><strong>Security Operations &amp; Managed Security</strong><span aria-hidden="true">↗</span></span>
+          </a>
+        </div>
+        <div id="preview-infrastructure-security" hidden>
+          <a class="service-preview-film story-film-reel" href="/services/#infrastructure-security" aria-label="Explore Network &amp; Infrastructure Security">
+            <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/infrastructure-security.webp" aria-hidden="true">
                 <source src="/service-loops/infrastructure-security.mp4" type="video/mp4">
               </video>
-              </span>
-              <span class="service-card-copy">
-                <strong id="build-infrastructure-security">Network &amp; Infrastructure Security</strong>
-                <span class="service-card-arrow" aria-hidden="true">↗</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a class="service-card story-film-reel" href="/services/#data-application-security" aria-labelledby="build-data-application-security">
-              <span class="story-product-video service-loop">
+            </span>
+            <span class="service-preview-caption"><strong>Network &amp; Infrastructure Security</strong><span aria-hidden="true">↗</span></span>
+          </a>
+        </div>
+        <div id="preview-data-application-security" hidden>
+          <a class="service-preview-film story-film-reel" href="/services/#data-application-security" aria-label="Explore Data &amp; Application Security">
+            <span class="story-product-video service-loop">
               <video muted loop playsinline preload="none" width="480" height="400" poster="/service-loops/data-application-security.webp" aria-hidden="true">
                 <source src="/service-loops/data-application-security.mp4" type="video/mp4">
               </video>
-              </span>
-              <span class="service-card-copy">
-                <strong id="build-data-application-security">Data &amp; Application Security</strong>
-                <span class="service-card-arrow" aria-hidden="true">↗</span>
-              </span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="service-preview-picker" role="group" aria-label="Browse service previews">
-        <button type="button" aria-controls="service-previews" aria-label="Previous service previews">←</button>
-        <div class="service-preview-dots" role="group" aria-label="Choose a service preview">
-          <button type="button" aria-controls="service-previews" aria-label="Start with Offensive Security Services" aria-current="true"></button>
-          <button type="button" aria-controls="service-previews" aria-label="Start with Governance, Risk &amp; Compliance (GRC)" aria-current="false"></button>
-          <button type="button" aria-controls="service-previews" aria-label="Start with Security Operations &amp; Managed Security" aria-current="false"></button>
-          <button type="button" aria-controls="service-previews" aria-label="Start with Network &amp; Infrastructure Security" aria-current="false"></button>
-          <button type="button" aria-controls="service-previews" aria-label="Start with Data &amp; Application Security" aria-current="false"></button>
+            </span>
+            <span class="service-preview-caption"><strong>Data &amp; Application Security</strong><span aria-hidden="true">↗</span></span>
+          </a>
         </div>
-        <button type="button" aria-controls="service-previews" aria-label="Next service previews">→</button>
       </div>
-      <a class="bento-link service-link" href="/services/">Explore all services <span aria-hidden="true">↗</span></a>
     </div>
   </div>
 </section>

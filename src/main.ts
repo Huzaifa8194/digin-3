@@ -58,87 +58,23 @@ loopingVideos.forEach(video => {
 reduceVideoMotion.addEventListener('change', () => loopingVideos.forEach(updateLoopingVideo));
 document.addEventListener('visibilitychange', () => loopingVideos.forEach(updateLoopingVideo));
 
-const serviceTrack = document.querySelector<HTMLUListElement>('#service-previews');
-const previewPicker = document.querySelector('.service-preview-picker');
+const serviceChoices = [...document.querySelectorAll<HTMLButtonElement>('.service-preview-choices button')];
+const servicePanels = serviceChoices.map(choice => document.getElementById(choice.getAttribute('aria-controls')!));
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+let selectedService = 0;
 
-if (serviceTrack && previewPicker) {
-  const track = serviceTrack;
-  const cards = [...track.children] as HTMLLIElement[];
-  const dots = [...previewPicker.querySelectorAll('.service-preview-dots button')];
-  let first = 0;
-  let transition: Animation | undefined;
-  let dragStart: { x: number; y: number } | undefined;
-  let suppressClick = false;
-
-  function arrangeCards() {
-    const ordered = cards.map((_, offset) => cards[(first + offset + cards.length - 1) % cards.length]);
-    ordered.forEach((card, offset) => {
-      track.append(card);
-      card.inert = offset !== 1 && offset !== 2;
-    });
-    dots.forEach((dot, index) => dot.setAttribute('aria-current', String(index === first)));
-  }
-
-  function select(index: number) {
-    transition?.cancel();
-    transition = undefined;
-    first = (index + cards.length) % cards.length;
-    arrangeCards();
-  }
-
-  function step(direction: number) {
-    if (transition) return;
-    if (reduceVideoMotion.matches) {
-      select(first + direction);
-      return;
-    }
-    const [left, right] = track.children;
-    const distance = right.getBoundingClientRect().left - left.getBoundingClientRect().left;
-    const base = getComputedStyle(track).transform;
-    const shifted = `translateX(${-distance}px) ${base}`;
-    // Put the incoming card offscreen before sliding backward.
-    if (direction < 0) track.prepend(track.lastElementChild!);
-    transition = track.animate([
-      { transform: direction < 0 ? shifted : base },
-      { transform: direction < 0 ? base : shifted },
-    ], { duration: 440, easing: 'cubic-bezier(.22,.76,.2,1)', fill: 'forwards' });
-    transition.onfinish = () => select(first + direction);
-  }
-
-  arrangeCards();
-  previewPicker.firstElementChild?.addEventListener('click', () => step(-1));
-  previewPicker.lastElementChild?.addEventListener('click', () => step(1));
-  dots.forEach((dot, index) => dot.addEventListener('click', () => select(index)));
-
-  track.addEventListener('pointerdown', event => {
-    if (!event.isPrimary || event.button !== 0) return;
-    suppressClick = false;
-    dragStart = { x: event.clientX, y: event.clientY };
-    track.dataset.dragging = '';
-  });
-  window.addEventListener('pointerup', event => {
-    if (!dragStart || !event.isPrimary) return;
-    const dx = event.clientX - dragStart.x;
-    const dy = event.clientY - dragStart.y;
-    dragStart = undefined;
-    delete track.dataset.dragging;
-    if (Math.abs(dx) < 32 || Math.abs(dx) <= Math.abs(dy)) return;
-    suppressClick = true;
-    step(dx < 0 ? 1 : -1);
-  });
-  track.addEventListener('pointercancel', () => {
-    dragStart = undefined;
-    delete track.dataset.dragging;
-  });
-  track.addEventListener('dragstart', event => event.preventDefault());
-  track.addEventListener('click', event => {
-    if (suppressClick) {
-      suppressClick = false;
-      event.preventDefault();
-      return;
-    }
-    const bounds = track.parentElement!.getBoundingClientRect();
-    if (event.clientX < bounds.left + bounds.width * .1) step(-1);
-    if (event.clientX > bounds.right - bounds.width * .1) step(1);
-  });
+function showService(index: number) {
+  if (index === selectedService) return;
+  serviceChoices[selectedService].setAttribute('aria-pressed', 'false');
+  servicePanels[selectedService]?.setAttribute('hidden', '');
+  selectedService = index;
+  serviceChoices[index].setAttribute('aria-pressed', 'true');
+  servicePanels[index]?.removeAttribute('hidden');
 }
+
+serviceChoices.forEach((choice, index) => {
+  choice.addEventListener('click', () => showService(index));
+  choice.addEventListener('pointerenter', event => {
+    if (finePointer.matches && event.pointerType === 'mouse') showService(index);
+  });
+});
