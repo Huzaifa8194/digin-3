@@ -3,98 +3,14 @@ import './standalone-page';
 import './services-page.css';
 
 const diagrams = [
-  { label: 'Perimeter', color: '#9edbff' },
-  { label: 'Controls', color: '#d1c6ff' },
-  { label: 'Signals', color: '#a3f0d9' },
-  { label: 'Network', color: '#b3cbff' },
-  { label: 'Data', color: '#ffd4ac' },
+  { label: 'Perimeter' },
+  { label: 'Controls' },
+  { label: 'Signals' },
+  { label: 'Network' },
+  { label: 'Data' },
 ];
 
 const tau = 2 * Math.PI;
-
-function drawDiagram(ctx: CanvasRenderingContext2D, diagram: number, time = 0) {
-  const { width, height } = ctx.canvas;
-  const unit = Math.min(width, height) / 270;
-  const color = diagrams[diagram].color;
-  ctx.clearRect(0, 0, width, height);
-  ctx.save();
-  ctx.translate(width / 2, height / 2);
-  ctx.scale(unit, unit);
-  ctx.lineWidth = 1;
-
-  function path(points: number[][], closed = false, opacity = .55) {
-    ctx.globalAlpha = opacity;
-    ctx.beginPath();
-    points.forEach(([x, y], index) => {
-      if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-    if (closed) ctx.closePath();
-    ctx.stroke();
-  }
-
-  ctx.strokeStyle = color;
-  ctx.fillStyle = color;
-  ctx.setLineDash([3, 5]);
-  path([[-125, 0], [125, 0]], false, .28);
-  path([[0, -122], [0, 122]], false, .28);
-  ctx.setLineDash([]);
-
-  const angle = time * .00022;
-  if (diagram === 0) {
-    for (let ring = 1; ring <= 5; ring++) {
-      const points = Array.from({ length: 97 }, (_, index) => {
-        const a = index * tau / 96;
-        const radius = ring * 20 + 5 * Math.cos(a * 5 + angle * 3 + ring / 2);
-        return [Math.cos(a) * radius, Math.sin(a) * radius];
-      });
-      path(points, true, .32 + ring * .10);
-    }
-    const x = 105 * Math.cos(angle * 2);
-    const y = 105 * Math.sin(angle * 2);
-    path([[0, 0], [x, y]], false, .9);
-    ctx.globalAlpha = .95;
-    ctx.shadowColor = color;
-    ctx.shadowBlur = 13;
-    ctx.beginPath();
-    ctx.arc(x, y, 4, 0, tau);
-    ctx.fill();
-  } else if (diagram === 1 || diagram === 4) {
-    for (let layer = 0; layer < 6; layer++) {
-      const rise = (layer - 2.5) * 24 + 4 * Math.sin(angle * 3 + layer);
-      const corners = [[-103, rise], [0, rise - 34], [103, rise], [0, rise + 34]];
-      const points = diagram === 1 ? corners : [[-77, rise - 20], [0, rise - 35], [77, rise - 20], [77, rise + 20], [0, rise + 35], [-77, rise + 20]];
-      path(points, true, .48 + layer * .08);
-      path([points[0], points[2]], false, .28);
-    }
-  } else if (diagram === 2) {
-    for (let band = 0; band < 7; band++) {
-      const points = Array.from({ length: 121 }, (_, index) => {
-        const x = (index - 60) * 1.95;
-        const envelope = 8 + 48 * Math.exp(-Math.pow(x / 46, 2));
-        const y = (band - 3) * 16 + envelope * Math.sin(x / 13 + angle * 3 + band / 2);
-        return [x, y];
-      });
-      path(points, false, band === 3 ? .94 : .42);
-    }
-  } else {
-    const points = Array.from({ length: 12 }, (_, index) => {
-      const a = angle + index * tau / 12;
-      const r = index % 2 === 0 ? 103 : 58;
-      return [Math.cos(a) * r, Math.sin(a) * r];
-    });
-    path(points, true, .9);
-    points.forEach(([x, y], index) => {
-      path([[x, y], points[(index + 4) % points.length]], false, .42);
-      ctx.globalAlpha = .95;
-      ctx.beginPath();
-      ctx.arc(x, y, index % 2 === 0 ? 3 : 2, 0, tau);
-      ctx.fill();
-    });
-  }
-
-  ctx.restore();
-}
 
 // SimplexNoise is reused directly from the installed MIT-licensed Three.js package.
 const noise = new SimplexNoise();
@@ -239,17 +155,62 @@ if (hero && heroContext) {
   select(0);
 }
 
-const chapterCanvases = document.querySelectorAll<HTMLCanvasElement>('.services-chapter-art canvas');
+const chapterMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const chapterArtwork = new Map<HTMLCanvasElement, { context: CanvasRenderingContext2D; diagram: number }>();
+const visibleArtwork = new Set<HTMLCanvasElement>();
+let chapterFrame = 0;
+let lastDraw = 0;
+
+function drawChapter(canvas: HTMLCanvasElement, time = 0) {
+  const artwork = chapterArtwork.get(canvas);
+  if (artwork) drawSculpture(artwork.context, artwork.diagram, time);
+}
+
+function animateChapters(time: number) {
+  if (time - lastDraw >= 32) {
+    visibleArtwork.forEach(canvas => drawChapter(canvas, time));
+    lastDraw = time;
+  }
+  chapterFrame = requestAnimationFrame(animateChapters);
+}
+
+function syncChapterMotion() {
+  cancelAnimationFrame(chapterFrame);
+  if (chapterMotion.matches) visibleArtwork.forEach(canvas => drawChapter(canvas));
+  else if (visibleArtwork.size) chapterFrame = requestAnimationFrame(animateChapters);
+}
+
 const chapterResize = new ResizeObserver(entries => {
   entries.forEach(({ target }) => {
     const canvas = target as HTMLCanvasElement;
-    const context = canvas.getContext('2d');
-    if (!context) return;
     fitCanvas(canvas);
-    drawDiagram(context, Number(canvas.dataset.serviceArt));
+    drawChapter(canvas);
   });
 });
-chapterCanvases.forEach(canvas => chapterResize.observe(canvas));
+const artworkObserver = new IntersectionObserver(entries => {
+  entries.forEach(({ target, isIntersecting }) => {
+    const canvas = target as HTMLCanvasElement;
+    if (isIntersecting) visibleArtwork.add(canvas);
+    else visibleArtwork.delete(canvas);
+  });
+  syncChapterMotion();
+});
+document.querySelectorAll<HTMLCanvasElement>('.services-chapter-art canvas').forEach(canvas => {
+  const context = canvas.getContext('2d');
+  if (!context) return;
+  chapterArtwork.set(canvas, { context, diagram: Number(canvas.dataset.serviceArt) });
+  chapterResize.observe(canvas);
+  artworkObserver.observe(canvas);
+});
+chapterMotion.addEventListener('change', syncChapterMotion);
+
+function syncServicesHeader() {
+  document.body.classList.toggle('services-header-compact', window.scrollY > 72);
+}
+
+window.addEventListener('scroll', syncServicesHeader, { passive: true });
+window.addEventListener('pageshow', syncServicesHeader);
+syncServicesHeader();
 
 function markCurrentChapter(id: string) {
   directoryLinks.forEach(link => {
