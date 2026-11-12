@@ -395,3 +395,44 @@
   .exhibit-brief { grid-template-columns: clamp(62px, 10svh, 82px) minmax(0, 1fr); padding-top: 9px; }
   .exhibit-capabilities { gap: 3px; }
 }
+
+@media (min-width: 901px) {
+  .product-gallery #aegis-shield {
+    grid-template-rows: max-content auto;
+    align-content: center;
+  }
+  .product-gallery #aegis-shield .exhibit-heading { align-self: start; }
+  .product-gallery #aegis-shield .exhibit-brief {
+    grid-template-columns: minmax(0, 56%) minmax(0, 1fr);
+    align-self: stretch;
+  }
+  .product-gallery #aegis-shield .exhibit-art {
+    position: relative;
+    align-self: stretch;
+  }
+  .product-gallery #aegis-shield .exhibit-art img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: left bottom;
+  }
+}
+
+@media (761px <= width <= 900px) {
+  .product-gallery #aegis-shield {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "heading" "film" "brief";
+    grid-template-rows: auto;
+    align-content: center;
+    row-gap: 10px;
+  }
+  .product-gallery #aegis-shield .exhibit-media {
+    width: min(100%, max(160px, calc((100svh - 445px) * 16 / 9)));
+    justify-self: center;
+  }
+  .product-gallery #aegis-shield .exhibit-brief {
+    grid-template-columns: 82px minmax(0, 1fr);
+  }
+}
