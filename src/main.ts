@@ -95,9 +95,12 @@ if (serviceTrack && previewPicker) {
     const [left, right] = track.children;
     const distance = right.getBoundingClientRect().left - left.getBoundingClientRect().left;
     const base = getComputedStyle(track).transform;
+    const shifted = `translateX(${-distance}px) ${base}`;
+    // Put the incoming card offscreen before sliding backward.
+    if (direction < 0) track.prepend(track.lastElementChild!);
     transition = track.animate([
-      { transform: base },
-      { transform: `translateX(${-distance * direction}px) ${base}` },
+      { transform: direction < 0 ? shifted : base },
+      { transform: direction < 0 ? base : shifted },
     ], { duration: 440, easing: 'cubic-bezier(.22,.76,.2,1)', fill: 'forwards' });
     transition.onfinish = () => select(first + direction);
   }
