@@ -93,12 +93,14 @@
 
 .hero-product-stage {
   --card-width: clamp(104px, min(23vw, 28svh), 255px);
-  --card-step: clamp(54px, 13.6vw, 181px);
+  --card-step: clamp(54px, 14vw, 188px);
+  --card-enlargement: 1.16;
+  --outer-card-enlargement: .48;
   position: relative;
   display: grid;
   place-items: center;
   height: calc(var(--card-width) * 1.25 + 32px);
-  margin-top: 16px;
+  margin-top: 24px;
   perspective: 1000px;
   isolation: isolate;
 }
@@ -144,7 +146,9 @@
 }
 
 .hero-product-card[aria-pressed="true"] img {
-  transform: translateY(-20px) rotateZ(calc(-1 * var(--tilt))) scale(1.08);
+  /* The smaller cards at the edges need a little more magnification. */
+  transform: translateY(-20px) rotateZ(calc(-1 * var(--tilt)))
+    scale(calc(var(--card-enlargement) + (1 - var(--size)) * var(--outer-card-enlargement)));
   border-color: var(--hero-signal);
 }
 
@@ -208,6 +212,8 @@
   .hero-product-stage {
     --card-width: clamp(112px, 34vw, 174px);
     --card-step: 17vw;
+    --card-enlargement: 1.12;
+    --outer-card-enlargement: .44;
   }
   .hero-feature-detail { min-height: 104px; gap: 12px; }
   .hero-feature-link { gap: 6px; padding-inline: 9px; }
