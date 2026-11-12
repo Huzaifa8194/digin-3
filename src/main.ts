@@ -27,7 +27,7 @@ if (touchLayout) {
   void import('./desktop-story');
 }
 
-const loopingVideos = document.querySelectorAll<HTMLVideoElement>('.story-product-video video, .service-loop video');
+const loopingVideos = document.querySelectorAll<HTMLVideoElement>('.story-product-video video');
 const reduceVideoMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const visibleLoopingVideos = new Set<HTMLVideoElement>();
 
@@ -51,6 +51,9 @@ const loopingVideoObserver = new IntersectionObserver(entries => {
   }
 }, { threshold: 0.3 });
 
-loopingVideos.forEach(video => loopingVideoObserver.observe(video));
+loopingVideos.forEach(video => {
+  if (video.closest('.service-loop')) video.defaultPlaybackRate = video.playbackRate = 0.75;
+  loopingVideoObserver.observe(video);
+});
 reduceVideoMotion.addEventListener('change', () => loopingVideos.forEach(updateLoopingVideo));
 document.addEventListener('visibilitychange', () => loopingVideos.forEach(updateLoopingVideo));
