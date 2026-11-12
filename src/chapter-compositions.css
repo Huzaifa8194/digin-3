@@ -288,18 +288,10 @@
   aspect-ratio: 6 / 5;
 }
 
-.service-loop .story-video-overlay {
-  gap: 4px;
-  padding: clamp(8px, 1vw, 15px);
-  background: linear-gradient(transparent 22%, #100d17f5);
-  opacity: 1;
+.service-loop-notes.story-film-notes {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 12px;
 }
-
-.service-loop .story-video-overlay strong {
-  font-size: clamp(.8rem, 1.08vw, 1.05rem);
-}
-
-.service-loop .story-video-overlay > span { font-size: .72rem; }
 
 @media (max-width: 760px) {
   .service-loops {
