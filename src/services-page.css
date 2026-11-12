@@ -451,3 +451,30 @@ html:has(> .services-route) { background: #fff; }
 @media (max-width: 700px) {
   .services-explainer canvas { aspect-ratio: 1.65; }
 }
+
+/* Fit the hero, including its category links, below the fixed header. */
+.services-hero {
+  min-height: calc(100vh - 80px);
+  min-height: calc(100svh - 80px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+.services-hero-grid { min-height: 0; padding-block: clamp(20px, 4svh, 48px); }
+.services-hero .services-intro h1 { font-size: clamp(2.65rem, min(8.45vw, 15svh), 9.7rem); }
+.services-preview { padding-bottom: clamp(12px, 2.4svh, 26px); }
+@media (max-width: 700px) {
+  .services-hero { min-height: calc(100svh - 112px); }
+  .services-hero-grid { padding-block: clamp(12px, 2.3svh, 26px) 6px; }
+  .services-hero .services-intro h1 {
+    font-size: clamp(2.15rem, min(11.5vw, 7.6svh), 5.1rem);
+    margin-block: 12px;
+  }
+  .services-intro > p:not(.services-label) { margin-block: 8px; line-height: 1.45; }
+  .services-intro .services-button { min-height: 44px; margin-top: 4px; }
+  .services-visual { height: clamp(108px, calc(53svh - 220px), 310px); margin-top: 0; }
+  .services-visual-footer { bottom: 3%; }
+}
+@media (max-width: 700px) and (max-height: 680px) {
+  .services-visual { height: clamp(70px, calc(53svh - 250px), 110px); }
+  .services-preview { padding-bottom: 10px; }
+}
