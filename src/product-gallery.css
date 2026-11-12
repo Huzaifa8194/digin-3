@@ -42,7 +42,7 @@
   font-size: clamp(1.45rem, min(3.4vw, 5svh), 2.85rem);
   line-height: 1;
   letter-spacing: -.065em;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 .exhibit-summary { margin: 9px 0 0; max-width: 55ch; color: #45515c; }
 .exhibit-heading .catalog-button { flex: none; gap: 10px; }
@@ -224,7 +224,7 @@
 .gallery-stage[data-paused] .gallery-orbit::after { animation-play-state: paused; }
 #product-collection { scroll-margin-top: 32px; }
 
-/* Size the exhibit around a full, uncropped trailer. */
+/* Pair the uncropped film with a compact product brief. */
 .product-gallery .exhibits {
   width: min(94%, 1440px);
 }
@@ -232,8 +232,15 @@
   --exhibit-accent: #c9ed91;
   --exhibit-tint: #212d1c;
   --exhibit-dark: #10141a;
-  --exhibit-width: min(100%, max(160px, calc((100svh - 350px) * 16 / 9)));
-  padding-block: clamp(12px, 2svh, 20px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 31%);
+  grid-template-areas: "film heading" "film brief";
+  grid-template-rows: 1fr 1fr;
+  align-items: start;
+  column-gap: clamp(16px, 3vw, 44px);
+  row-gap: 16px;
+  min-height: calc(100svh - 96px);
+  padding-block: clamp(16px, 3svh, 32px);
 }
 .product-gallery #sysbastion { --exhibit-accent: #b8f2ce; --exhibit-tint: #142e29; }
 .product-gallery #aegis-shield { --exhibit-accent: #b8dcff; --exhibit-tint: #142945; }
@@ -241,10 +248,13 @@
 .product-gallery #darkintel360 { --exhibit-accent: #dbc4ff; --exhibit-tint: #281b40; }
 
 .product-gallery .exhibit-heading {
-  align-items: flex-end;
-  gap: 16px 24px;
-  width: var(--exhibit-width);
-  margin: 0 auto 12px;
+  grid-area: heading;
+  align-self: end;
+  display: grid;
+  justify-content: stretch;
+  justify-items: start;
+  gap: 12px;
+  margin: 0;
 }
 .product-gallery .exhibit-heading .catalog-kicker { color: var(--gallery-accent); }
 .product-gallery .exhibit-summary { color: #60535b; line-height: 1.55; }
@@ -254,8 +264,10 @@
 }
 
 .product-gallery .exhibit-media {
-  width: var(--exhibit-width);
-  margin-inline: auto;
+  grid-area: film;
+  align-self: center;
+  width: min(100%, max(220px, calc((100svh - 170px) * 16 / 9)));
+  justify-self: end;
   padding: clamp(6px, .8vw, 12px);
   background: radial-gradient(ellipse at 76% 20%, var(--exhibit-tint), var(--exhibit-dark) 74%);
   border: 1px solid color-mix(in srgb, var(--exhibit-accent) 20%, var(--exhibit-dark));
@@ -311,7 +323,7 @@
 
 @media (max-width: 620px) {
   .product-gallery .exhibit-heading { align-items: flex-start; }
-  .product-gallery .product-exhibit { --exhibit-width: min(100%, max(160px, calc((100svh - 390px) * 16 / 9))); }
+
 }
 
 /* Keep the product index close to the gallery. */
@@ -343,4 +355,43 @@
   .gallery-intro h1 em br { display: none; }
   .gallery-stage { width: clamp(105px, 18svh, 124px); margin: 4px auto 8px; }
   .gallery-intro .catalog-index { padding-bottom: 10px; }
+}
+.exhibit-brief {
+  grid-area: brief;
+  display: grid;
+  grid-template-columns: clamp(64px, 7.5vw, 105px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.5vw, 20px);
+  padding-top: 14px;
+  border-top: 1px solid var(--gallery-rule);
+}
+.exhibit-art { display: block; }
+.exhibit-art img { display: block; width: 100%; height: auto; }
+.exhibit-art:is(:hover, :focus-visible) { outline: 2px solid var(--gallery-accent); outline-offset: 3px; }
+.exhibit-capabilities {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-inline-start: 1em;
+  font-size: .84rem;
+  line-height: 1.35;
+}
+.exhibit-capabilities li::marker { color: var(--gallery-accent); }
+@media (max-width: 760px) {
+  .product-gallery .product-exhibit {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "heading" "film" "brief";
+    grid-template-rows: auto;
+    align-content: center;
+    row-gap: 10px;
+  }
+  .product-gallery .exhibit-heading { gap: 7px; }
+  .product-gallery .exhibit-heading .catalog-button { min-height: 36px; }
+  .product-gallery .exhibit-summary { margin-top: 5px; }
+  .product-gallery .exhibit-media {
+    width: min(100%, max(160px, calc((100svh - 460px) * 16 / 9)));
+    justify-self: center;
+  }
+  .exhibit-brief { grid-template-columns: 54px minmax(0, 1fr); padding-top: 9px; }
+  .exhibit-capabilities { gap: 3px; }
 }
