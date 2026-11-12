@@ -11,7 +11,6 @@ export function mountHeroProductFeature() {
   updateHeader();
 
   const feature = hero.querySelector<HTMLElement>('.hero-product-feature')!;
-  const background = hero.querySelector<HTMLVideoElement>('.hero-atmosphere-video')!;
   const picker = feature.querySelector<HTMLElement>('.hero-feature-picker')!;
   const cards = [...feature.querySelectorAll<HTMLElement>('.hero-product-card')];
   const name = feature.querySelector<HTMLElement>('#hero-feature-name')!;
@@ -39,6 +38,7 @@ export function mountHeroProductFeature() {
       const slot = (cardIndex - selected + cards.length + midpoint) % cards.length - midpoint;
       card.dataset.slot = String(slot);
     });
+    hero.dataset.product = product;
     name.textContent = title;
     summary.textContent = button.dataset.summary!;
     link.href = `/${product}/`;
@@ -50,16 +50,10 @@ export function mountHeroProductFeature() {
     const focused = document.activeElement;
     const reading = feature.contains(focused) && focused !== rotation;
     const hovered = canHover.matches && (picker.matches(':hover') || link.matches(':hover'));
-    const rotating = playing && inView && !document.hidden && !reading && !hovered;
-    status.setAttribute('aria-live', rotating ? 'off' : 'polite');
     const motionActive = playing && !reducedMotion.matches && inView && !document.hidden;
+    const rotating = motionActive && !reading && !hovered;
+    status.setAttribute('aria-live', rotating ? 'off' : 'polite');
     hero.toggleAttribute('data-moving', motionActive);
-    if (motionActive) {
-      if (!background.hasAttribute('src')) background.src = background.dataset.src!;
-      if (background.paused) void background.play().catch(() => {});
-    } else {
-      background.pause();
-    }
     if (rotating) {
       timer = window.setTimeout(() => {
         showProduct((selected + 1) % buttons.length);

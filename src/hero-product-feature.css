@@ -104,18 +104,9 @@
 
 .hero-product-halo {
   position: absolute;
-  inset: -30px -10% -14px;
-  background: radial-gradient(ellipse closest-side, #5c87b642, transparent 100%);
+  inset: 45% -5% -15%;
+  background: radial-gradient(ellipse closest-side, color-mix(in srgb, var(--hero-signal) 16%, transparent), transparent);
   pointer-events: none;
-}
-
-.hero-product-halo::after {
-  content: '';
-  position: absolute;
-  inset: 34% 10% 9%;
-  border: 1px solid #a8c5e920;
-  border-radius: 50%;
-  transform: rotateX(53deg);
 }
 
 .hero-product-card {
@@ -271,82 +262,92 @@
 }
 .home-page.hero-header-scrolled > header { background: var(--home-paper, #fff); }
 
-/* The light and orbital traces sit behind the artwork and share its motion control. */
-.hero-atmosphere {
+/* Accent colors are drawn from the featured product artwork. */
+.home-page #home { --hero-signal: #b2d993; }
+.home-page #home[data-product="mobile-pentest"] { --hero-signal: #b9a5e1; }
+.home-page #home[data-product="sysbastion"] { --hero-signal: #86cbb5; }
+.home-page #home[data-product="aegis-shield"] { --hero-signal: #dcb48a; }
+.home-page #home[data-product="darkintel360"] { --hero-signal: #bb9cde; }
+
+.hero-schematic {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  isolation: isolate;
+  background: radial-gradient(ellipse at 50% 65%, #182936 0%, transparent 69%);
 }
 
-.hero-atmosphere::after {
+.hero-schematic-grid {
+  position: absolute;
+  inset: 20% -30% -10%;
+  transform: perspective(440px) rotateX(42deg);
+  background-image:
+    linear-gradient(#99b8cd28 1px, transparent 1px),
+    linear-gradient(90deg, #99b8cd28 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 50% 57%, #000 6%, #000b 34%, transparent 67%);
+}
+
+.hero-schematic-track {
+  position: absolute;
+  top: 47%;
+  left: 6%;
+  width: 27%;
+  height: 18px;
+  color: var(--hero-signal);
+  border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-left: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  transition: color 800ms ease;
+}
+
+.hero-schematic-track + .hero-schematic-track {
+  inset: 70% 6% auto auto;
+  transform: scaleX(-1);
+}
+
+.hero-schematic-track::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, #a6c7f053 1px, transparent 1.4px);
-  background-size: 25px 25px;
-  mask-image: radial-gradient(ellipse at 50% 62%, transparent 22%, #0009 62%, transparent 82%);
+  bottom: 0;
+  left: -3px;
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  opacity: .65;
 }
 
-.hero-atmosphere-light {
+.hero-schematic-track::after {
+  content: '';
   position: absolute;
-  inset: -16% -14%;
-  background:
-    radial-gradient(ellipse 37% 39% at 21% 65%, #254f8790, transparent 100%),
-    radial-gradient(ellipse 38% 43% at 78% 43%, #427ab766, transparent 100%),
-    radial-gradient(ellipse 40% 33% at 56% 91%, #345e955c, transparent 100%);
-  animation: hero-light-drift 15s ease-in-out infinite alternate;
+  top: -1px;
+  inset-inline: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor 50%, transparent) 0 0 / 30% 100% no-repeat;
+  mask-image: linear-gradient(90deg, transparent, #000 15% 85%, transparent);
+  animation: hero-signal-pass 6s linear infinite;
+  animation-play-state: paused;
 }
 
-.hero-atmosphere-orbits {
-  position: absolute;
-  inset: 24% -16% 3%;
-  background: repeating-radial-gradient(
-    ellipse at 50% 50%, transparent 0 37px, #a9cbf22b 38px, transparent 39px 43px
-  );
-  mask-image: radial-gradient(ellipse, transparent 32%, #000 56%, transparent 74%);
-  transform: rotate(-12deg) scaleY(.75);
-  animation: hero-orbit-drift 18s ease-in-out infinite alternate;
-}
+.hero-schematic-track + .hero-schematic-track::after { animation-delay: -3s; }
+#home[data-moving] .hero-schematic-track::after { animation-play-state: running; }
 
-.hero-atmosphere :is(.hero-atmosphere-light, .hero-atmosphere-orbits) { animation-play-state: paused; }
-#home[data-moving] .hero-atmosphere :is(.hero-atmosphere-light, .hero-atmosphere-orbits) {
-  animation-play-state: running;
+@keyframes hero-signal-pass {
+  from { transform: translateX(-28%); opacity: 0; }
+  25%, 75% { opacity: .8; }
+  to { transform: translateX(100%); opacity: 0; }
 }
 
 .home-page #home :is(.hero-intro, .hero-product-feature) { position: relative; }
 
-@keyframes hero-light-drift {
-  from { transform: translate3d(-7%, 3%, 0) rotate(-6deg) scale(1.04); }
-  to { transform: translate3d(8%, -4%, 0) rotate(9deg) scale(1.15); }
-}
+.mobile-story .home-page #home > .hero-orbit { margin: 12px auto 0; }
 
-@keyframes hero-orbit-drift {
-  from { transform: translate3d(-3%, 2%, 0) rotate(-12deg) scaleY(.75); }
-  to { transform: translate3d(4%, -4%, 0) rotate(8deg) scaleY(.91); }
-}
-
-.mobile-story .home-page #home > .hero-orbit {
-  margin: 12px auto 0;
+@media (max-width: 700px) {
+  .hero-schematic-grid { background-size: 36px 36px; }
+  .hero-schematic-track { top: 45%; left: 3%; width: 20%; }
+  .hero-schematic-track + .hero-schematic-track { inset: 64% 3% auto auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #home .hero-atmosphere :is(.hero-atmosphere-light, .hero-atmosphere-orbits) { animation: none; }
-}
-
-.hero-atmosphere-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: .36;
-  filter: saturate(.72);
-  mix-blend-mode: screen;
-  mask-image: radial-gradient(ellipse at 50% 61%, #000 18%, #000c 55%, transparent 91%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-atmosphere-video { display: none; }
+  .hero-schematic-track { transition: none; }
+  .hero-schematic-track::after { animation: none; opacity: .35; }
 }
