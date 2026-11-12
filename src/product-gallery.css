@@ -359,7 +359,7 @@
 .exhibit-brief {
   grid-area: brief;
   display: grid;
-  grid-template-columns: clamp(72px, 8.5vw, 120px) minmax(0, 1fr);
+  grid-template-columns: clamp(110px, min(12vw, 21svh), 200px) minmax(0, 1fr);
   align-items: center;
   gap: clamp(10px, 1.5vw, 20px);
   padding-top: 14px;
@@ -392,6 +392,6 @@
     width: min(100%, max(160px, calc((100svh - 460px) * 16 / 9)));
     justify-self: center;
   }
-  .exhibit-brief { grid-template-columns: 62px minmax(0, 1fr); padding-top: 9px; }
+  .exhibit-brief { grid-template-columns: clamp(62px, 10svh, 82px) minmax(0, 1fr); padding-top: 9px; }
   .exhibit-capabilities { gap: 3px; }
 }
