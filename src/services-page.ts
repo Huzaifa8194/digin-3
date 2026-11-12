@@ -3,14 +3,6 @@ import './standalone-page';
 import './services-page.css';
 import { drawServiceArtwork } from './service-artwork';
 
-const diagrams = [
-  { label: 'Perimeter' },
-  { label: 'Controls' },
-  { label: 'Signals' },
-  { label: 'Network' },
-  { label: 'Data' },
-];
-
 const tau = 2 * Math.PI;
 
 // SimplexNoise is reused directly from the installed MIT-licensed Three.js package.
@@ -122,7 +114,7 @@ if (hero && heroContext) {
   function select(index: number) {
     selection = index;
     previewLinks.forEach((link, linkIndex) => link.classList.toggle('is-previewed', linkIndex === index));
-    if (label) label.textContent = `0${index + 1} / ${diagrams[index].label}`;
+    if (label) label.textContent = `0${index + 1} / ${previewLinks[index].querySelector('.services-preview-name')?.textContent ?? ''}`;
     drawSculpture(heroContext!, selection);
   }
 

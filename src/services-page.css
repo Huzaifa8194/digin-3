@@ -370,9 +370,12 @@
   align-items: end;
   column-gap: clamp(22px, 4vw, 60px);
 }
-.services-chapter-copy .services-label { grid-column: 1 / -1; }
+.services-chapter-copy .services-label { align-self: start; margin-top: 14px; }
 .services-chapter h3 {
-  font-size: clamp(2.55rem, 5.7vw, 6.4rem);
+  grid-column: 1 / -1;
+  font-size: clamp(2.25rem, 4.65vw, 5.25rem);
+  font-weight: 750;
+  text-wrap: balance;
   letter-spacing: -.077em;
   margin: 12px 0 0;
 }
@@ -456,3 +459,19 @@ html:has(> .services-route) { background: #fff; }
 .services-route .footer-top > a, .services-route .footer-bottom { border-color: var(--services-line); }
 .services-route .footer-bottom > :is(span, a:not(.brand)) { color: var(--services-muted); }
 .services-route .new-footer a:hover { color: var(--services-coral-ink); }
+
+.services-preview a .services-preview-name {
+  color: inherit;
+  font: inherit;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.services-visual-footer {
+  max-width: 74%;
+  text-align: right;
+}
+.services-chapter-copy > p:last-child { margin-top: 14px; }
+@media (max-width: 700px) {
+  .services-chapter-copy .services-label,
+  .services-chapter-copy > p:last-child { margin-top: 0; }
+}
