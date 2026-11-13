@@ -150,17 +150,12 @@ html.mobile-story {
   padding-block: calc(var(--mobile-header-height) + 8px) 8px;
 }
 .mobile-story .home-page #home .hero-intro h1 { font-size: clamp(1.7rem, min(8vw, 5svh), 2.6rem); }
-.mobile-story .home-page #home .hero-eyebrow,
-.mobile-story .home-page #home .hero-intro > p:last-child,
-.mobile-story .home-page #home #orbit-detail { display: none; }
-.mobile-story .home-page #home .hero-product-stage { --card-width: clamp(62px, var(--hero-height-budget) * .18, 122px); }
-.mobile-story .home-page #home .hero-feature-detail { min-height: 0; gap: 5px; }
-.mobile-story .home-page #home #hero-feature-summary { display: none; }
-.mobile-story .home-page #home .hero-orbit { width: min(100%, 290px); margin: 0; }
-.mobile-story .home-page #home .security-orbit-map { width: min(90%, clamp(108px, var(--hero-height-budget) * .32, 220px)); }
-.mobile-story .home-page #home .orbit-node { min-height: 0; gap: 2px; font-size: .5rem; }
-.mobile-story .home-page #home .orbit-node-icon { width: 23px; height: 23px; }
-.mobile-story .home-page #home .orbit-node svg { width: 13px; height: 13px; }
+.mobile-story .home-page #home .hero-orbit { display: none; }
+.mobile-story .home-page #home .hero-product-stage {
+  --card-width: clamp(94px, min(34vw, var(--hero-height-budget) * .26), 174px);
+}
+.mobile-story .home-page #home .hero-feature-detail { min-height: 0; gap: 8px; }
+.mobile-story .home-page #home #hero-feature-summary { font-size: clamp(.75rem, 2.8vw, .95rem); line-height: 1.35; }
 
 @media (max-height: 660px) {
   .mobile-story .mobile-guided-story :is(#test, #protect, #watch) .story-product-intro { display: none; }
