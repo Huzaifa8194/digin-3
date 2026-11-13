@@ -111,6 +111,10 @@
 :is(.home-page, .standalone-page) > header .tube-nav a.mega-feature {
   display: grid;
   gap: 8px;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
   padding: clamp(16px, 2vw, 26px);
   background: #fff2e7;
   border: 1px solid #dcbca9;
