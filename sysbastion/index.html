@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SysBastion: Windows hardening you can undo | DigiInn360</title>
+  <meta name="description" content="SysBastion hardens Windows endpoints in one console: scripts, PowerShell, outbound and inbound traffic, Office and PDF readers. Every change is journaled and restorable.">
+  <link rel="canonical" href="https://digin-3.vercel.app/sysbastion/">
+  <meta name="theme-color" content="#07090c">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="/sysbastion/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/brand/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DigiInn360">
+  <meta property="og:title" content="SysBastion: deny by default, reversible by design">
+  <meta property="og:description" content="One console that closes the ways attackers get into a Windows machine, and journals every change so it can be put back exactly.">
+  <meta property="og:url" content="https://digin-3.vercel.app/sysbastion/">
+  <meta property="og:image" content="https://digin-3.vercel.app/sysbastion/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SysBastion: deny by default, reversible by design">
+  <meta name="twitter:description" content="Windows endpoint hardening in one console, with an exact-original Restore All.">
+  <meta name="twitter:image" content="https://digin-3.vercel.app/sysbastion/og.png">
+
+  <link rel="preload" href="/sysbastion/fonts/switzer-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/sysbastion/fonts/switzer-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/sysbastion/media/film-poster.webp" as="image" type="image/webp" fetchpriority="high">
+
+  <script>
+    document.documentElement.classList.add('js');
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SysBastion",
+    "softwareVersion": "1.4",
+    "operatingSystem": "Windows",
+    "applicationCategory": "SecurityApplication",
+    "description": "Windows endpoint hardening console. Script and execution control, PowerShell hardening, outbound and inbound firewall, document-reader policies, a change journal with exact restore, and an audit trail.",
+    "url": "https://digin-3.vercel.app/sysbastion/",
+    "publisher": { "@type": "Organization", "name": "DigiInn360", "url": "https://digin-3.vercel.app/" }
+  }
+  </script>
+  <link rel="stylesheet" href="/src/sysbastion/styles/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#top">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 4.5 5.4v5.5c0 4.9 3.1 8.5 7.5 9.9 4.4-1.4 7.5-5 7.5-9.9V5.4z"/><path class="mark__tick" d="m8.7 12.2 2.3 2.3 4.3-4.6"/></svg>
+      <span>SysBastion</span>
+      <span class="top__ver">V1.4</span>
+    </a>
+    <nav class="top__nav" aria-label="Page">
+      <ul>
+        <li><a class="draw" href="#controls">Controls</a></li>
+        <li><a class="draw" href="#film">Film</a></li>
+        <li><a class="draw" href="#restore">Restore All</a></li>
+        <li><a class="draw" href="/products/">All products</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--primary top__cta" href="/contact/" data-fill><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Request a demo</span></a>
+    <button class="top__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-open>Menu</button>
+  </header>
+
+  <div class="menu" id="menu" hidden data-menu>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a href="#controls">Controls</a></li>
+        <li><a href="#film">Film</a></li>
+        <li><a href="#restore">Restore All</a></li>
+        <li><a href="/products/">All products</a></li>
+        <li><a href="/contact/">Request a demo</a></li>
+      </ul>
+    </nav>
+    <button class="menu__close" type="button" data-menu-close>Close</button>
+  </div>
+
+  <main id="main" tabindex="-1">
+
+    <!-- HERO -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <!-- Hero intro is CSS-only (.rise) so the LCP text paints without waiting for JS. -->
+      <p class="hero__meta rise" style="--d:0">Windows endpoint hardening <span class="hero__by">by <a class="link" href="/">DigiInn360</a></span></p>
+      <p class="hero__ways"><span class="rise" style="--d:0.05">Every attack needs a way&nbsp;in.</span> <span class="hero__way rise" style="--d:0.15">A script. A macro. A connection&nbsp;out.</span></p>
+      <h1 class="hero__title rise rise--big" id="hero-title" style="--d:0.3">SysBastion</h1>
+      <div class="hero__foot">
+        <p class="hero__tag"><span class="rise" style="--d:0.55">Deny by default.</span> <span class="muted rise" style="--d:0.62">Reversible by design.</span></p>
+        <div class="hero__copy rise" style="--d:0.75">
+          <p>One console that closes the ways attackers get into a Windows machine, from script hosts and Office macros to tools phoning out. Every change is journaled with the value it replaced, so any setting can go back exactly as it was.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="/contact/" data-fill><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Request a demo</span></a>
+            <a class="btn btn--ghost" href="#film" data-fill data-film-jump="0"><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Watch the film <span class="mono">0:58</span></span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILM -->
+    <section class="film" id="film" aria-labelledby="film-title">
+      <div class="film__frame" data-reveal="scale">
+        <video class="film__video" data-film width="1920" height="1080" playsinline muted preload="metadata" poster="/sysbastion/media/film-poster.webp" aria-describedby="film-chapters-title">
+          <source src="/sysbastion/media/sysbastion-film.mp4" type="video/mp4">
+        </video>
+        <div class="film__controls">
+          <button class="film__btn" type="button" data-film-toggle aria-label="Play the film">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-play" d="M4 2.5v11l9-5.5z"/><path class="i-pause" d="M4 2.5h3v11H4zm5 0h3v11H9z"/></svg>
+          </button>
+          <div class="film__track" aria-hidden="true"><span data-film-progress></span></div>
+          <span class="film__time mono" data-film-time>0:00 / 0:58</span>
+          <button class="film__btn film__sound" type="button" data-film-sound aria-pressed="false">Sound off</button>
+        </div>
+      </div>
+      <div class="film__side">
+        <h2 class="film__title" id="film-title" data-split="lines">SysBastion in 58 seconds</h2>
+        <p class="film__lede" id="film-chapters-title">The launch film, chapter by chapter. Pick a chapter to jump to it.</p>
+        <ol class="chapters" data-chapters>
+          <li><button type="button" data-seek="0"><span class="mono">0:00</span><span>Every attack needs a way in</span></button></li>
+          <li><button type="button" data-seek="7.6"><span class="mono">0:07</span><span>One-click hardening</span></button></li>
+          <li><button type="button" data-seek="13"><span class="mono">0:13</span><span>14 risky file types</span></button></li>
+          <li><button type="button" data-seek="20.2"><span class="mono">0:20</span><span>PowerShell, locked down</span></button></li>
+          <li><button type="button" data-seek="24"><span class="mono">0:24</span><span>35 tools, no internet</span></button></li>
+          <li><button type="button" data-seek="32"><span class="mono">0:32</span><span>Shields-Up</span></button></li>
+          <li><button type="button" data-seek="36.6"><span class="mono">0:36</span><span>Document readers</span></button></li>
+          <li><button type="button" data-seek="40.6"><span class="mono">0:40</span><span>Restore All</span></button></li>
+          <li><button type="button" data-seek="46.5"><span class="mono">0:46</span><span>What, when, who</span></button></li>
+          <li><button type="button" data-seek="50"><span class="mono">0:50</span><span>16 admin tools</span></button></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- INTRO / STATEMENT -->
+    <section class="intro" id="controls" aria-labelledby="controls-title">
+      <h2 class="intro__title" id="controls-title" data-split="lines">Six doors, closed from one console.</h2>
+      <div class="intro__body">
+        <p data-reveal="up">Each group below is a real section of the SysBastion app, in the order the app lists them. As you read one, this page applies it to a demo journal, the same way SysBastion records a change on a machine: the setting, the value it found, the value it set.</p>
+        <p class="intro__note" data-reveal="up" data-delay="0.1">Nothing on your computer changes. The bar at the bottom of the screen is the demo, and its <strong>Restore all applied</strong> button rewinds the page.</p>
+      </div>
+    </section>
+
+    <!-- 01 SYSTEM HARDENING -->
+    <section class="group g-harden" id="hardening" data-group="hardening" aria-labelledby="hardening-title">
+      <div class="group__head">
+        <p class="group__label"><span class="mono">01</span> System hardening</p>
+        <p class="status" data-status><span class="status__dot" aria-hidden="true"></span><span data-status-text>Not applied</span></p>
+      </div>
+      <h2 class="group__title" id="hardening-title" data-split="lines">One click hardens the&nbsp;basics.</h2>
+      <figure class="clip g-harden__clip" data-reveal="scale">
+        <video data-clip width="1280" height="720" muted loop playsinline preload="none" poster="/sysbastion/media/clip-hardening.webp" aria-label="The SysBastion system hardening panel switching SmartScreen, DEP and AutoRun controls on">
+          <source src="/sysbastion/media/clip-hardening.mp4" type="video/mp4">
+        </video>
+        <figcaption><button type="button" class="seek" data-film-jump="7.6">From the film, <span class="mono">0:07</span></button></figcaption>
+      </figure>
+      <div class="g-harden__copy">
+        <p>The settings Windows ships loose, switched to safe in a single pass. Showing file extensions alone exposes a name like <span class="mono">invoice.pdf.bat</span> for what it is.</p>
+        <ul class="switches" aria-label="Controls in this group">
+          <li style="--i:0"><span>UAC enforcement</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:1"><span>SmartScreen</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:2"><span>Data Execution Prevention</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:3"><span>AutoRun and AutoPlay off</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:4"><span>SMB1 and SMB2 off</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:5"><span>NetBIOS off</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:6"><span>Safe DLL search order</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:7"><span>DCOM off</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:8"><span>File extensions visible</span><span class="switch" aria-hidden="true"></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 02 SCRIPT & EXECUTION -->
+    <section class="group g-scripts" id="scripts" data-group="scripts" aria-labelledby="scripts-title">
+      <div class="group__head">
+        <p class="group__label"><span class="mono">02</span> Script and execution control</p>
+        <p class="status" data-status><span class="status__dot" aria-hidden="true"></span><span data-status-text>Not applied</span></p>
+      </div>
+      <h2 class="group__title" id="scripts-title" data-split="lines">14 risky file types. Not one of them runs on a double&nbsp;click.</h2>
+      <ul class="exts" aria-label="File types SysBastion neutralises">
+        <li style="--i:0">.vbs</li><li style="--i:1">.vbe</li><li style="--i:2">.js</li><li style="--i:3">.jse</li><li style="--i:4">.wsf</li><li style="--i:5">.wsh</li><li style="--i:6">.hta</li>
+        <li style="--i:7">.scr</li><li style="--i:8">.pif</li><li style="--i:9">.reg</li><li style="--i:10">.jar</li><li style="--i:11">.bat</li><li style="--i:12">.cmd</li><li style="--i:13">.ps1</li>
+      </ul>
+      <div class="g-scripts__grid">
+        <p class="g-scripts__copy">Double-click one and SysBastion opens it in Notepad as plain text, so you can read it without it running. Windows Script Host is switched off, and AppLocker-based execution control catches whatever is left.</p>
+        <div class="versus">
+          <figure class="clip versus__clip" data-reveal="clip">
+            <video data-clip width="1280" height="720" muted loop playsinline preload="none" poster="/sysbastion/media/clip-scripts.webp" aria-label="A batch file running freely, then the same file blocked by group policy once SysBastion is applied">
+              <source src="/sysbastion/media/clip-scripts.mp4" type="video/mp4">
+            </video>
+            <figcaption><button type="button" class="seek" data-film-jump="13">From the film, <span class="mono">0:13</span></button></figcaption>
+          </figure>
+          <dl class="versus__rows">
+            <div class="versus__row is-without"><dt>Without SysBastion</dt><dd>The script runs</dd></div>
+            <div class="versus__row is-with"><dt>With SysBastion</dt><dd class="mono">This program is blocked by group policy.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 POWERSHELL -->
+    <section class="group g-shell" id="powershell" data-group="powershell" aria-labelledby="powershell-title">
+      <div class="group__head">
+        <p class="group__label"><span class="mono">03</span> PowerShell hardening</p>
+        <p class="status" data-status><span class="status__dot" aria-hidden="true"></span><span data-status-text>Not applied</span></p>
+      </div>
+      <div class="g-shell__text">
+        <h2 class="group__title" id="powershell-title" data-split="lines">Locked at the machine&nbsp;level.</h2>
+        <p>PowerShell is the attacker's favourite shell because it is already there. SysBastion enforces the execution policy and adds a machine-level block on running script files.</p>
+        <ul class="switches switches--wide" aria-label="Controls in this group">
+          <li style="--i:0"><span>Execution policy enforced</span><span class="switch" aria-hidden="true"></span></li>
+          <li style="--i:1"><span>Script files blocked for the whole machine</span><span class="switch" aria-hidden="true"></span></li>
+        </ul>
+      </div>
+      <figure class="clip g-shell__clip" data-reveal="scale">
+        <video data-clip width="1280" height="720" muted loop playsinline preload="none" poster="/sysbastion/media/clip-powershell.webp" aria-label="The SysBastion PowerShell panel with the machine-level script block switched on">
+          <source src="/sysbastion/media/clip-powershell.mp4" type="video/mp4">
+        </video>
+        <figcaption><button type="button" class="seek" data-film-jump="20.2">From the film, <span class="mono">0:20</span></button></figcaption>
+      </figure>
+    </section>
+
+    <!-- 04 OUTBOUND FIREWALL -->
+    <section class="group g-out" id="outbound" data-group="outbound" aria-labelledby="outbound-title">
+      <div class="group__head">
+        <p class="group__label"><span class="mono">04</span> Outbound firewall</p>
+        <p class="status" data-status><span class="status__dot" aria-hidden="true"></span><span data-status-text>Not applied</span></p>
+      </div>
+      <div class="g-out__top">
+        <p class="g-out__num" aria-hidden="true">35</p>
+        <h2 class="group__title" id="outbound-title" data-split="lines"><span class="sr-only">35 </span>tools attackers love. No&nbsp;internet.</h2>
+      </div>
+      <div class="g-out__grid">
+        <div class="g-out__copy">
+          <p>Attacks that live off the land borrow tools Windows already trusts. SysBastion stops 35 of them, plus the document apps that launch them, from reaching the internet.</p>
+          <p><strong>Enforced twice:</strong> each rule lives in Windows Defender Firewall and again in the Windows Filtering Platform, so one layer being switched off does not reopen the door.</p>
+          <ul class="tools" aria-label="Some of the 35 blocked tools">
+            <li>PowerShell</li><li>certutil</li><li>mshta</li><li>rundll32</li><li>regsvr32</li><li>bitsadmin</li><li>Word</li><li>Excel</li><li class="tools__more">and 27 more</li>
+          </ul>
+        </div>
+        <figure class="wire" data-wire>
+          <svg viewBox="0 0 640 300" role="img" aria-labelledby="wire-title">
+            <title id="wire-title">Outbound traffic from the endpoint is stopped twice, by Windows Defender Firewall and by the Windows Filtering Platform, before it reaches the internet.</title>
+            <g class="wire__paths">
+              <path d="M110 150 C 230 70, 330 70, 560 150"/>
+              <path d="M110 150 C 230 120, 330 120, 560 150"/>
+              <path d="M110 150 L 560 150"/>
+              <path d="M110 150 C 230 180, 330 180, 560 150"/>
+              <path d="M110 150 C 230 230, 330 230, 560 150"/>
+            </g>
+            <g class="wire__packets" data-packets></g>
+            <g class="wire__wall wire__wall--fw"><line x1="330" y1="40" x2="330" y2="260"/><text x="330" y="284" text-anchor="middle">Defender Firewall</text></g>
+            <g class="wire__wall wire__wall--wfp"><line x1="400" y1="40" x2="400" y2="260"/><text x="400" y="24" text-anchor="middle">Filtering Platform</text></g>
+            <g class="wire__node">
+              <rect x="64" y="128" width="64" height="40" rx="5"/><path d="M56 174h80"/>
+              <text x="96" y="196" text-anchor="middle">Endpoint</text>
+            </g>
+            <g class="wire__node">
+              <circle cx="576" cy="150" r="22"/><path d="M554 150h44M576 128c-9 12-9 32 0 44M576 128c9 12 9 32 0 44"/>
+              <text x="576" y="196" text-anchor="middle">Internet</text>
+            </g>
+          </svg>
+          <figcaption class="wire__state"><span class="wire__off">Not applied: traffic reaches the internet</span><span class="wire__on">Applied: stopped at both walls</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 05 SHIELDS-UP -->
+    <section class="group g-shields" id="shields" data-group="shields" aria-labelledby="shields-title">
+      <figure class="g-shields__media" aria-hidden="true">
+        <video data-clip width="1280" height="720" muted loop playsinline preload="none" poster="/sysbastion/media/clip-shields.webp">
+          <source src="/sysbastion/media/clip-shields.mp4" type="video/mp4">
+        </video>
+      </figure>
+      <div class="g-shields__inner">
+        <div class="group__head">
+          <p class="group__label"><span class="mono">05</span> Inbound Shields-Up</p>
+          <p class="status" data-status><span class="status__dot" aria-hidden="true"></span><span data-status-text>Not applied</span></p>
+        </div>
+        <h2 class="g-shields__title" id="shields-title" data-split="lines">Shields-Up. <span class="muted">Nothing gets in&nbsp;uninvited.</span></h2>
+        <div class="g-shields__copy">
+          <p>Every unsolicited inbound connection is refused, except the ones you allow by name. It is still on after a restart.</p>
+          <ul class="switches switches--wide" aria-label="Controls in this group">
+            <li style="--i:0"><span>Unsolicited inbound blocked</span><span class="switch" aria-hidden="true"></span></li>
+            <li style="--i:1"><span>Still on after restart</span><span class="switch" aria-hidden="true"></span></li>
+          </ul>
+          <button type="button" class="seek" data-film-jump="32">From the film, <span class="mono">0:32</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 DOCUMENT READERS -->
+    <section class="group g-readers" id="readers" data-group="readers" aria-labelledby="readers-title">
+      <div class="group__head">
+        <p class="group__label"><span class="mono">06</span> Document-reader hardening</p>
+        <p class="status" data-status><span class="status__dot" aria-hidden="true"></span><span data-status-text>Not applied</span></p>
+      </div>
+      <h2 class="group__title" id="readers-title" data-split="lines">Hardened before they’re&nbsp;installed.</h2>
+      <p class="g-readers__lede">Documents are where macros and scripts arrive. SysBastion locks the readers down through the official machine policies each vendor supports, and those policies can be set before the app is even on the machine.</p>
+      <div class="readers">
+        <div class="reader">
+          <h3>Microsoft Office</h3>
+          <ul class="switches" aria-label="Microsoft Office policies">
+            <li style="--i:0"><span>Macros</span><span class="switch" aria-hidden="true"></span></li>
+            <li style="--i:1"><span>DDE</span><span class="switch" aria-hidden="true"></span></li>
+            <li style="--i:2"><span>ActiveX</span><span class="switch" aria-hidden="true"></span></li>
+            <li style="--i:3"><span>OLE</span><span class="switch" aria-hidden="true"></span></li>
+          </ul>
+        </div>
+        <div class="reader">
+          <h3>Adobe Acrobat Reader</h3>
+          <ul class="switches" aria-label="Adobe Acrobat Reader policies">
+            <li style="--i:4"><span>JavaScript</span><span class="switch" aria-hidden="true"></span></li>
+            <li style="--i:5"><span>Protected View</span><span class="switch" aria-hidden="true"></span></li>
+            <li style="--i:6"><span>Enhanced Security</span><span class="switch" aria-hidden="true"></span></li>
+          </ul>
+        </div>
+        <div class="reader">
+          <h3>Foxit Reader <span class="reader__tag">Not installed yet</span></h3>
+          <ul class="switches" aria-label="Foxit Reader policies">
+            <li style="--i:7"><span>Machine policy staged</span><span class="switch" aria-hidden="true"></span></li>
+          </ul>
+        </div>
+      </div>
+      <figure class="clip g-readers__clip" data-reveal="clip">
+        <video data-clip width="1280" height="720" muted loop playsinline preload="none" poster="/sysbastion/media/clip-docs.webp" aria-label="Office, Acrobat and Foxit policy toggles switching on, including Foxit before it is installed">
+          <source src="/sysbastion/media/clip-docs.mp4" type="video/mp4">
+        </video>
+        <figcaption><button type="button" class="seek" data-film-jump="36.6">From the film, <span class="mono">0:36</span></button></figcaption>
+      </figure>
+    </section>
+
+    <!-- 07 RESTORE ALL -->
+    <section class="restore" id="restore" aria-labelledby="restore-title">
+      <div class="restore__text">
+        <p class="group__label"><span class="mono">07</span> Restore All</p>
+        <h2 class="restore__title" id="restore-title" data-split="lines">Exact original. Not&nbsp;defaults.</h2>
+        <p>Every change is journaled with the value it replaced. Restore All puts each setting back to that exact value, not to a generic Windows default, so a machine you hardened returns to the state you found it in.</p>
+        <p class="restore__try">This page has been keeping its own journal while you read. Try it.</p>
+        <button type="button" class="btn btn--primary btn--big" data-restore data-fill><span class="btn__fill" aria-hidden="true"></span><span class="btn__label" data-restore-label>Restore all applied</span></button>
+      </div>
+      <div class="journal-panel">
+        <div class="journal-panel__head">
+          <p><strong>Change journal</strong></p>
+          <p class="mono" data-entry-count>0 journaled changes</p>
+        </div>
+        <table class="jtable">
+          <caption class="sr-only">Demo change journal for this page</caption>
+          <thead><tr><th scope="col">Setting</th><th scope="col">Original value</th><th scope="col">Current</th></tr></thead>
+          <tbody data-journal-rows>
+            <tr class="jtable__empty"><td colspan="3">Nothing applied yet. Scroll through the six groups above, or press Apply all.</td></tr>
+          </tbody>
+        </table>
+        <p class="journal-panel__foot">Demo values. On a real machine SysBastion records whatever value it finds.</p>
+      </div>
+    </section>
+
+    <!-- 08 AUDIT -->
+    <section class="audit" id="audit" aria-labelledby="audit-title">
+      <p class="group__label"><span class="mono">08</span> Evidence and audit trail</p>
+      <h2 class="audit__title" id="audit-title"><span data-split="chars">What.</span> <span data-split="chars" data-delay="0.15">When.</span> <span data-split="chars" data-delay="0.3">Who.</span></h2>
+      <div class="audit__grid">
+        <p class="audit__copy">An execution log and ownership records show what was changed, when, and that SysBastion made the change. An auditor gets evidence, not somebody’s memory of last Tuesday.</p>
+        <div class="audit__log">
+          <table class="jtable jtable--log">
+            <caption class="sr-only">Demo execution log for this page</caption>
+            <thead><tr><th scope="col">Time</th><th scope="col">Change</th><th scope="col">Action</th><th scope="col">By</th></tr></thead>
+            <tbody data-audit-rows>
+              <tr class="jtable__empty"><td colspan="4">The log fills in as the page applies each group.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN TOOLS -->
+    <section class="tools16" aria-labelledby="tools-title">
+      <h2 class="tools16__title" id="tools-title"><span class="tools16__num">16</span> <span data-split="lines">admin tools. One tab&nbsp;away.</span></h2>
+      <p class="tools16__lede">The Windows consoles you reach for while hardening, opened straight from SysBastion’s System tools tab.</p>
+      <ul class="tools16__grid">
+        <li style="--i:0"><span>System Restore</span><small>Restore points and rollback</small></li>
+        <li style="--i:1"><span>Registry Editor</span><small>Inspect registry keys</small></li>
+        <li style="--i:2"><span>Windows Services</span><small>Start, stop, configure</small></li>
+        <li style="--i:3"><span>Task Manager</span><small>Processes and performance</small></li>
+        <li style="--i:4"><span>Event Viewer</span><small>Windows event logs</small></li>
+        <li style="--i:5"><span>System Information</span><small>Hardware and OS details</small></li>
+        <li style="--i:6"><span>Windows Features</span><small>Turn features on or off</small></li>
+        <li style="--i:7"><span>Disk Cleanup</span><small>Free up disk space</small></li>
+        <li style="--i:8"><span>DCOM Config</span><small>Component Services</small></li>
+        <li style="--i:9"><span>MSConfig</span><small>Startup and boot options</small></li>
+        <li style="--i:10"><span>UAC Settings</span><small>Notification level</small></li>
+        <li style="--i:11"><span>Windows Firewall</span><small>Rules and profiles</small></li>
+        <li style="--i:12"><span>Active Connections</span><small>Open network connections</small></li>
+        <li style="--i:13"><span>Windows Updates</span><small>Update status</small></li>
+        <li style="--i:14"><span>Command Prompt</span><small>cmd.exe</small></li>
+        <li style="--i:15"><span>PowerShell</span><small>Windows PowerShell</small></li>
+      </ul>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" aria-labelledby="cta-title">
+      <svg class="cta__mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 4.5 5.4v5.5c0 4.9 3.1 8.5 7.5 9.9 4.4-1.4 7.5-5 7.5-9.9V5.4z"/><path class="mark__tick" d="m8.7 12.2 2.3 2.3 4.3-4.6"/></svg>
+      <h2 class="cta__title" id="cta-title" data-split="lines">Harden the fleet. Keep the way&nbsp;back.</h2>
+      <p class="cta__copy">See SysBastion on your own Windows machines with the DigiInn360 team.</p>
+      <div class="cta__actions">
+        <a class="btn btn--primary btn--big" href="/contact/" data-fill><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Request a demo</span></a>
+        <a class="btn btn--ghost btn--big" href="/products/" data-fill><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">All DigiInn360 products</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__brand">
+      <a href="/" aria-label="DigiInn360 home"><img src="/brand/digiinn360-light.png" alt="DigiInn360" width="160" height="40" loading="lazy" decoding="async"></a>
+      <p>SysBastion V1.4 is a DigiInn360 product.</p>
+    </div>
+    <nav class="foot__nav" aria-label="DigiInn360">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/services/">Services</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <p class="foot__small">© 2026 DigiInn360. Set in Switzer and JetBrains Mono.</p>
+  </footer>
+
+  <!-- The demo journal bar: mirrors SysBastion's own bottom action bar -->
+  <aside class="bar" aria-label="Demo journal" data-bar>
+    <div class="bar__point">
+      <span class="switch is-fixed-on" aria-hidden="true"></span>
+      <span class="bar__pointtext"><strong>Restore point</strong><small>Offered before rules apply</small></span>
+    </div>
+    <p class="bar__status" aria-live="polite"><span class="mono"><span data-count>0</span>/6</span> <span class="bar__words">control groups applied</span> <span class="bar__note">on this page only</span></p>
+    <div class="bar__actions">
+      <button type="button" class="btn btn--ghost btn--small bar__journal" data-journal-open data-fill aria-expanded="false" aria-controls="journal"><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Journal <span class="mono" data-entries>0</span></span></button>
+      <button type="button" class="btn btn--primary btn--small" data-restore data-fill><span class="btn__fill" aria-hidden="true"></span><span class="btn__label" data-restore-label>Restore all applied</span></button>
+    </div>
+    <div class="drawer" id="journal" hidden data-drawer>
+      <div class="drawer__head">
+        <p><strong>Journal</strong> <span class="muted">this page, this visit</span></p>
+        <button type="button" class="drawer__close" data-journal-close>Close</button>
+      </div>
+      <ol class="drawer__list" data-drawer-list>
+        <li class="drawer__empty">Nothing applied yet.</li>
+      </ol>
+    </div>
+  </aside>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script type="module" src="/src/sysbastion/main.ts"></script>
+</body>
+</html>
