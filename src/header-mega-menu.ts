@@ -14,7 +14,7 @@ const groups = [
         ['Data & Application Security', 'Protect sensitive data and the applications that handle it.', '#data-application-security'],
       ] },
     ],
-    feature: ['Need help scoping a security project?', 'Talk through your goals and which services fit.', '/contact/'],
+    feature: ['Need help scoping a security project?', 'Talk through your goals and which services fit.', '/contact/', 'Talk to our team'],
   },
   {
     title: 'Security products',
@@ -31,7 +31,7 @@ const groups = [
         ['DarkIntel360', 'Track exposed credentials, data leaks, and emerging threats.', '#darkintel360'],
       ] },
     ],
-    feature: ['Choosing a security tool?', 'Compare the five offerings and watch their trailers.', '/products/'],
+    feature: ['Choosing a security tool?', 'Compare the five offerings and watch their trailers.', '/products/', 'View products'],
   },
 ];
 
@@ -79,7 +79,7 @@ if (header && nav) {
             `).join('')}</ul>
           </section>
         `).join('')}
-        <a class="mega-feature" href="${group.feature[2]}"><strong>${group.feature[0]} ↗</strong><span>${group.feature[1]}</span></a>
+        <a class="mega-feature" href="${group.feature[2]}"><strong>${group.feature[0]}</strong><span>${group.feature[1]}</span><span class="mega-feature-action">${group.feature[3]} ↗</span></a>
       </div>`;
     link.replaceWith(button, panel);
     controls.push(button);

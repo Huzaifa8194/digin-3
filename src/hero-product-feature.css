@@ -15,8 +15,8 @@
   background: #ffffff09;
 }
 
-.home-page:not(.hero-header-scrolled) > header .tube-nav a { color: var(--hero-muted); }
-.home-page:not(.hero-header-scrolled) > header .tube-nav a:is(:hover, [aria-current]) {
+.home-page:not(.hero-header-scrolled) > header .tube-nav > a { color: var(--hero-muted); }
+.home-page:not(.hero-header-scrolled) > header .tube-nav > a:is(:hover, [aria-current]) {
   background: #ffffff15;
   color: var(--hero-ink);
   box-shadow: none;
