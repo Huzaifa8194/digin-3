@@ -5,6 +5,7 @@ import './chapter-compositions.css';
 import './layout-refinement.css';
 import './standalone-page.css';
 import './header-navigation.css';
+import './header-mega-menu';
 import { mountComponentRefresh } from './component-refresh';
 import { mountTeam } from './reference-components';
 
