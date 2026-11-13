@@ -40,8 +40,11 @@ const nav = header?.querySelector('.tube-nav');
 if (header && nav) {
   const controls: HTMLButtonElement[] = [];
   let active: HTMLButtonElement | undefined;
+  let closeTimer: number | undefined;
+  const hover = matchMedia('(any-hover: hover)');
 
   function close(restoreFocus = false) {
+    window.clearTimeout(closeTimer);
     if (!active) return;
     const button = active;
     active = undefined;
@@ -80,14 +83,36 @@ if (header && nav) {
       </div>`;
     link.replaceWith(button, panel);
     controls.push(button);
-    button.addEventListener('click', () => {
-      const opening = active !== button;
+    function open() {
+      window.clearTimeout(closeTimer);
+      if (active === button) return;
       close();
-      if (opening) {
-        active = button;
-        button.setAttribute('aria-expanded', 'true');
-        panel.hidden = false;
-      }
+      active = button;
+      button.setAttribute('aria-expanded', 'true');
+      panel.hidden = false;
+    }
+
+    function cancelHoverClose() {
+      window.clearTimeout(closeTimer);
+    }
+
+    function scheduleHoverClose(event: PointerEvent) {
+      if (event.pointerType !== 'mouse' || active !== button) return;
+      cancelHoverClose();
+      closeTimer = window.setTimeout(() => {
+        if (active === button && !panel.contains(document.activeElement)) close();
+      }, 220);
+    }
+
+    button.addEventListener('pointerenter', event => {
+      if (hover.matches && event.pointerType === 'mouse') open();
+    });
+    button.addEventListener('pointerleave', scheduleHoverClose);
+    panel.addEventListener('pointerenter', cancelHoverClose);
+    panel.addEventListener('pointerleave', scheduleHoverClose);
+    button.addEventListener('click', event => {
+      if (active !== button) open();
+      else if (!(event instanceof PointerEvent && event.pointerType === 'mouse' && hover.matches)) close();
     });
     panel.addEventListener('click', event => {
       if ((event.target as HTMLElement).closest('a')) close();

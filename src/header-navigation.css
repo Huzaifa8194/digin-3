@@ -65,8 +65,8 @@
   overflow: auto;
   overscroll-behavior: contain;
   background: #fff;
-  color: #231d22;
-  border-block: 1px solid #efdedb;
+  color: #181219;
+  border-block: 1px solid #d7bdbe;
   box-shadow: 0 24px 48px #1b10152e;
   text-align: left;
 }
@@ -87,12 +87,12 @@
   justify-content: space-between;
   gap: 8px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #efdedb;
+  border-bottom: 1px solid #d7bdbe;
   font-size: clamp(1.25rem, 3vw, 2rem);
 }
 .mega-column h2 {
   margin: 0 0 6px;
-  color: #963d42;
+  color: #762b35;
   font: 650 .75rem/1.4 ui-monospace, monospace;
   text-transform: uppercase;
   letter-spacing: .06em;
@@ -102,16 +102,16 @@
   display: block;
   padding: 10px 8px;
   border: 0;
-  color: #231d22;
+  color: #181219;
   font-size: .9rem;
   line-height: 1.35;
 }
-:is(.home-page, .standalone-page) > header .tube-nav .mega-panel a:hover { background: #fff0ee; color: #963d42; }
-.mega-panel a span { display: block; margin-top: 3px; color: #60535b; font-size: .8rem; font-weight: 450; }
+:is(.home-page, .standalone-page) > header .tube-nav .mega-panel a:hover { background: #f9e4e3; color: #762b35; }
+.mega-panel a span { display: block; margin-top: 3px; color: #42343e; font-size: .8rem; font-weight: 450; }
 :is(.home-page, .standalone-page) > header .tube-nav a.mega-feature {
   padding: clamp(16px, 2.4vw, 32px);
-  background: #fff0ee;
-  border: 1px solid #efdedb;
+  background: #f9e4e3;
+  border: 1px solid #d7bdbe;
 }
 @media (max-width: 700px) {
   .mega-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -119,4 +119,10 @@
 }
 @media (max-width: 420px) {
   .mega-inner { grid-template-columns: minmax(0, 1fr); }
+}
+
+:is(.home-page, .standalone-page) > header .tube-nav .mega-panel a:focus-visible {
+  outline: 2px solid #762b35;
+  outline-offset: -2px;
+  background: #f9e4e3;
 }
