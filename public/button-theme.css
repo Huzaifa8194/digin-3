@@ -28,3 +28,16 @@
     .catalog-button, .gallery-hero-cta, .service-link, .button) > span {
   color: inherit;
 }
+
+/* Repeat the logo red in the footer without changing its reading surface. */
+:is(.home-page, .standalone-page) .new-footer {
+  border-top: 3px solid var(--button-surface);
+}
+
+:is(.home-page, .standalone-page) .new-footer .footer-word {
+  color: var(--button-surface);
+}
+
+:is(.home-page, .standalone-page) .new-footer a:not(.brand):is(:hover, :focus-visible) {
+  color: var(--button-surface);
+}
