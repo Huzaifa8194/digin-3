@@ -34,8 +34,10 @@
   border-top: 3px solid var(--button-surface);
 }
 
-:is(.home-page, .standalone-page) .new-footer .footer-word {
-  color: var(--button-surface);
+.new-footer .footer-word img {
+  display: block;
+  width: min(100%, 480px);
+  height: auto;
 }
 
 :is(.home-page, .standalone-page) .new-footer a:not(.brand):is(:hover, :focus-visible) {
