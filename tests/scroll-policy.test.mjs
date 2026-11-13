@@ -13,8 +13,8 @@ test('one wheel notch is one complete intent', () => {
 });
 test('fine trackpad movement accumulates, jitter does not trigger', () => {
   const input = new ScrollIntent();
-  for(let i=0;i<2;i++) assert.equal(input.feed(4, i*15), null);
-  assert.equal(input.feed(4, 30).direction, 1);
+  for(let i=0;i<2;i++) assert.equal(input.feed(1.5, i*15), null);
+  assert.equal(input.feed(1.5, 30).direction, 1);
 });
 test('decaying trackpad momentum cannot skip chapters', () => {
   const input = new ScrollIntent();
@@ -37,9 +37,9 @@ test('a sustained strong gesture never advances twice', () => {
   assert.equal(actions.length,1);
 });
 test('reset discards partial input and permits a new gesture', () => {
-  const input=new ScrollIntent();input.feed(8,0);input.reset();
-  assert.equal(input.feed(7,30),null);
-  assert.equal(input.feed(3,60).direction,1);
+  const input=new ScrollIntent();input.feed(3,0);input.reset();
+  assert.equal(input.feed(3,30),null);
+  assert.equal(input.feed(1,60).direction,1);
 });
 test('invalid deltas are ignored',()=>{
  const input=new ScrollIntent();for(const delta of [NaN,Infinity,0,.1])assert.equal(input.feed(delta,0),null);
@@ -73,15 +73,21 @@ test('a delayed momentum burst is still the same gesture',()=>{
  assert.equal(input.feed(100,400).direction,1);
 });
 
-test('feedback reflects partial gesture and resets after cancellation',()=>{const input=new ScrollIntent();assert.equal(input.progress,0);input.feed(5,0);assert.equal(input.progress,.5);input.feed(5,20);assert.equal(input.progress,1);input.reset();assert.equal(input.progress,0);});
+test('feedback reflects partial gesture and resets after cancellation',()=>{const input=new ScrollIntent();assert.equal(input.progress,0);input.feed(2,0);assert.equal(input.progress,.5);input.feed(2,20);assert.equal(input.progress,1);input.reset();assert.equal(input.progress,0);});
 
 test('light movement triggers equally and its momentum stays consumed in both directions', () => {
   for (const direction of [-1, 1]) {
     const input = new ScrollIntent();
-    assert.equal(input.feed(direction * 5, 0), null);
+    assert.equal(input.feed(direction * 2, 0), null);
     assert.equal(input.progress, .5);
-    assert.equal(input.feed(direction * 5, 15).direction, direction);
+    assert.equal(input.feed(direction * 2, 15).direction, direction);
     for (let time = 30; time <= 700; time += 15) assert.equal(input.feed(direction * 8, time), null);
     assert.equal(input.feed(direction * 10, 850).direction, direction);
   }
+});
+
+test('fractional wheel deltas accumulate during a single gesture', () => {
+  const input = new ScrollIntent();
+  for (let frame = 0; frame < 15; frame++) assert.equal(input.feed(.25, frame * 12), null);
+  assert.equal(input.feed(.25, 180).direction, 1);
 });

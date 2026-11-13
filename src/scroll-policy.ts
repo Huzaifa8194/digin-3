@@ -1,5 +1,5 @@
 export const SCROLL_TUNING = {
-  gestureGap: 150, threshold: 10, reversalThreshold: 16,
+  gestureGap: 150, threshold: 4, reversalThreshold: 16,
   minDuration: .38, maxDuration: .63,
 } as const;
 
@@ -16,7 +16,7 @@ export class ScrollIntent {
   }
   reset() { this.last = -Infinity; this.direction = 0; this.distance = 0; this.spent = false; this.candidate = 0; }
   feed(delta: number, now: number): { direction: number; continuation: boolean } | null {
-    if (!Number.isFinite(delta) || Math.abs(delta) < .5) return null;
+    if (!Number.isFinite(delta) || delta === 0) return null;
     const direction = Math.sign(delta);
     const fresh = now - this.last > SCROLL_TUNING.gestureGap;
     if (fresh) {

@@ -23,6 +23,7 @@ export function createChapterScroll({ reduced, onUpdate, mobile }: Options) {
   let active: gsap.core.Tween | null = null;
   let destination = 0;
   let direction = 0;
+  let queuedStep = 0;
   let nativeTimer: ReturnType<typeof setTimeout> | undefined;
   let ownScrollUntil = 0;
   let destroyed = false;
@@ -113,6 +114,7 @@ export function createChapterScroll({ reduced, onUpdate, mobile }: Options) {
 
   function cancel() {
     active?.kill(); active = null; intent.reset();
+    queuedStep = 0;
     clearTimeout(nativeTimer);
     document.documentElement.classList.remove('scroll-transitioning');
     updateFeedback();
@@ -144,6 +146,9 @@ export function createChapterScroll({ reduced, onUpdate, mobile }: Options) {
         // The gesture stays consumed until trackpad input falls quiet.
         document.documentElement.classList.remove('scroll-transitioning');
         updateFeedback();
+        const nextStep = queuedStep;
+        queuedStep = 0;
+        if (nextStep && controlsInput()) request(nextStep);
       },
     });
     updateFeedback();
@@ -154,7 +159,10 @@ export function createChapterScroll({ reduced, onUpdate, mobile }: Options) {
     if (active) {
       if (step !== direction) {
         // Reverse toward the previous landing point without jumping position.
+        queuedStep = 0;
         move(destination - direction);
+      } else {
+        queuedStep = step;
       }
       return;
     }
@@ -166,9 +174,9 @@ export function createChapterScroll({ reduced, onUpdate, mobile }: Options) {
   }
 
   window.addEventListener('wheel', event => {
-    if (!controlsInput() || event.ctrlKey || event.metaKey || !event.cancelable ||
+    if (!controlsInput() || event.ctrlKey || event.metaKey ||
         Math.abs(event.deltaX) > Math.abs(event.deltaY) || nestedCanScroll(event.target, event.deltaY, true)) return;
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault();
     const now = performance.now();
     const action = intent.feed(normalizeWheel(event.deltaY, event.deltaMode, innerHeight), now);
     if (action) request(action.direction);
