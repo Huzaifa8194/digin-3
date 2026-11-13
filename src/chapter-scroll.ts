@@ -53,22 +53,12 @@ export function createChapterScroll({ reduced, onUpdate, mobile }: Options) {
 
   function measureMobileStops(layout: NonNullable<Options['mobile']>) {
     const header = layout.headerHeight();
-    const viewport = Math.max(1, innerHeight - header);
     const pageTop = (section: HTMLElement) => section.getBoundingClientRect().top + scrollY;
     boundary = clamp(pageTop(layout.end) - header);
-    const measured: Stop[] = [];
-    for (const [index, section] of layout.chapters.entries()) {
-      const start = index === 0 ? 0 : clamp(pageTop(section) - header);
-      measured.push({ y: start, section });
-      // Leave some overlap when a chapter needs more than one screen of reading.
-      // Decorative space after the copy never gets its own stop.
-      const content = index === 0 ? section : section.querySelector<HTMLElement>('.copy') ?? section;
-      const last = Math.min(boundary, content.getBoundingClientRect().bottom + scrollY - innerHeight + 12);
-      for (let y = start; last - y > 24;) {
-        y = Math.min(last, y + viewport * .9);
-        measured.push({ y, section });
-      }
-    }
+    const measured: Stop[] = layout.chapters.map((section, index) => ({
+      y: index === 0 ? 0 : clamp(pageTop(section) - header),
+      section,
+    }));
     measured.push({ y: boundary, section: layout.end });
     return measured;
   }

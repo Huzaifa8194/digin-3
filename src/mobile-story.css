@@ -47,7 +47,7 @@ html.mobile-story {
 .mobile-story .hero-orbit .orbit-track,
 .mobile-story .hero-orbit .orbit-node { animation-play-state: paused; }
 .mobile-story .chapter:not(.hero) { border-top: 1px solid var(--line); }
-.mobile-guided-story > .chapter:not(.hero) { padding-bottom: clamp(120px, 23svh, 210px); }
+
 .mobile-story #test .security-bento { grid-template-columns: minmax(0, 1fr); }
 .mobile-story #test .security-bento > * { grid-column: auto; }
 .mobile-story .copy.contact-composition { grid-template-columns: minmax(0, 1fr); gap: 22px; }
@@ -55,4 +55,118 @@ html.mobile-story {
 .mobile-story #story > :is(#team, #faq) { scroll-margin-top: 0; }
 .mobile-story.guided-scroll .mobile-guided-story {
   touch-action: pan-x pinch-zoom;
+}
+
+/* Each mobile chapter has one viewport beneath the measured header. */
+.mobile-story .home-page #story .mobile-guided-story {
+  --chapter-room: calc(100svh - var(--mobile-header-height));
+}
+.mobile-story .home-page #story .mobile-guided-story > .chapter:not(.hero) {
+  display: grid;
+  align-content: center;
+  min-height: var(--chapter-room);
+  padding: 12px 5%;
+}
+.mobile-story .home-page #story .chapter-composition {
+  display: grid;
+  gap: clamp(6px, 1.35svh, 12px);
+}
+.mobile-story .home-page #story .composition-heading { margin: 0; }
+.mobile-story .home-page #story .composition-heading h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, min(7.6vw, 5svh), 2.4rem);
+  line-height: 1;
+}
+.mobile-story .home-page #story .mobile-guided-story :is(
+  .composition-heading .kicker, .chapter-service-links > p, .story-film-notes
+) { display: none; }
+.mobile-story .mobile-guided-story .story-product-intro {
+  margin-top: 6px;
+  font-size: .78rem;
+  line-height: 1.35;
+}
+.mobile-story .mobile-guided-story .chapter-service-links { margin-top: 6px; gap: 4px; }
+.mobile-story .mobile-guided-story .chapter-service-links a {
+  min-height: 34px;
+  padding: 4px 8px;
+  font-size: .75rem;
+}
+.mobile-story .home-page #story :is(#test, #protect, #watch) .story-film-reel {
+  margin: 0;
+  padding: 7px;
+  justify-items: center;
+}
+.mobile-story .home-page #story :is(#test, #watch) .story-products {
+  width: min(100%, calc(clamp(78px, var(--chapter-room) * .43, 258px) * 1.6 + 8px));
+}
+.mobile-story .home-page #story #protect .story-products {
+  width: min(100%, calc(clamp(78px, var(--chapter-room) * .43, 258px) * .8));
+}
+.mobile-story .home-page #story #build .service-preview-index {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+}
+.mobile-story .home-page #story #build .service-preview-stage {
+  grid-row: 1;
+  justify-self: center;
+  width: min(100%, clamp(112px, var(--chapter-room) * .43, 240px));
+}
+.mobile-story .home-page #story #build .service-preview-film { padding: 6px; gap: 0; }
+.mobile-story .mobile-guided-story .service-preview-caption {
+  border: 0;
+  padding: 0;
+  min-height: 0;
+}
+.mobile-story .mobile-guided-story .service-preview-caption strong {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.mobile-story .mobile-guided-story .service-preview-film { position: relative; }
+.mobile-story .mobile-guided-story .service-preview-caption > span {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  padding: 3px 6px;
+  background: #fff;
+}
+.mobile-story .mobile-guided-story .service-preview-choices button {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 32px;
+  padding: 4px 7px;
+  font-size: .75rem;
+}
+.mobile-story .mobile-guided-story .service-preview-choices button > span { display: none; }
+.mobile-story .mobile-guided-story .service-link { min-height: 32px; margin-top: 2px; }
+.mobile-story .mobile-guided-story .service-summary > li { padding: 7px 0; }
+.mobile-story .mobile-guided-story .service-summary p { font-size: .8rem; line-height: 1.35; }
+
+.mobile-story .home-page #story #home {
+  --hero-header-height: var(--mobile-header-height);
+  --hero-height-budget: calc(100svh - var(--mobile-header-height));
+  gap: clamp(5px, 1svh, 10px);
+  padding-block: calc(var(--mobile-header-height) + 8px) 8px;
+}
+.mobile-story .home-page #home .hero-intro h1 { font-size: clamp(1.7rem, min(8vw, 5svh), 2.6rem); }
+.mobile-story .home-page #home .hero-eyebrow,
+.mobile-story .home-page #home .hero-intro > p:last-child,
+.mobile-story .home-page #home #orbit-detail { display: none; }
+.mobile-story .home-page #home .hero-product-stage { --card-width: clamp(62px, var(--hero-height-budget) * .18, 122px); }
+.mobile-story .home-page #home .hero-feature-detail { min-height: 0; gap: 5px; }
+.mobile-story .home-page #home #hero-feature-summary { display: none; }
+.mobile-story .home-page #home .hero-orbit { width: min(100%, 290px); margin: 0; }
+.mobile-story .home-page #home .security-orbit-map { width: min(90%, clamp(108px, var(--hero-height-budget) * .32, 220px)); }
+.mobile-story .home-page #home .orbit-node { min-height: 0; gap: 2px; font-size: .5rem; }
+.mobile-story .home-page #home .orbit-node-icon { width: 23px; height: 23px; }
+.mobile-story .home-page #home .orbit-node svg { width: 13px; height: 13px; }
+
+@media (max-height: 660px) {
+  .mobile-story .mobile-guided-story :is(#test, #protect, #watch) .story-product-intro { display: none; }
+}
+
+/* A header resize during a swipe would invalidate the measured chapter stops. */
+.mobile-story .home-page.hero-header-scrolled > header {
+  height: var(--mobile-header-height);
 }
