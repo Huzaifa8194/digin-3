@@ -6,7 +6,7 @@
 
 /* Route and product themes still control sizing and layout. */
 :is(.header-contact, .hero-feature-link, .service-cta, .services-button, .about-button,
-    .catalog-button, .gallery-hero-cta, .service-link, .mega-feature-action, .button,
+    .catalog-button, .gallery-hero-cta, .mega-feature-action, .button,
     button[data-platform], button[data-step]),
 .service-preview-choices button[aria-pressed="true"] {
   background: var(--button-surface) !important;
@@ -15,7 +15,7 @@
 }
 
 :is(.header-contact, .hero-feature-link, .service-cta, .services-button, .about-button,
-    .catalog-button, .gallery-hero-cta, .service-link, .button,
+    .catalog-button, .gallery-hero-cta, .button,
     button[data-platform], button[data-step]):is(:hover, :focus-visible),
 .service-preview-choices button[aria-pressed="true"]:is(:hover, :focus-visible),
 .mega-feature:is(:hover, :focus-visible) .mega-feature-action {
@@ -25,7 +25,7 @@
 
 .service-preview-choices button[aria-pressed="true"] > span,
 :is(.header-contact, .hero-feature-link, .service-cta, .services-button, .about-button,
-    .catalog-button, .gallery-hero-cta, .service-link, .button) > span {
+    .catalog-button, .gallery-hero-cta, .button) > span {
   color: inherit;
 }
 
