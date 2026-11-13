@@ -62,8 +62,7 @@ if (header && nav) {
     button.className = 'mega-trigger';
     button.setAttribute('aria-expanded', 'false');
     button.setAttribute('aria-controls', id);
-    button.textContent = link.textContent;
-    if (link.hasAttribute('aria-current')) button.dataset.current = '';
+    button.setAttribute('aria-label', `Toggle ${link.textContent?.trim()} menu`);
     const panel = document.createElement('div');
     panel.id = id;
     panel.hidden = true;
@@ -81,7 +80,7 @@ if (header && nav) {
         `).join('')}
         <a class="mega-feature" href="${group.feature[2]}"><strong>${group.feature[0]}</strong><span>${group.feature[1]}</span><span class="mega-feature-action">${group.feature[3]} ↗</span></a>
       </div>`;
-    link.replaceWith(button, panel);
+    link.after(button, panel);
     controls.push(button);
     function open() {
       window.clearTimeout(closeTimer);
@@ -104,15 +103,19 @@ if (header && nav) {
       }, 220);
     }
 
-    button.addEventListener('pointerenter', event => {
+    function openOnHover(event: PointerEvent) {
       if (hover.matches && event.pointerType === 'mouse') open();
-    });
+    }
+
+    link.addEventListener('pointerenter', openOnHover);
+    link.addEventListener('pointerleave', scheduleHoverClose);
+    button.addEventListener('pointerenter', openOnHover);
     button.addEventListener('pointerleave', scheduleHoverClose);
     panel.addEventListener('pointerenter', cancelHoverClose);
     panel.addEventListener('pointerleave', scheduleHoverClose);
-    button.addEventListener('click', event => {
+    button.addEventListener('click', () => {
       if (active !== button) open();
-      else if (!(event instanceof PointerEvent && event.pointerType === 'mouse' && hover.matches)) close();
+      else close();
     });
     panel.addEventListener('click', event => {
       if ((event.target as HTMLElement).closest('a')) close();
