@@ -38,8 +38,7 @@
   border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--header-nav-text, inherit);
-  font: inherit;
-  font-size: inherit;
+  font-family: inherit;
   font-weight: 650;
   white-space: nowrap;
   cursor: pointer;
@@ -142,4 +141,9 @@
   background: #84340e;
   color: #fff;
   font-weight: 700;
+}
+
+:is(.home-page, .standalone-page) > header .tube-nav > :is(a, .mega-trigger) {
+  font-size: .875rem;
+  line-height: 1.4;
 }
