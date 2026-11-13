@@ -30,6 +30,8 @@
 }
 
 .site-footer {
+  position: relative;
+  z-index: 3;
   background: #001733;
   color: #fff;
   border-top: 4px solid var(--button-surface);
