@@ -194,6 +194,8 @@ async function load(canvas: HTMLCanvasElement, mod: Promise<typeof import('three
   const cur = params(0);
   gsap.ticker.add((t) => {
     if (home.footer) return;
+    // Phones past the hero: copy runs over the radar, so the core fades out (home.css) and stops rendering. Halves scroll cost there.
+    if (mobile() && home.scrollDeg >= 24) return;
     const p = params(home.scrollDeg);
     for (let i = 1; i < p.length; i++) cur[i] += (p[i] - cur[i]) * 0.08;
     const [, close, scan, watch, explode, cool] = cur;

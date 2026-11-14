@@ -52,6 +52,11 @@ html.lenis, html.lenis body { height: auto; }
 .dk-btn__fill { position: absolute; inset: 0; z-index: -1; clip-path: circle(0% at 50% 50%); background: var(--ink); }
 .dk-btn__label { position: relative; display: inline-flex; gap: 0.6em; align-items: center; }
 .dk-btn--solid { background: var(--red); color: #fff; }
+button.dk-btn--solid { border: 0; }
+/* One button shape across header, page and footer */
+.dk > header .header-contact { border-radius: 6px; }
+.dk .site-footer .site-footer-contact { border-radius: 6px; min-height: 58px; padding: 0.8em 1.8em; font-size: 1.0625rem; font-weight: 700; gap: 0.6em; transition: background-color 0.3s, color 0.3s; }
+.dk .site-footer .site-footer-contact:is(:hover, :focus-visible) { background: var(--ink); color: var(--g); text-decoration: none; }
 .dk-btn--line { border: 1px solid var(--ln2); color: var(--ink); }
 .dk-btn.is-filled, .dk-btn:active { color: var(--g); border-color: var(--ink); }
 .dk-btn:active .dk-btn__fill { clip-path: circle(150% at 50% 50%); }

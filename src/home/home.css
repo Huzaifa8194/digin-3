@@ -201,8 +201,52 @@ html:not(.radar-on) .hm-tags, html:not(.radar-on) .hm-sound, html:not(.radar-on)
 .hm-core.is-on { opacity: 1; }
 .hud-away .hm-core { opacity: 0; }
 
-/* Phones: text runs over the radar, so the core and the risk labels step back outside the hero */
+/* Phones: text runs over the radar, so the core (paused in core3d.ts) and the risk labels leave outside the hero */
 @media (max-width: 760px) {
-  html:not(.at-hero) .hm-core.is-on { opacity: 0.28; }
+  html:not(.at-hero) .hm-core.is-on { opacity: 0; }
   html:not(.at-hero) .hm-tags .hm-tag { display: none; }
+}
+
+/* ---------- Jury round 1 ---------- */
+.hm-route .skip { color: #03070f; font-weight: 700; }
+
+/* Service rows answer the pointer like the bearings do: the red-to-blue rule draws, the name leans in */
+.hm-links a, .hm-svc a { position: relative; }
+.hm-links a::before, .hm-svc a::before { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: linear-gradient(90deg, var(--risk), var(--cool)); scale: 0 1; transform-origin: left; transition: scale 0.6s var(--e-out); }
+.hm-links a > span:first-child { transition: translate 0.5s var(--e-out); }
+@media (hover: hover) {
+  :is(.hm-links, .hm-svc) a:hover::before { scale: 1 1; }
+  .hm-links a:hover > span:first-child { translate: 8px 0; }
+  .hm-sound:hover { background: rgb(140 192 255 / 0.16); }
+}
+:is(.hm-links, .hm-svc) a:focus-visible::before { scale: 1 1; }
+
+/* Talk: contact lines sit under the form, off the radar ring */
+.hm-talk__grid { grid-template-columns: 1fr; gap: 1.5rem; max-width: min(46rem, 52vw); }
+.hm-talk__lines { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; margin: 0; font-size: 1.05rem; line-height: 1.5; color: var(--ink); }
+.hm-talk__lines span { width: auto; color: var(--soft); }
+.hm-talk__form select { text-overflow: ellipsis; }
+
+/* Footer keeps the instrument: page background, beam rule, quarter-turn bearings on the columns */
+.hm-route .site-footer { background: #03070f; border-top: 0; }
+.hm-route .site-footer::before { content: ''; position: absolute; inset: 0 0 auto; height: 1px; background: linear-gradient(90deg, var(--risk), var(--cool) 55%, transparent); }
+.hm-route .site-footer-directory h2 { font-family: var(--mono); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cool); }
+.hm-route .site-footer-directory h2::before { color: var(--mut); }
+.hm-route .site-footer-directory > div:nth-child(1) h2::before { content: '090° / '; }
+.hm-route .site-footer-directory > div:nth-child(2) h2::before { content: '180° / '; }
+.hm-route .site-footer-directory > div:nth-child(3) h2::before { content: '270° / '; }
+.hm-route .site-footer-directory > div:nth-child(4) h2::before { content: '360° / '; }
+.hm-route .site-footer-end { font-family: var(--mono); letter-spacing: 0.04em; }
+.hm-route .site-footer-end a { display: inline-flex; align-items: center; gap: 0.5em; min-height: 44px; padding-inline: 0.5rem; margin-right: -0.5rem; }
+
+@media (max-width: 760px) {
+  /* No cover on phones: the headline is the first paint */
+  .hm-loader { display: none; }
+  .motion.is-loaded .hm-in { animation: none; }
+  .hm-talk__grid { max-width: none; }
+  /* The readout becomes one backed chip; the sound toggle stays with the hero */
+  .hm-hud { grid-auto-flow: column; align-items: baseline; gap: 0.45rem; right: 12px; bottom: 12px; padding: 0.4rem 0.7rem; border: 1px solid var(--ln2); border-radius: 999px; background: rgb(3 7 15 / 0.9); }
+  .hm-hud__deg { font-size: 1rem; letter-spacing: 0; }
+  .hm-sound { right: 12px; bottom: 3.6rem; }
+  html:not(.at-hero) .hm-sound { opacity: 0; pointer-events: none; }
 }

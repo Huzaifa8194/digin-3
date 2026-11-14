@@ -215,6 +215,7 @@ export function startRadar() {
 
     let arrays: { T: Float32Array; P: Float32Array } | null = null;
     let vel = 0;
+    let lensK = 0; // the lens only exists over the radar disc, so it never crosses the copy
     const draw = (time: number) => {
       if (!gl || !U) return;
       const d = dpr();
@@ -226,7 +227,7 @@ export function startRadar() {
       gl.uniform1f(U.uGhost, s.ghost);
       gl.uniform1f(U.uTime, time);
       gl.uniform2f(U.uMouse, s.mx * d, (innerHeight - s.my) * d);
-      gl.uniform1f(U.uLens, (mobile() ? 64 : 96) * d);
+      gl.uniform1f(U.uLens, lensK < 0.02 ? -100 : (mobile() ? 64 : 96) * d * lensK);
       gl.uniform1f(U.uIntro, s.intro);
       gl.uniform1f(U.uCool, L.cool);
       gl.uniform1f(U.uDim, L.dim);
@@ -283,6 +284,7 @@ export function startRadar() {
       s.L = lerpL(s.L, t.L, 1 - Math.pow(0.9, r));
       s.ghost = (s.ghost + 0.012 * r) % (Math.PI * 2);
       if (isTouch()) { s.tmx = s.L.cx + Math.cos(tSec * 0.7) * s.L.r * 0.55; s.tmy = s.L.cy + Math.sin(tSec * 0.9) * s.L.r * 0.45; }
+      lensK += ((Math.hypot(s.tmx - s.L.cx, s.tmy - s.L.cy) < s.L.r * 1.04 ? 1 : 0) - lensK) * (1 - Math.pow(0.86, r));
       s.mx += (s.tmx - s.mx) * 0.12;
       s.my += (s.tmy - s.my) * 0.12;
       const shown = t.deg >= 359.5 && he >= 1 ? 360 : ((Math.round(s.angle) % 360) + 360) % 360;
@@ -312,10 +314,13 @@ async function runLoader(s: { intro: number; angle: number }, L: () => Layout, s
   const arc = el?.querySelector<SVGCircleElement>('[data-loader-arc]');
   const ring = el?.querySelector<HTMLElement>('[data-loader-ring]');
   if (!el || !count || !arc || !ring) { s.intro = 1; root.classList.add('is-loaded'); return; }
+  // Phones skip the cover (CSS hides it) so the headline is the first paint; the radar fades in behind it.
+  if (getComputedStyle(el).display === 'none') { root.classList.add('is-loaded'); await gsap.to(s, { intro: 1, duration: 0.9, ease: 'power2.inOut' }); el.hidden = true; return; }
   let seen = false;
   try { seen = sessionStorage.getItem('dg-seen') === '1'; sessionStorage.setItem('dg-seen', '1'); } catch { /* storage blocked */ }
   const MIN = seen ? 0.35 : 1.0, MAX = 1.5;
-  const start = performance.now();
+  // Count from navigation, not from script start: time already spent downloading is not waited for twice.
+  const start = performance.now() - Math.min(performance.now(), MIN * 800);
   const ready = Promise.race([document.fonts.ready, wait(MAX)]);
   let done = false; ready.then(() => { done = true; });
   const len = 2 * Math.PI * 48;
