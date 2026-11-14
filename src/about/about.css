@@ -1,0 +1,96 @@
+/* About: one team, nine disciplines. Shared tokens come from site-dark.css. */
+
+/* Hero: copy + a 3×3 portrait mosaic in greyscale; the "lit" tile is in colour */
+.ab-hero {
+  min-height: calc(100svh - var(--hdr)); display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center; gap: var(--gut); padding-block: clamp(2.5rem, 6vh, 5rem);
+}
+.ab-hero__copy { display: grid; gap: 1.5rem; justify-items: start; }
+.ab-hero__title { font-size: clamp(2.9rem, 0.8rem + 6vw, 7.5rem); font-weight: 800; line-height: 0.92; letter-spacing: -0.07em; margin-left: -0.05em !important; }
+.ab-hero__title > span { display: block; width: fit-content; padding-right: 0.06em; }
+.ab-hero__em { color: var(--red-t); }
+.ab-hero__lede { color: var(--soft); max-width: 32rem; font-size: var(--t-m); line-height: 1.5; letter-spacing: -0.01em; }
+
+.ab-mosaic { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.4rem, 0.8vw, 0.75rem); max-height: calc(100svh - var(--hdr) - 4rem); aspect-ratio: 4 / 5; justify-self: end; width: min(100%, 36rem); }
+.ab-tile { position: relative; margin: 0; overflow: hidden; border-radius: 8px; background: var(--surface); }
+.ab-tile img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) brightness(0.55) contrast(1.05); transition: filter 0.9s var(--e-out), scale 1.2s var(--e-out); }
+.ab-tile figcaption {
+  position: absolute; inset: auto 0 0; display: grid; gap: 0.15rem; padding: 0.6rem 0.7rem;
+  background: linear-gradient(transparent, rgb(5 10 20 / 0.92)); font-size: 0.75rem; line-height: 1.25;
+  opacity: 0; translate: 0 8px; transition: opacity 0.5s, translate 0.6s var(--e-out);
+}
+.ab-tile figcaption strong { font-size: 0.8125rem; }
+.ab-tile figcaption span { color: var(--soft); }
+.ab-tile.is-lit img { filter: none; scale: 1.04; }
+.ab-tile.is-lit { box-shadow: 0 0 0 1px var(--red), 0 20px 50px rgb(219 0 10 / 0.18); }
+.ab-tile.is-lit figcaption { opacity: 1; translate: 0 0; }
+html:not(.js) .ab-tile img { filter: none; }
+.motion .ab-tile { animation: ab-tile 0.9s var(--e-out) both; animation-delay: calc(0.2s + var(--i) * 0.06s); }
+@keyframes ab-tile { from { opacity: 0; clip-path: inset(100% 0 0 0); } to { opacity: 1; clip-path: inset(0); } }
+
+/* What we do: three giant rows; the row floods red from the pointer side */
+.ab-do { padding-block: clamp(5rem, 3rem + 6vw, 9rem); border-top: 1px solid var(--ln); }
+.ab-do__title { font-family: var(--mono); font-size: 0.75rem !important; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mut); margin-bottom: 1.5rem !important; }
+.ab-do__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ln2); }
+.ab-do__list a {
+  position: relative; isolation: isolate; overflow: clip; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 3rem;
+  align-items: center; gap: 1.5rem; padding: clamp(1.25rem, 2.6vw, 2.25rem) clamp(0.5rem, 1.5vw, 1.5rem); border-bottom: 1px solid var(--ln2);
+  transition: color 0.35s;
+}
+.ab-do__flood { position: absolute; inset: 0; z-index: -1; background: var(--red); clip-path: circle(0% at 0% 50%); }
+.ab-do__word { font-size: clamp(2.2rem, 0.8rem + 5vw, 6rem); font-weight: 800; letter-spacing: -0.065em; line-height: 0.95; }
+.ab-do__desc { color: var(--soft); font-size: 1rem; line-height: 1.5; max-width: 26rem; transition: color 0.35s; }
+.ab-do__arrow { font-size: 2rem; justify-self: end; transition: translate 0.5s var(--e-out); }
+.ab-do__list a.is-filled, .ab-do__list a:active { color: #fff; }
+.ab-do__list a.is-filled .ab-do__desc { color: #ffe3e1; }
+.ab-do__list a.is-filled .ab-do__arrow { translate: 6px -6px; }
+.ab-do__list a:active .ab-do__flood { clip-path: circle(150% at 50% 50%); }
+@media (prefers-reduced-motion: reduce) {
+  .ab-do__list a:is(:hover, :focus-visible) .ab-do__flood { clip-path: none; }
+  .ab-do__list a:is(:hover, :focus-visible) { color: #fff; }
+}
+
+/* Team index */
+.dk #team.ab-team { background: var(--g); }
+.ab-team { position: relative; padding-block: clamp(5rem, 3rem + 6vw, 9rem); border-top: 1px solid var(--ln); scroll-margin-top: var(--hdr); }
+.ab-team__head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 2rem; align-items: end; margin-bottom: clamp(2rem, 2rem + 2vw, 4rem); }
+.ab-team__head h2 { font-size: var(--t-xl); font-weight: 800; letter-spacing: -0.06em; line-height: 0.95; }
+.ab-team__head p { color: var(--soft); max-width: 30rem; justify-self: end; line-height: 1.6; }
+.ab-team__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ln2); }
+.ab-team__list li {
+  position: relative; display: grid; grid-template-columns: 3rem minmax(0, 1.3fr) minmax(0, 1fr); align-items: baseline; gap: 1rem;
+  padding: clamp(0.9rem, 1.6vw, 1.4rem) 0; border-bottom: 1px solid var(--ln2); cursor: default;
+}
+.ab-team__list .dk-mono { color: var(--red-t); }
+.ab-team__thumb { display: none; }
+.ab-team__name { font-size: clamp(1.5rem, 0.9rem + 2.6vw, 3.4rem); font-weight: 800; letter-spacing: -0.055em; line-height: 1; transition: translate 0.5s var(--e-out), color 0.3s; }
+.ab-team__role { color: var(--mut); font-size: 0.9375rem; line-height: 1.4; transition: color 0.3s; }
+.ab-team__list li::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--red); scale: 0 1; transform-origin: left; transition: scale 0.55s var(--e-out); }
+@media (hover: hover) {
+  .ab-team__list li:hover .ab-team__name { translate: 14px 0; }
+  .ab-team__list li:hover .ab-team__role { color: var(--ink); }
+  .ab-team__list li:hover::after { scale: 1 1; }
+}
+.ab-team__portrait { position: fixed; left: 0; top: 0; z-index: 5; width: clamp(11rem, 15vw, 16rem); aspect-ratio: 4 / 5; translate: -50% -50%; border-radius: 10px; overflow: hidden; pointer-events: none; opacity: 0; visibility: hidden; box-shadow: 0 30px 60px rgb(0 0 0 / 0.55); }
+.ab-team__portrait img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 900px) {
+  .ab-hero { grid-template-columns: 1fr; min-height: auto; }
+  .ab-mosaic { justify-self: stretch; width: 100%; max-height: none; }
+  .ab-do__list a { grid-template-columns: minmax(0, 1fr) 2rem; }
+  .ab-do__desc { grid-column: 1; grid-row: 2; }
+  .ab-do__arrow { grid-row: 1 / span 2; grid-column: 2; }
+  .ab-team__head { grid-template-columns: 1fr; }
+  .ab-team__head p { justify-self: start; }
+}
+@media (max-width: 700px), (hover: none) {
+  .ab-team__list li { grid-template-columns: 3.5rem minmax(0, 1fr); align-items: center; gap: 0.25rem 1rem; }
+  .ab-team__thumb { display: block; grid-row: span 2; width: 3.5rem; aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden; }
+  .ab-team__thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .ab-team__list .dk-mono { display: none; }
+  .ab-team__name { font-size: clamp(1.35rem, 6.5vw, 2rem); }
+  .ab-team__role { font-size: 0.875rem; }
+}
+@media (max-width: 700px) {
+  .ab-hero__title { font-size: clamp(2.7rem, 12.5vw, 4rem); }
+}

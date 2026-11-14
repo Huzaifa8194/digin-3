@@ -1,0 +1,90 @@
+/* Shared dark system for the redesigned site pages (products, about). Same tokens as services.
+   Pages opt in with body.dk; everything is scoped under .dk / .dk-* so global site CSS never collides. */
+
+@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/jetbrains-mono-400-normal.woff2') format('woff2'); font-weight: 400 500; font-display: swap; }
+
+.dk {
+  --g: #050a14; --surface: #0b1422; --ink: #eef3f9; --mut: #9aa8ba; --soft: #c9d3df;
+  --ln: rgb(238 243 249 / 0.1); --ln2: rgb(238 243 249 / 0.18);
+  --red: #db000a; --red-t: #ff6b72; --blue-t: #8cc0ff;
+  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --gut: clamp(1rem, 0.4rem + 2.6vw, 3.5rem);
+  --hdr: 80px;
+  --e-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-mega: clamp(3.1rem, 0.6rem + 7.6vw, 9.25rem);
+  --t-xl: clamp(2.3rem, 1rem + 4.4vw, 5.6rem);
+  --t-l: clamp(1.75rem, 1.15rem + 2.2vw, 3.25rem);
+  --t-m: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+  background: var(--g); color: var(--ink);
+}
+html:has(> .dk) { background: #050a14; }
+html.lenis { scroll-behavior: auto; }
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.dk ::selection { background: #2f6fe0; color: #fff; }
+.dk :focus-visible { outline: 2px solid var(--blue-t); outline-offset: 4px; }
+.dk-mono { font-family: var(--mono); font-size: 0.82em; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.dk-kicker { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--red-t); margin: 0; }
+
+/* Header: the site's header, dark; compacts on scroll */
+.dk > header {
+  --header-nav-text: #c3cedb; --header-nav-active: #fff; --header-nav-indicator: var(--red);
+  background: #050a14; border-bottom-color: var(--ln);
+  transition: height 0.4s var(--e-out);
+}
+.dk > header .brand-logo:not(.brand-logo-light) { display: none; }
+.dk > header .brand-logo-light { display: block; }
+.dk.dk-compact > header { height: 62px; }
+.dk.dk-compact > header .brand-logo { width: clamp(105px, 11vw, 140px); }
+.dk.dk-compact > header .header-contact { min-height: 36px; padding-block: 6px; }
+
+.dk main.dk-main { position: relative; z-index: 1; padding-top: var(--hdr); }
+.dk-main section { padding-inline: var(--gut); }
+.dk-main h1, .dk-main h2, .dk-main h3 { margin: 0; color: inherit; max-width: none; }
+.dk-main p { margin: 0; }
+
+/* Buttons flood from the pointer side (engine/fill.ts) */
+.dk-btn {
+  position: relative; isolation: isolate; overflow: clip; display: inline-flex; align-items: center; justify-content: center;
+  min-height: 50px; padding: 0.8em 1.4em; border-radius: 6px; font-size: 0.9375rem; font-weight: 700; white-space: nowrap;
+  transition: color 0.3s, border-color 0.3s;
+}
+.dk-btn__fill { position: absolute; inset: 0; z-index: -1; clip-path: circle(0% at 50% 50%); background: var(--ink); }
+.dk-btn__label { position: relative; display: inline-flex; gap: 0.6em; align-items: center; }
+.dk-btn--solid { background: var(--red); color: #fff; }
+.dk-btn--line { border: 1px solid var(--ln2); color: var(--ink); }
+.dk-btn.is-filled, .dk-btn:active { color: var(--g); border-color: var(--ink); }
+.dk-btn:active .dk-btn__fill { clip-path: circle(150% at 50% 50%); }
+.dk-btn--big { min-height: 58px; font-size: 1.0625rem; padding-inline: 1.8em; }
+@media (prefers-reduced-motion: reduce) {
+  .dk-btn:is(:hover, :focus-visible) { color: var(--g); }
+  .dk-btn:is(:hover, :focus-visible) .dk-btn__fill { clip-path: none; }
+}
+.dk-link { background: linear-gradient(#2f6fe0 0 0) left 100% / 100% 1px no-repeat; transition: background-size 0.4s var(--e-out); padding-block: 2px; }
+@media (hover: hover) { .dk-link:hover { background-size: 100% 100%; } }
+.dk-link:focus-visible { background-size: 100% 100%; }
+
+/* CSS-only intro so headings paint without waiting for JS */
+.motion .dk-rise { animation: dk-rise 1.15s var(--e-out) both; animation-delay: calc(var(--d, 0) * 1s); }
+@keyframes dk-rise { from { clip-path: inset(0 0 100% 0); translate: 0 0.4em; } to { clip-path: inset(-10% -5% -25% -5%); translate: 0 0; } }
+
+.motion .dk-main [data-split], .motion .dk-main [data-reveal] { visibility: hidden; }
+.split-line { padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.dk .site-footer { position: relative; z-index: 3; }
+.dk .site-footer-directory a { display: inline-block; padding-block: 3px; }
+
+/* Shared closing section */
+.dk-close { padding-block: clamp(6rem, 4rem + 8vw, 12rem); border-top: 1px solid var(--ln); display: grid; gap: clamp(2rem, 3vw, 3rem); }
+.dk-close h2 { font-size: var(--t-mega); font-weight: 800; letter-spacing: -0.07em; line-height: 0.9; max-width: 12ch !important; }
+.dk-close__row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem 3rem; }
+.dk-close__row p { color: var(--soft); max-width: 34rem; font-size: var(--t-m); line-height: 1.5; }
+
+@media (max-width: 700px) {
+  .dk { --hdr: 112px; }
+  .dk.dk-compact > header { height: 94px; }
+  .dk-close h2 { font-size: clamp(2.6rem, 13vw, 4rem); }
+  .dk-close__row .dk-btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dk *, .dk *::before, .dk *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
