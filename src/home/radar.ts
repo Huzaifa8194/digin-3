@@ -253,7 +253,7 @@ export function startRadar() {
       return;
     }
 
-    let last = 0, frame = 0;
+    let last = 0, frame = 0, frozen = 0;
     const tagHost = document.querySelector<HTMLElement>('[data-tags]');
     const tip = document.querySelector<HTMLElement>('[data-tip]');
     const targets = tagHost ? createTargets(tagHost, mobile) : null;
@@ -268,6 +268,13 @@ export function startRadar() {
       soundBtn.setAttribute('aria-pressed', String(on));
       soundBtn.textContent = on ? 'Sound on' : 'Sound off';
     });
+    const motionBtn = document.querySelector<HTMLButtonElement>('[data-motion]');
+    motionBtn?.addEventListener('click', () => {
+      home.paused = !home.paused;
+      root.classList.toggle('motion-paused', home.paused);
+      motionBtn.setAttribute('aria-pressed', String(home.paused));
+      motionBtn.textContent = home.paused ? 'Motion paused' : 'Pause motion';
+    });
     gsap.ticker.add((tSec) => {
       const prevAngle = s.angle;
       const t = update();
@@ -277,12 +284,12 @@ export function startRadar() {
       const first = anchors[1]?.y || innerHeight;
       const hk = Math.min(1, Math.max(0, (scrollState().y || scrollY) / (first * 0.6)));
       const he = hk * hk * (3 - 2 * hk);
-      s.idle += 0.75 * r * (1 - he);
+      if (!home.paused) s.idle += 0.75 * r * (1 - he);
       const diff = ((((t.deg - s.idle) % 360) + 540) % 360) - 180;
       const eff = s.idle + diff * he;
       s.angle += (eff - s.angle) * k;
       s.L = lerpL(s.L, t.L, 1 - Math.pow(0.9, r));
-      s.ghost = (s.ghost + 0.012 * r) % (Math.PI * 2);
+      if (!home.paused) s.ghost = (s.ghost + 0.012 * r) % (Math.PI * 2);
       if (isTouch()) { s.tmx = s.L.cx + Math.cos(tSec * 0.7) * s.L.r * 0.55; s.tmy = s.L.cy + Math.sin(tSec * 0.9) * s.L.r * 0.45; }
       lensK += ((Math.hypot(s.tmx - s.L.cx, s.tmy - s.L.cy) < s.L.r * 1.04 ? 1 : 0) - lensK) * (1 - Math.pow(0.86, r));
       s.mx += (s.tmx - s.mx) * 0.12;
@@ -292,7 +299,7 @@ export function startRadar() {
       vel += (Math.min(1, Math.abs(scrollState().velocity || 0) / 40) - vel) * 0.08;
       home.scrollDeg += (t.deg - home.scrollDeg) * k; home.cx = s.L.cx; home.cy = s.L.cy; home.r = s.L.r;
       const atHero = home.scrollDeg < 24; if (atHero !== root.classList.contains('at-hero')) root.classList.toggle('at-hero', atHero);
-      if (targets) arrays = targets.update(prevAngle, s.angle, s.L, tSec, dpr(), innerHeight, s.intro >= 1);
+      if (targets) arrays = targets.update(prevAngle, s.angle, s.L, tSec, dpr(), innerHeight, s.intro >= 1 && !home.paused);
       if (tip) {
         const a = (s.angle / 180) * Math.PI, rr = s.L.r + 40;
         tip.style.transform = `translate(${(s.L.cx + Math.sin(a) * rr).toFixed(1)}px, ${(s.L.cy - Math.cos(a) * rr).toFixed(1)}px)`;
@@ -301,7 +308,7 @@ export function startRadar() {
       }
       // Phones past the hero: the radar is a dimmed backdrop under copy (home.css), so it draws every other frame.
       if (mobile() && !atHero && frame++ & 1) return;
-      draw(tSec);
+      draw(home.paused ? (frozen ||= tSec) : ((frozen = 0), tSec));
     });
 
     // ---------- loader: 000° → 360°, then the ring opens into the radar ----------

@@ -29,6 +29,7 @@
 <header><a class="brand" href="/" aria-label="Digiinn360 home"><img class="brand-logo" src="/brand/digiinn360.png" width="764" height="228" alt=""><img class="brand-logo brand-logo-light" src="/brand/digiinn360-light.png" width="764" height="228" alt=""></a><nav class="tube-nav" aria-label="Main navigation"><a href="/" aria-current="page">Home</a><a href="/services/">Services</a><a href="/products/">Our Products</a><a href="/about/">About</a></nav><div class="header-actions"><a class="header-contact" href="/contact/">Let’s talk</a></div></header>
 
 <!-- Bearing readout (the loader counter lands here) -->
+<button class="hm-sound hm-motion" type="button" data-motion aria-pressed="false">Pause motion</button>
 <button class="hm-sound" type="button" data-sound aria-pressed="false">Sound off</button>
 <div class="hm-hud" aria-hidden="true"><span class="hm-hud__deg" data-hud-deg>000°</span><span class="hm-hud__name" data-hud-name>See</span></div>
 
@@ -67,6 +68,18 @@
         </div>
         <div class="hm-cards hm-cards--2" data-sweep><a class="hm-card" href="/shadowad/" data-card><span class="hm-card__screen"><canvas data-loop="shadowad" aria-hidden="true"></canvas></span><span class="hm-card__name">ShadowAD <span class="hm-dial" aria-hidden="true">↗</span></span><span class="hm-card__sum">Assess identity risk across Active Directory and Microsoft Entra ID.</span></a><a class="hm-card" href="/mobile-pentest/" data-card><span class="hm-card__screen"><canvas data-loop="mobile-pentest" aria-hidden="true"></canvas></span><span class="hm-card__name">Agentic Mobile App Penetration Testing <span class="hm-dial" aria-hidden="true">↗</span></span><span class="hm-card__sum">Static analysis, runtime testing, and evidence-led reporting for Android and iOS.</span></a></div>
       </div>
+      <div class="hm-self" data-selfcheck>
+        <div class="hm-self__head">
+          <h3 class="hm-self__title">We ran the first test on this page.</h3>
+          <p>Read live from your own browser as you arrived. None of it is sent anywhere.</p>
+        </div>
+        <dl class="hm-self__rows">
+          <div data-check="transport"><dt>Your connection</dt><dd>Checking</dd></div>
+          <div data-check="cookies"><dt>Cookies set</dt><dd>Checking</dd></div>
+          <div data-check="third"><dt>Other hosts contacted</dt><dd>Checking</dd></div>
+          <div data-check="storage"><dt>Items saved on your device</dt><dd>Checking</dd></div>
+        </dl>
+      </div>
     </section>
     <section class="hm-ch" id="protect" data-bearing="144" data-layout="right" data-name="Protect" aria-labelledby="protect-heading">
       <div class="hm-ch__mark" aria-hidden="true"><span class="hm-ch__deg">144°</span><span class="hm-ch__name">Protect</span></div>
@@ -99,9 +112,8 @@
 
     <section class="hm-ch hm-build" id="build" data-bearing="288" data-layout="right" data-name="Build" aria-labelledby="build-heading">
       <div class="hm-ch__mark" aria-hidden="true"><span class="hm-ch__deg">288°</span><span class="hm-ch__name">Build</span></div>
-      <p class="dk-kicker">Five services</p>
       <h2 class="hm-ch__title" id="build-heading" data-split="lines">Find the gaps. Strengthen your defenses.</h2>
-      <ol class="hm-svc"><li><a href="/services/#offensive-security"><span class="dk-mono">01</span><span class="hm-svc__name">Offensive Security Services</span><span class="hm-dial" aria-hidden="true">↗</span></a></li><li><a href="/services/#grc"><span class="dk-mono">02</span><span class="hm-svc__name">Governance, Risk &amp; Compliance (GRC)</span><span class="hm-dial" aria-hidden="true">↗</span></a></li><li><a href="/services/#managed-security"><span class="dk-mono">03</span><span class="hm-svc__name">Security Operations &amp; Managed Security</span><span class="hm-dial" aria-hidden="true">↗</span></a></li><li><a href="/services/#infrastructure-security"><span class="dk-mono">04</span><span class="hm-svc__name">Network &amp; Infrastructure Security</span><span class="hm-dial" aria-hidden="true">↗</span></a></li><li><a href="/services/#data-application-security"><span class="dk-mono">05</span><span class="hm-svc__name">Data &amp; Application Security</span><span class="hm-dial" aria-hidden="true">↗</span></a></li></ol>
+      <ul class="hm-svc"><li><a href="/services/#offensive-security"><span class="dk-mono">072°</span><span class="hm-svc__name">Offensive Security Services</span><span class="hm-dial" aria-hidden="true">↗</span></a></li><li><a href="/services/#grc"><span class="dk-mono">072°</span><span class="hm-svc__name">Governance, Risk &amp; Compliance (GRC)</span><span class="hm-dial" aria-hidden="true">↗</span></a></li><li><a href="/services/#infrastructure-security"><span class="dk-mono">144°</span><span class="hm-svc__name">Network &amp; Infrastructure Security</span><span class="hm-dial" aria-hidden="true">↗</span></a></li><li><a href="/services/#data-application-security"><span class="dk-mono">144°</span><span class="hm-svc__name">Data &amp; Application Security</span><span class="hm-dial" aria-hidden="true">↗</span></a></li><li><a href="/services/#managed-security"><span class="dk-mono">216°</span><span class="hm-svc__name">Security Operations &amp; Managed Security</span><span class="hm-dial" aria-hidden="true">↗</span></a></li></ul>
       <a class="hm-more" href="/services/">Explore all services <span class="hm-dial" aria-hidden="true">↗</span></a>
       <div class="hm-train">
         <div>
@@ -123,7 +135,7 @@
       <div class="hm-talk__grid">
         <div class="hm-talk__form">
           <p class="hm-talk__lede">Tell us which systems you need to assess, protect, or monitor.</p>
-          <form id="inquiry"><label for="interest">What can we help with?</label><select id="interest" name="interest"><option>Offensive security &amp; pen testing</option><option>Governance, risk &amp; compliance</option><option>Security operations &amp; managed security</option><option>Network &amp; infrastructure security</option><option>Data &amp; application security</option><option>Software development</option><option>Team training</option><option>Leave Management Application</option><option>File Sharing Website</option><option>Custom business tool</option></select><label for="brief">Your requirements</label><textarea id="brief" name="brief" rows="3" maxlength="2000" placeholder="Your goal, current challenge, and preferred timeline" required></textarea><button class="dk-btn dk-btn--solid dk-btn--big" type="submit" data-fill><span class="dk-btn__fill" aria-hidden="true"></span><span class="dk-btn__label">Prepare email inquiry <span aria-hidden="true">↗</span></span></button><p class="form-note">Opens a draft in your email app for you to review and send.</p></form>
+          <form id="inquiry" novalidate><label for="interest">What can we help with?</label><select id="interest" name="interest"><option>Offensive security &amp; pen testing</option><option>Governance, risk &amp; compliance</option><option>Security operations &amp; managed security</option><option>Network &amp; infrastructure security</option><option>Data &amp; application security</option><option>Software development</option><option>Team training</option><option>Leave Management Application</option><option>File Sharing Website</option><option>Custom business tool</option></select><label for="brief">Your requirements</label><textarea id="brief" name="brief" rows="3" maxlength="2000" placeholder="Your goal, current challenge, and preferred timeline" required aria-describedby="brief-error"></textarea><p class="form-error" id="brief-error" data-brief-error role="alert" hidden>Add a line about what you need, so the draft is not empty.</p><button class="dk-btn dk-btn--solid dk-btn--big" type="submit" data-fill><span class="dk-btn__fill" aria-hidden="true"></span><span class="dk-btn__label">Prepare email inquiry <span aria-hidden="true">↗</span></span></button><p class="form-note">Opens a draft in your email app for you to review and send.</p></form>
         </div>
         <address class="hm-talk__lines">
           <a class="dk-link" href="mailto:info@digiinn360.com">info@digiinn360.com</a>

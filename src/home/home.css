@@ -278,3 +278,51 @@ html:not(.radar-on) .hm-tags, html:not(.radar-on) .hm-sound, html:not(.radar-on)
   .hm-sound { display: none; }
   html:not(.radar-on) .hm-radar-fallback { opacity: 0.35; }
 }
+
+/* ---------- Skills pass: craft floor ---------- */
+/* Headline words stay separate words; tracking eased from -0.075em */
+.hm-hero__title { letter-spacing: -0.06em; word-spacing: 0.06em; }
+.hm-ch__title { letter-spacing: -0.05em; }
+.hm-talk__title { letter-spacing: -0.06em; }
+/* Browser defaults belong to the theme too */
+.hm-route { caret-color: var(--cool); accent-color: var(--risk); }
+html:has(> .hm-route) { scrollbar-color: #24344d #03070f; }
+/* One drawn arrow instead of a font glyph; it still turns to bearing on hover */
+.hm-dial, .hm-svc .hm-dial { font-size: 0; flex: none; width: 0.8rem; height: 0.8rem; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 9.5l7-7M4 2.5h5.5V8' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 9.5l7-7M4 2.5h5.5V8' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") center / contain no-repeat; }
+.hm-svc .hm-dial { width: 1.1rem; height: 1.1rem; }
+.hm-svc a { grid-template-columns: 3.75rem minmax(0, 1fr) 2rem; }
+.hm-svc .dk-mono { color: var(--cool); }
+/* Controls step on hover and press on click; linked cards lift */
+.hm-route .dk-btn { transition: color 0.3s, border-color 0.3s, scale 0.2s var(--e-out); }
+.hm-route .dk-btn:active { scale: 0.98; }
+.hm-card { transition: translate 0.4s var(--e-out); }
+.hm-card__screen { border-radius: 12px; }
+@media (hover: hover) { .hm-card:hover { translate: 0 -2px; } }
+/* Pause control for the continuous motion (WCAG 2.2.2) */
+.hm-motion { bottom: calc(clamp(1rem, 3vh, 2rem) + 6.1rem); }
+.hm-motion[aria-pressed='true'] { color: var(--ink); background: rgb(255 51 65 / 0.18); border-color: var(--risk); }
+/* Form error: says what is wrong and how to fix it */
+.hm-talk__form .form-error { margin: 0; color: #ff8a92; font-size: 0.875rem; line-height: 1.4; }
+.hm-talk__form textarea[aria-invalid='true'] { border-color: var(--risk); }
+
+/* ---------- The first test: this page, read live ---------- */
+.hm-self { display: grid; gap: 1.1rem; margin-top: 0.5rem; padding: clamp(1.1rem, 2vw, 1.6rem); border: 1px solid var(--ln2); border-radius: 12px; background: rgb(8 15 27 / 0.86); }
+html:not(.js) .hm-self { display: none; }
+.hm-self__head { display: grid; gap: 0.35rem; }
+.hm-self__title { font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; }
+.hm-self__head p { color: var(--mut); font-size: 0.875rem; line-height: 1.5; }
+.hm-self__rows { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--ln2); }
+.hm-self__rows > div { display: grid; gap: 0.4rem; align-content: start; padding: 0.9rem 0.9rem 0 0; }
+.hm-self__rows > div + div { padding-left: 0.9rem; border-left: 1px solid var(--ln); }
+.hm-self dt { color: var(--mut); font-size: 0.8125rem; line-height: 1.35; }
+.hm-self dd { display: grid; gap: 0.2rem; margin: 0; color: var(--mut); font-size: 0.8125rem; line-height: 1.4; }
+.hm-self dd strong { display: flex; align-items: center; gap: 0.5rem; color: var(--ink); font-size: 1.2rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
+.hm-self dd strong::before { content: ''; flex: none; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--mut); }
+.hm-self .is-ok strong::before { background: var(--cool); }
+.hm-self .is-risk strong::before { background: var(--risk); }
+.motion .hm-self .is-done dd { animation: hm-self-in 0.5s var(--e-out) both; }
+@keyframes hm-self-in { from { opacity: 0; translate: 0 6px; } }
+@media (max-width: 760px) {
+  .hm-self__rows { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 0.25rem; }
+  .hm-self__rows > div:nth-child(3) { padding-left: 0; border-left: 0; }
+}

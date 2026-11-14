@@ -8,4 +8,6 @@ export const home = {
   ready: false,
   /** Footer covers the screen: 3D can pause. */
   footer: false,
+  /** Visitor paused the continuous motion (radar sweep, 3D idle spin, product loops). Scroll still drives the bearing. */
+  paused: false,
 };

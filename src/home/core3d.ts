@@ -192,7 +192,9 @@ async function load(canvas: HTMLCanvasElement, mod: Promise<typeof import('three
   canvas.classList.add('is-on');
 
   const cur = params(0);
-  gsap.ticker.add((t) => {
+  let held = 0;
+  gsap.ticker.add((now) => {
+    const t = home.paused ? (held ||= now) : ((held = 0), now);
     if (home.footer) return;
     // Phones past the hero: copy runs over the radar, so the core fades out (home.css) and stops rendering. Halves scroll cost there.
     if (mobile() && home.scrollDeg >= 24) return;

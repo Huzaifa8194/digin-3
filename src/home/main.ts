@@ -8,6 +8,8 @@ import { bootDark } from '../site-dark';
 import { isTouch, onPage, prefersReducedMotion } from '../engine';
 import { startRadar } from './radar';
 import { startCore } from './core3d';
+import { startSelfCheck } from './selfcheck';
+import { home } from './state';
 import { Loop } from '../products/loops/kit';
 import { aegis, darkintel, mobile, shadowad, sysbastion } from '../products/loops/scenes';
 
@@ -33,7 +35,7 @@ function startCards() {
         card.addEventListener('pointerenter', () => gsap.to({ v: speed }, { v: 2.2, duration: 0.4, onUpdate() { speed = this.targets()[0].v; } }));
         card.addEventListener('pointerleave', () => gsap.to({ v: speed }, { v: 1, duration: 0.5, onUpdate() { speed = this.targets()[0].v; } }));
       }
-      const tick = (_t: number, dt: number) => loop.advance((Math.min(dt, 50) / 1000) * speed);
+      const tick = (_t: number, dt: number) => { if (!home.paused) loop.advance((Math.min(dt, 50) / 1000) * speed); };
       ScrollTrigger.create({ trigger: card, start: 'top bottom', end: 'bottom top', onToggle: (s) => (s.isActive ? gsap.ticker.add(tick) : gsap.ticker.remove(tick)) });
     });
   });
@@ -53,4 +55,5 @@ bootDark(() => {
   startCore();
   startCards();
   startSweeps();
+  startSelfCheck();
 });
