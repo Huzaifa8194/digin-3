@@ -1,11 +1,17 @@
 // Products: the reel. Each screen is sticky; as the next one slides up, the current card sinks back
-// (scale + dim, scrubbed). The trailer on the active screen plays; the rest stay paused.
+// (scale + dim, scrubbed). Each screen plays its own coded loop (src/products/loops), only while active.
 import '../site-dark';
 import './products.css';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { bootDark } from '../site-dark';
-import { isMobile, isTouch, onPage, onScroll, prefersReducedMotion } from '../engine';
+import { isTouch, onPage, onScroll, prefersReducedMotion } from '../engine';
+import { Loop } from './loops/kit';
+import { aegis, darkintel, mobile, shadowad, sysbastion } from './loops/scenes';
+
+const SCENES = { shadowad, sysbastion, 'aegis-shield': aegis, 'mobile-pentest': mobile, darkintel360: darkintel } as const;
+const ACCENTS: Record<string, string> = { shadowad: '#c9ed91', sysbastion: '#8cc0ff', 'aegis-shield': '#b8dcff', 'mobile-pentest': '#f5cfab', darkintel360: '#dbc4ff' };
+const NAMES: Record<string, string> = { shadowad: 'ShadowAD', sysbastion: 'SysBastion', 'aegis-shield': 'AEGIS-SHIELD', 'mobile-pentest': 'Mobile pentest', darkintel360: 'DarkIntel360' };
 
 function startReel() {
   onPage(() => {
@@ -13,7 +19,7 @@ function startReel() {
     const reduced = prefersReducedMotion();
     screens.forEach((screen, i) => {
       const card = screen.querySelector<HTMLElement>('[data-screen-card]')!;
-      const video = screen.querySelector<HTMLVideoElement>('[data-trailer]');
+      const canvas = screen.querySelector<HTMLCanvasElement>('[data-loop]');
       const next = screens[i + 1];
       if (next && !reduced) {
         gsap.to(card, {
@@ -21,12 +27,19 @@ function startReel() {
           scrollTrigger: { trigger: next, start: 'top bottom', end: 'top top', scrub: true },
         });
       }
-      // Phones keep the poster (2.5 MB per trailer is too much to autoplay on data).
-      if (video && !reduced && !isMobile()) {
-        ScrollTrigger.create({
-          trigger: screen, start: 'top 60%', end: 'bottom 40%',
-          onToggle: (self) => (self.isActive ? video.play().catch(() => {}) : video.pause()),
-        });
+      if (canvas) {
+        const id = canvas.dataset.loop as keyof typeof SCENES;
+        const loop = new Loop(canvas, SCENES[id], NAMES[id], ACCENTS[id]);
+        const fit = () => (reduced ? loop.still(1) : loop.resize());
+        new ResizeObserver(() => { loop.resize(); if (reduced) loop.still(1); }).observe(canvas);
+        document.fonts?.ready.then(fit);
+        if (!reduced) {
+          const tick = (_t: number, dt: number) => loop.advance(Math.min(dt, 50) / 1000);
+          ScrollTrigger.create({
+            trigger: screen, start: 'top 85%', end: 'bottom 15%',
+            onToggle: (self) => (self.isActive ? gsap.ticker.add(tick) : gsap.ticker.remove(tick)),
+          });
+        }
       }
     });
   });

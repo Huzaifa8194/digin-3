@@ -34,8 +34,8 @@
 .pr-reel { padding: 0 !important; }
 .pr-screen { position: sticky; top: var(--hdr); height: calc(100svh - var(--hdr)); padding: clamp(0.5rem, 1vw, 1rem) var(--gut); scroll-margin-top: var(--hdr); }
 .pr-screen__card { position: relative; height: 100%; border-radius: 12px; overflow: hidden; background: var(--surface); display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.3fr); border: 1px solid color-mix(in srgb, var(--acc) 25%, transparent); transform-origin: 50% 0%; }
-.pr-screen__video { grid-column: 2; grid-row: 1; width: 100%; height: 100%; object-fit: cover; object-position: 100% 50%; }
-.pr-screen__scrim { grid-column: 2; grid-row: 1; position: relative; background: linear-gradient(90deg, var(--surface) 0%, var(--surface) 12%, rgb(11 20 34 / 0) 45%); }
+.pr-screen__video { grid-column: 2; grid-row: 1; width: 100%; height: 100%; min-height: 0; display: block; }
+.pr-screen__scrim { grid-column: 2; grid-row: 1; position: relative; pointer-events: none; background: linear-gradient(90deg, var(--surface) 0%, rgb(11 20 34 / 0) 6%); }
 .pr-screen__card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(60% 70% at 10% 100%, color-mix(in srgb, var(--acc) 14%, transparent), transparent); pointer-events: none; }
 .pr-screen__body { grid-column: 1; grid-row: 1; position: relative; align-self: end; padding: clamp(1.25rem, 3.5vw, 3.5rem); display: grid; gap: 1.1rem; justify-items: start; }
 .pr-screen__meta { display: flex; gap: 1rem; align-items: baseline; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--acc); }
@@ -72,7 +72,7 @@
   .pr-fan { height: 22rem; }
   .pr-screen__card { grid-template-columns: 1fr; grid-template-rows: minmax(0, 0.8fr) auto; }
   .pr-screen__video, .pr-screen__scrim { grid-column: 1; grid-row: 1; }
-  .pr-screen__scrim { background: linear-gradient(90deg, var(--surface), rgb(11 20 34 / 0) 40%), linear-gradient(transparent 55%, var(--surface)); }
+  .pr-screen__scrim { background: linear-gradient(transparent 85%, var(--surface)); }
   .pr-screen__body { grid-column: 1; grid-row: 2; padding-top: 0.5rem; }
   .pr-fan { justify-self: center; width: 100%; }
 }
