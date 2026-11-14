@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#030407">
+  <meta name="robots" content="noindex">
+  <title>Sanctuary | Digiinn360 (design 2)</title>
+  <meta name="description" content="Digiinn360 in five acts: out of the network's noise, a shield. A single-screen 3D story.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap">
+  <script>document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion');</script>
+</head>
+<body class="d2">
+  <a class="d2-skip" href="#acts">Skip to the story text</a>
+
+  <canvas class="d2-canvas" data-story aria-hidden="true"></canvas>
+  <div class="d2-vignette" aria-hidden="true"></div>
+
+  <header class="d2-top">
+    <a class="d2-brand" href="/" aria-label="Digiinn360 home"><img src="/brand/digiinn360-light.png" width="764" height="228" alt=""></a>
+    <p class="d2-count" aria-hidden="true"><span data-count>01</span> / 05 <span class="d2-count__name" data-count-name>The storm</span></p>
+    <a class="d2-exit" href="/">Back to the site</a>
+  </header>
+
+  <main id="acts" class="d2-acts" tabindex="-1">
+    <h1 class="d2-sr">Digiinn360: out of the noise, a shield. A story in five acts.</h1>
+    <section class="d2-act" data-act="0">
+      <p class="d2-kicker">01 / The storm</p>
+      <h2 class="d2-line">Every second, the network is noise.</h2>
+      <p class="d2-sub">Logins, updates, messages, traffic. Somewhere inside it, something is looking for a way in.</p>
+    </section>
+    <section class="d2-act" data-act="1">
+      <p class="d2-kicker">02 / The way in</p>
+      <h2 class="d2-line">Every attack needs a way in.</h2>
+      <p class="d2-sub">A script. A macro. A weak permission. A connection out.</p>
+    </section>
+    <section class="d2-act" data-act="2">
+      <p class="d2-kicker">03 / Every angle</p>
+      <h2 class="d2-line">We look from every angle.</h2>
+      <p class="d2-sub">Penetration testing, audits and monitoring turn the whole surface until the weak points show.</p>
+    </section>
+    <section class="d2-act" data-act="3">
+      <p class="d2-kicker">04 / The shield</p>
+      <h2 class="d2-line">Then we close the gaps.</h2>
+      <p class="d2-sub">Hardening, managed security and data protection, built around the systems you actually run.</p>
+    </section>
+    <section class="d2-act d2-act--final" data-act="4">
+      <p class="d2-kicker">05 / Digiinn360</p>
+      <h2 class="d2-line">See risk. Stay ahead.</h2>
+      <p class="d2-sub">Cybersecurity services, five security products and training, from Islamabad.</p>
+      <div class="d2-ctas">
+        <a class="d2-btn d2-btn--red" href="/contact/">Talk to our team <span aria-hidden="true">↗</span></a>
+        <a class="d2-btn" href="/services/">Services</a>
+        <a class="d2-btn" href="/products/">Products</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="d2-rail" aria-hidden="true">
+    <span class="d2-rail__fill" data-rail></span>
+    <i style="--k:0"></i><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i><i style="--k:4"></i>
+  </div>
+  <p class="d2-hint" aria-hidden="true" data-hint>Scroll to begin</p>
+
+  <div class="d2-scroll" aria-hidden="true"></div>
+  <script type="module" src="/src/design2/main.ts"></script>
+</body>
+</html>
