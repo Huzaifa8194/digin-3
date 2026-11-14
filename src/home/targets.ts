@@ -63,10 +63,13 @@ export function createTargets(host: HTMLElement, compact: () => boolean) {
   const type = (t: Target, label: string, cls: string) => {
     t.el.className = `hm-tag ${cls}`;
     const o = { n: 0 };
-    gsap.to(o, { n: label.length, duration: Math.min(0.5, label.length * 0.025), ease: 'none', onUpdate: () => { t.text.textContent = label.slice(0, Math.round(o.n)); } });
+    gsap.to(o, { n: label.length, duration: Math.min(0.3, label.length * 0.015), ease: 'none', onUpdate: () => { t.text.textContent = label.slice(0, Math.round(o.n)); } });
   };
   const trigger = (t: Target, now: number) => {
     if (t.state !== 'idle') return;
+    // Labels never stack: skip a target whose label would land on a live one, and keep five at most.
+    const live = targets.filter((o) => o.state !== 'idle');
+    if (live.length >= 5 || live.some((o) => Math.abs(o.y - t.y) < 38 && Math.abs(o.x - t.x) < 250)) return;
     t.state = 'risk';
     t.until = now + 1.7;
     type(t, `▲ ${t.risk}`, 'is-risk');

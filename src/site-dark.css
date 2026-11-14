@@ -85,8 +85,19 @@ button.dk-btn--solid { border: 0; }
 .dk-close__row p { color: var(--soft); max-width: 34rem; font-size: var(--t-m); line-height: 1.5; }
 
 @media (max-width: 700px) {
-  .dk { --hdr: 112px; }
-  .dk.dk-compact > header { height: 94px; }
+  /* One-row header: logo, contact, menu button; the nav opens as a sheet under it */
+  .dk { --hdr: 64px; }
+  .dk > header { height: 64px; grid-template-columns: 1fr auto; grid-template-rows: auto; align-items: center; gap: 12px; padding: 0 5%; }
+  .dk.dk-compact > header { height: 56px; }
+  .dk > header > .header-actions { grid-column: 2; grid-row: 1; display: flex; align-items: center; gap: 8px; }
+  .dk > header .nav-toggle { display: inline-flex; align-items: center; gap: 0.55em; min-height: 40px; padding: 0 0.85em; border: 1px solid var(--ln2); border-radius: 6px; background: transparent; color: var(--ink); font-size: 0.8125rem; font-weight: 700; }
+  .nav-toggle__bars { position: relative; width: 14px; height: 8px; border-block: 1.5px solid currentColor; transition: height 0.3s var(--e-out); }
+  .nav-open .nav-toggle__bars { height: 0; }
+  .dk > header > .tube-nav { display: none; }
+  .dk > header.nav-open > .tube-nav { display: flex; flex-direction: column; align-items: stretch; justify-self: stretch; position: absolute; top: 100%; left: 0; right: 0; grid-column: auto; grid-row: auto; max-width: none; gap: 0; padding: 0.25rem 5% 1rem; background: #050a14; border-bottom: 1px solid var(--ln); }
+  .dk > header.nav-open .tube-nav > a { padding: 1rem 0; font-size: 1.0625rem; border-bottom: 1px solid var(--ln); border-radius: 0; }
+  .dk > header .tube-nav > button, .dk > header .tube-nav > .mega-panel { display: none !important; }
+  html:has(> .dk) { scroll-padding-top: 76px; }
   .dk-close h2 { font-size: clamp(2.6rem, 13vw, 4rem); }
   .dk-close__row .dk-btn { width: 100%; }
 }

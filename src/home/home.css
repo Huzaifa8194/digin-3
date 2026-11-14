@@ -11,8 +11,9 @@ html:not(.radar-on) .hm-radar { display: none; }
 .hm-radar-fallback { display: none; }
 html:not(.radar-on) .hm-radar-fallback {
   display: block; position: fixed; z-index: 0; pointer-events: none;
-  width: min(80vh, 54vw); aspect-ratio: 1; right: 6vw; top: 50%; translate: 0 -50%; border-radius: 50%;
+  width: min(70vh, 38vw); aspect-ratio: 1; right: 4vw; top: 50%; translate: 0 -50%; border-radius: 50%;
   background:
+    radial-gradient(circle, rgb(140 192 255 / 0.9) 0 7%, rgb(140 192 255 / 0.16) 7.5% 26%, transparent 26.5%),
     conic-gradient(from 20deg, rgb(90 162 255 / 0.28), transparent 18%),
     repeating-radial-gradient(circle, transparent 0 calc(20% - 1px), rgb(140 192 255 / 0.25) calc(20% - 1px) 20%),
     radial-gradient(circle, #0b1830, #050a14 72%);
@@ -249,4 +250,31 @@ html:not(.radar-on) .hm-tags, html:not(.radar-on) .hm-sound, html:not(.radar-on)
   .hm-hud__deg { font-size: 1rem; letter-spacing: 0; }
   .hm-sound { right: 12px; bottom: 3.6rem; }
   html:not(.at-hero) .hm-sound { opacity: 0; pointer-events: none; }
+}
+
+/* ---------- Jury round 2 ---------- */
+/* Chapters fill their column: services beside notes, product screens full width below; no empty bands */
+@media (min-width: 761px) {
+  .hm-ch { min-height: 0; padding-block: clamp(3rem, 7vh, 5rem); }
+  .hm-ch__grid { grid-template-columns: 1fr; gap: 2rem; }
+  .hm-ch__col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 clamp(1.5rem, 3vw, 3rem); align-items: start; }
+  .hm-ch__col .hm-sub, .hm-ch__col .hm-links { grid-column: 1; }
+  .hm-ch__col .hm-links { margin-bottom: 0; }
+  .hm-ch__col .hm-notes { grid-column: 2; grid-row: 2; }
+  .hm-cards--1 .hm-card { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); column-gap: clamp(1.25rem, 2.5vw, 2rem); row-gap: 0.6rem; }
+  .hm-cards--1 .hm-card__screen { grid-row: 1 / span 2; }
+  .hm-cards--1 .hm-card__name { align-self: end; }
+  .hm-cards--1 .hm-card__sum { align-self: start; }
+}
+/* The select matches the textarea: no native chrome, a cool chevron */
+.hm-talk__form select {
+  -webkit-appearance: none; appearance: none; padding-right: 2.75rem; cursor: pointer;
+  background: #050c18 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238cc0ff' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 1rem center / 12px 8px;
+}
+@media (max-width: 760px) {
+  /* Past the hero the radar is a backdrop, not a second layer of content */
+  .hm-radar { transition: opacity 0.6s; }
+  html:not(.at-hero) .hm-radar { opacity: 0.4; }
+  .hm-sound { display: none; }
+  html:not(.radar-on) .hm-radar-fallback { opacity: 0.35; }
 }

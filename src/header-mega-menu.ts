@@ -137,3 +137,20 @@ if (header && nav) {
     }
   });
 }
+
+// Phones: one-row header with a menu button (styled per theme; hidden unless the theme shows it).
+if (header && nav) {
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'nav-toggle';
+  if (!nav.id) nav.id = 'site-nav';
+  toggle.setAttribute('aria-controls', nav.id);
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.innerHTML = '<span class="nav-toggle__bars" aria-hidden="true"></span><span>Menu</span>';
+  (header.querySelector('.header-actions') ?? header).append(toggle);
+  const set = (open: boolean) => { header.classList.toggle('nav-open', open); toggle.setAttribute('aria-expanded', String(open)); };
+  toggle.addEventListener('click', () => set(!header.classList.contains('nav-open')));
+  nav.addEventListener('click', (event) => { if ((event.target as HTMLElement).closest('a')) set(false); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && header.classList.contains('nav-open')) { set(false); toggle.focus(); } });
+  document.addEventListener('pointerdown', (event) => { if (!header.contains(event.target as Node)) set(false); });
+}

@@ -253,7 +253,7 @@ export function startRadar() {
       return;
     }
 
-    let last = 0;
+    let last = 0, frame = 0;
     const tagHost = document.querySelector<HTMLElement>('[data-tags]');
     const tip = document.querySelector<HTMLElement>('[data-tip]');
     const targets = tagHost ? createTargets(tagHost, mobile) : null;
@@ -299,6 +299,8 @@ export function startRadar() {
         const tx = `${pad(((Math.round(s.angle) % 360) + 360) % 360)}°`;
         if (tip.textContent !== tx) tip.textContent = tx;
       }
+      // Phones past the hero: the radar is a dimmed backdrop under copy (home.css), so it draws every other frame.
+      if (mobile() && !atHero && frame++ & 1) return;
       draw(tSec);
     });
 
@@ -318,7 +320,7 @@ async function runLoader(s: { intro: number; angle: number }, L: () => Layout, s
   if (getComputedStyle(el).display === 'none') { root.classList.add('is-loaded'); await gsap.to(s, { intro: 1, duration: 0.9, ease: 'power2.inOut' }); el.hidden = true; return; }
   let seen = false;
   try { seen = sessionStorage.getItem('dg-seen') === '1'; sessionStorage.setItem('dg-seen', '1'); } catch { /* storage blocked */ }
-  const MIN = seen ? 0.35 : 1.0, MAX = 1.5;
+  const MIN = seen ? 0.3 : 0.7, MAX = 1.5;
   // Count from navigation, not from script start: time already spent downloading is not waited for twice.
   const start = performance.now() - Math.min(performance.now(), MIN * 800);
   const ready = Promise.race([document.fonts.ready, wait(MAX)]);
@@ -348,7 +350,7 @@ async function runLoader(s: { intro: number; angle: number }, L: () => Layout, s
     .to(el.querySelector('.hm-loader__brand'), { autoAlpha: 0, duration: 0.3 }, 0.1)
     .add(() => root.classList.add('is-loaded'), 0.35)
     .add(() => { el.style.pointerEvents = 'none'; }, 0.5)
-    .to(s, { intro: 1, duration: 1.0, ease: 'power2.inOut' }, 0.4)
+    .to(s, { intro: 1, duration: 0.7, ease: 'power2.inOut' }, 0.35)
     .to(ring, { autoAlpha: 0, duration: 0.3 }, 0.8);
   if (hud) tl.to(count, { x: hud.left + hud.width / 2 - (cr.left + cr.width / 2), y: hud.top + hud.height / 2 - (cr.top + cr.height / 2), scale: hud.height / cr.height, duration: 0.75, ease: 'expo.inOut' }, 0);
   tl.to(count, { autoAlpha: 0, duration: 0.15 }, 0.75);

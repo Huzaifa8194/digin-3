@@ -159,3 +159,5 @@
   font-size: .875rem;
   line-height: 1.4;
 }
+
+.nav-toggle { display: none; }
