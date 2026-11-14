@@ -1,21 +1,35 @@
 <!doctype html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#f3f3ef"><meta name="robots" content="noindex">
-<title>The trace | Digiinn360 (design 4)</title>
+<title>The trace | Digiinn360</title>
 <meta name="description" content="Every attack leaves a trace. Digiinn360 follows it: testing, hardening, monitoring, five services and training, from Islamabad.">
+<link rel="canonical" href="https://digin-3.vercel.app/design4/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Digiinn360">
+<meta property="og:title" content="The trace | Digiinn360">
+<meta property="og:description" content="Every attack leaves a trace. Digiinn360 follows it: testing, hardening, monitoring, five services and training.">
+<meta property="og:url" content="https://digin-3.vercel.app/design4/"><meta property="og:image" content="https://digin-3.vercel.app/design4-og.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="The trace | Digiinn360"><meta name="twitter:image" content="https://digin-3.vercel.app/design4-og.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon.png">
 <link rel="preload" href="/fonts/d4/cabinet-grotesk-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/d4/general-sans-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/button-theme.css">
 <script>document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion');</script>
 </head>
 <body class="d4" id="top">
 <a class="d4-skip" href="#main">Skip to content</a>
 <header class="d4-frame">
-  <a class="d4-frame__logo" href="/">DigiInn360</a>
+  <a class="d4-frame__logo" href="/" aria-label="DigiInn360 home"><span class="d4-roll"><span>DigiInn360</span><span aria-hidden="true">DigiInn360</span></span></a>
   <nav class="d4-frame__nav" aria-label="Sections">
     <a href="#test"><span class="d4-roll"><span>Test</span><span aria-hidden="true">Test</span></span></a><a href="#protect"><span class="d4-roll"><span>Protect</span><span aria-hidden="true">Protect</span></span></a><a href="#watch"><span class="d4-roll"><span>Watch</span><span aria-hidden="true">Watch</span></span></a><a href="#build"><span class="d4-roll"><span>Build</span><span aria-hidden="true">Build</span></span></a><a href="#talk"><span class="d4-roll"><span>Talk</span><span aria-hidden="true">Talk</span></span></a>
   </nav>
+  <button class="d4-frame__menu" type="button" aria-expanded="false" aria-controls="d4-menu" data-menu-open>Menu</button>
   <a class="d4-frame__cta" href="#talk"><span class="d4-roll"><span>Let’s talk</span><span aria-hidden="true">Let’s talk</span></span></a>
 </header>
+<div class="d4-menu" id="d4-menu" hidden data-menu>
+  <nav aria-label="Sections"><ol>
+    <li><a href="#test"><span class="d4-menu__n">01</span>Test</a></li><li><a href="#protect"><span class="d4-menu__n">02</span>Protect</a></li><li><a href="#watch"><span class="d4-menu__n">03</span>Watch</a></li><li><a href="#build"><span class="d4-menu__n">04</span>Build</a></li><li><a href="#talk"><span class="d4-menu__n">05</span>Talk</a></li>
+  </ol></nav>
+  <button class="d4-menu__close" type="button" data-menu-close>Close</button>
+</div>
 
 <main id="main" class="d4-main" tabindex="-1">
   <svg class="d4-thread" data-thread aria-hidden="true"><path data-thread-path/></svg>
@@ -45,6 +59,7 @@
       <h2 class="d4-h2" id="test-title">Find and fix security gaps.</h2>
       <p class="d4-p">Penetration testing and security audits follow the path an attacker would take, stop by stop.</p>
     </div>
+    <div class="d4-trackwrap">
     <div class="d4-track" data-track>
       <span class="d4-track__line" data-track-line aria-hidden="true"></span>
       <ol class="d4-stations">
@@ -54,6 +69,7 @@
         <li class="d4-station is-low"><span class="d4-station__dot" aria-hidden="true"></span><div class="d4-station__card"><p class="d4-station__n">Stop 4: Audits and risk</p><h3>Priorities</h3><p>Use security audits and risk assessments to decide what to fix first, across your organization and suppliers.</p><a class="d4-link" href="/services/#grc">Governance, risk &amp; compliance ↗</a></div></li>
         <li class="d4-station "><span class="d4-station__dot" aria-hidden="true"></span><div class="d4-station__card"><p class="d4-station__n">Stop 5: Fix, then retest</p><h3>Verified</h3><p>Find and fix security gaps, then verify the fix. The trace ends with proof.</p><a class="d4-link" href="/services/">All services ↗</a></div></li>
       </ol>
+    </div>
     </div>
   </section>
   <i class="d4-node" data-anchor="2" style="top:3.5rem;left:var(--m)" aria-hidden="true"></i>
@@ -107,11 +123,11 @@
     </div>
     <ol class="d4-index" data-index>
       <i class="d4-node" data-anchor="9" style="left:0;top:0" aria-hidden="true"></i>
-      <li><a href="/services/#offensive-security" data-stitch="0"><span class="d4-index__n">01</span><span class="d4-index__name">Offensive Security Services</span><span class="d4-index__sub">VAPT, web, API and network testing, configuration assessments</span><span class="d4-index__thumb" aria-hidden="true"></span></a></li>
-      <li><a href="/services/#grc" data-stitch="1"><span class="d4-index__n">02</span><span class="d4-index__name">Governance, Risk &amp; Compliance</span><span class="d4-index__sub">Audits, compliance, risk assessments, gap analysis, vendor risk</span><span class="d4-index__thumb" aria-hidden="true"></span></a></li>
-      <li><a href="/services/#managed-security" data-stitch="2"><span class="d4-index__n">03</span><span class="d4-index__name">Security Operations &amp; Managed Security</span><span class="d4-index__sub">SOC, SIEM, monitoring, incident response, threat hunting</span><span class="d4-index__thumb" aria-hidden="true"></span></a></li>
-      <li><a href="/services/#infrastructure-security" data-stitch="3"><span class="d4-index__n">04</span><span class="d4-index__name">Network &amp; Infrastructure Security</span><span class="d4-index__sub">Network assessments, firewalls, endpoints, IDS/IPS, IAM</span><span class="d4-index__thumb" aria-hidden="true"></span></a></li>
-      <li><a href="/services/#data-application-security" data-stitch="4"><span class="d4-index__n">05</span><span class="d4-index__name">Data &amp; Application Security</span><span class="d4-index__sub">Encryption, AppSec, DevSecOps, supply chain, config reviews</span><span class="d4-index__thumb" aria-hidden="true"></span></a></li>
+      <li><a href="/services/#offensive-security" data-stitch="0"><span class="d4-index__n">01</span><span class="d4-index__name">Offensive Security Services</span><span class="d4-index__sub">VAPT, web, API and network testing, configuration assessments</span><svg class="d4-index__thumb" viewBox="0 0 48 48" aria-hidden="true"><path d="M4 30 L12 14 L20 30 L28 14 L36 30 L44 14"/></svg></a></li>
+      <li><a href="/services/#grc" data-stitch="1"><span class="d4-index__n">02</span><span class="d4-index__name">Governance, Risk &amp; Compliance</span><span class="d4-index__sub">Audits, compliance, risk assessments, gap analysis, vendor risk</span><svg class="d4-index__thumb" viewBox="0 0 48 48" aria-hidden="true"><path d="M6 8 l8 8 m0 -8 l-8 8 M22 8 l8 8 m0 -8 l-8 8 M6 26 l8 8 m0 -8 l-8 8 M38 8 l8 8 m0 -8 l-8 8 M38 26 l8 8 m0 -8 l-8 8"/></svg></a></li>
+      <li><a href="/services/#managed-security" data-stitch="2"><span class="d4-index__n">03</span><span class="d4-index__name">Security Operations &amp; Managed Security</span><span class="d4-index__sub">SOC, SIEM, monitoring, incident response, threat hunting</span><svg class="d4-index__thumb" viewBox="0 0 48 48" aria-hidden="true"><path d="M2 24 H14 L18 10 L24 38 L29 24 H46"/></svg></a></li>
+      <li><a href="/services/#infrastructure-security" data-stitch="3"><span class="d4-index__n">04</span><span class="d4-index__name">Network &amp; Infrastructure Security</span><span class="d4-index__sub">Network assessments, firewalls, endpoints, IDS/IPS, IAM</span><svg class="d4-index__thumb" viewBox="0 0 48 48" aria-hidden="true"><path d="M2 12 H46 M2 24 H46 M2 36 H46 M14 12 V24 M30 12 V24 M8 24 V36 M24 24 V36 M40 24 V36"/></svg></a></li>
+      <li><a href="/services/#data-application-security" data-stitch="4"><span class="d4-index__n">05</span><span class="d4-index__name">Data &amp; Application Security</span><span class="d4-index__sub">Encryption, AppSec, DevSecOps, supply chain, config reviews</span><svg class="d4-index__thumb" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 24 m0 -3 a3 3 0 1 1 -3 3 a6 6 0 1 1 6 6 a10 10 0 1 1 -10 -10 a15 15 0 1 1 15 15"/></svg></a></li>
     </ol>
     <a class="d4-link d4-build__all" href="/services/">Explore all services ↗</a>
     <div class="d4-train">
@@ -135,22 +151,18 @@
     </div>
     <div class="d4-faq">
       <h3 class="d4-h3">Questions, answered.</h3>
-      <ol><li><details open><summary><span class="d4-faq__n">Q1</span><span>What does cybersecurity protect?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>Cybersecurity helps defend systems, networks and information against unauthorized access, theft and disruption.</p></details></li><li><details><summary><span class="d4-faq__n">Q2</span><span>Why does cybersecurity matter for businesses?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>It helps safeguard sensitive information, maintain operations and reduce the financial and reputational effects of an attack.</p></details></li><li><details><summary><span class="d4-faq__n">Q3</span><span>Which cyber threats should we be aware of?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>Phishing, ransomware, malware and denial-of-service attacks can affect businesses. Application risks also include injection attacks and stolen credentials.</p></details></li><li><details><summary><span class="d4-faq__n">Q4</span><span>How can we strengthen our defenses?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>Combine secure access, updated software, network protection and staff awareness. Discuss a security review to understand your priorities.</p></details></li><li><details><summary><span class="d4-faq__n">Q5</span><span>How can I contact Digiinn360?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>Email info@digiinn360.com or call +92 51 2748690 or +92 309 5624742 to discuss your requirements.</p></details></li></ol>
+      <ol><li><details open><summary><span class="d4-faq__n">Q1</span><span>Where should we start: testing, hardening or monitoring?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>Usually with a test. A penetration test or risk assessment shows where the real gaps are, and that decides what to harden first and what to watch.</p></details></li><li><details><summary><span class="d4-faq__n">Q2</span><span>Can you test identity across Active Directory and Microsoft Entra ID?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>Yes. Offensive testing covers hybrid identity, and ShadowAD is our workbench for testing attack paths across both, with evidence and retests.</p></details></li><li><details><summary><span class="d4-faq__n">Q3</span><span>What happens after a penetration test?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>You get prioritized findings with evidence and remediation steps. Once fixes are in, a retest verifies them, so the trace ends with proof.</p></details></li><li><details><summary><span class="d4-faq__n">Q4</span><span>Do you monitor around the clock?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>Security operations and managed security include continuous monitoring, incident detection and response, with 24/7 monitoring and support.</p></details></li><li><details><summary><span class="d4-faq__n">Q5</span><span>How do we reach Digiinn360?</span><span class="d4-faq__x" aria-hidden="true"></span></summary><p>Email info@digiinn360.com or call +92 51 2748690 or +92 309 5624742. The form above drafts the email for you.</p></details></li></ol>
     </div>
   </section>
 </main>
-<footer class="site-footer">
-  <div class="site-footer-inner">
-    <div class="site-footer-lead">
-      <a class="site-footer-logo" href="/" aria-label="Digiinn360 home"><img src="/brand/digiinn360-light.png" width="764" height="228" alt="" loading="lazy"></a>
-      <a class="site-footer-contact" href="/contact/">Let’s talk <span aria-hidden="true">↗</span></a>
-    </div>
-    <div class="site-footer-directory"><div><h2>Quick links</h2><a href="/">Home</a><a href="/services/">Services</a><a href="/products/">Our Products</a><a href="/about/">About</a><a href="/contact/">Contact us</a></div><div><h2>Services</h2><a href="/services/#offensive-security">Offensive Security Services</a><a href="/services/#grc">Governance, Risk &amp; Compliance (GRC)</a><a href="/services/#managed-security">Security Operations &amp; Managed Security</a><a href="/services/#infrastructure-security">Network &amp; Infrastructure Security</a><a href="/services/#data-application-security">Data &amp; Application Security</a></div><div><h2>Support</h2><a href="/#faq">Help &amp; FAQs</a><span>24/7 monitoring &amp; support</span></div><div><h2>Contact</h2><a href="tel:+92512748690">051 2748690</a><a href="tel:+923095624742">0309 5624742</a><a href="mailto:info@digiinn360.com">info@digiinn360.com</a><address>House no 3, Street no 14,<br>Sector F7, Islamabad</address></div></div>
-    <div class="site-footer-end">
-      <span>© Digiinn360</span>
-      <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
-    </div>
+<footer class="d4-foot">
+  <p class="d4-foot__word" aria-hidden="true">DigiInn360</p>
+  <div class="d4-foot__cols">
+    <div><p class="d4-meta">Pages</p><a class="d4-link" href="/">Home</a><a class="d4-link" href="/services/">Services</a><a class="d4-link" href="/products/">Products</a><a class="d4-link" href="/about/">About</a><a class="d4-link" href="/contact/">Contact</a></div>
+    <div><p class="d4-meta">Products</p><a class="d4-link" href="/shadowad/">ShadowAD</a><a class="d4-link" href="/sysbastion/">SysBastion</a><a class="d4-link" href="/aegis-shield/">AEGIS-SHIELD</a><a class="d4-link" href="/mobile-pentest/">Mobile App Pentest</a><a class="d4-link" href="/darkintel360/">DarkIntel360</a></div>
+    <div><p class="d4-meta">Contact</p><a class="d4-link" href="mailto:info@digiinn360.com">info@digiinn360.com</a><a class="d4-link" href="tel:+92512748690">051 2748690</a><a class="d4-link" href="tel:+923095624742">0309 5624742</a><span>House no 3, Street no 14, Sector F7, Islamabad</span></div>
   </div>
+  <div class="d4-foot__end"><span>© Digiinn360. 24/7 monitoring and support.</span><a class="d4-link" href="#top">Back to top ↑</a></div>
 </footer>
 <script type="module" src="/src/design4/main.ts"></script>
 </body></html>

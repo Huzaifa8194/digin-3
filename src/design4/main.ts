@@ -19,6 +19,7 @@ function startRope() {
     const N = 46;
     type P = { x: number; y: number; px: number; py: number };
     let pts: P[] = [], seg = 0, W = 0, H = 0, dpr = 1;
+    let redraw = () => {};
     const pin = () => ({ ax: W * 0.66, ay: 0, bx: W * 0.62, by: H });
     const build = () => {
       dpr = Math.min(devicePixelRatio || 1, 2);
@@ -27,6 +28,7 @@ function startRope() {
       const { ax, ay, bx, by } = pin();
       seg = (Math.hypot(bx - ax, by - ay) * 1.08) / (N - 1);
       pts = Array.from({ length: N }, (_, i) => { const t = i / (N - 1); const x = ax + (bx - ax) * t + Math.sin(t * Math.PI) * 60; const y = ay + (by - ay) * t; return { x, y, px: x, py: y }; });
+      redraw();
     };
     build();
     new ResizeObserver(build).observe(hero);
@@ -48,6 +50,7 @@ function startRope() {
       ctx.shadowColor = 'transparent';
       [pts[0], pts[N - 1]].forEach((p) => { ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI * 2); ctx.fillStyle = RED; ctx.fill(); });
     };
+    redraw = draw;
     if (reduced()) { draw(); return; }
 
     let on = false;
@@ -240,6 +243,8 @@ function startStitch() {
     const ctx = canvas.getContext('2d')!;
     const dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = 260 * dpr; canvas.height = 320 * dpr;
+    const NAMES = ['Offensive security', 'Governance, risk & compliance', 'Security operations', 'Network & infrastructure', 'Data & application'];
+    const STITCH = ['Zigzag: testing', 'Cross-stitch, one gap: compliance', 'Running stitch with pulses: monitoring', 'Brick stitch: infrastructure', 'Spiral: data'];
     let kind = 0, prog = 0, active = false;
     const x = gsap.quickTo(canvas, 'x', { duration: 0.6, ease: 'power3.out' });
     const y = gsap.quickTo(canvas, 'y', { duration: 0.6, ease: 'power3.out' });
@@ -247,7 +252,11 @@ function startStitch() {
     let lastX = 0, px = 0, py = 0;
     const stitch = (k: number, p: number) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, 260, 320);
-      ctx.fillStyle = '#f3f3ef'; ctx.fillRect(0, 0, 260, 320);
+      ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0, 0, 260, 320);
+      ctx.fillStyle = '#f3f3ef'; ctx.font = '500 11px "JetBrains Mono", monospace'; ctx.fillText(`0${k + 1} / THE THREAD`, 16, 24);
+      ctx.font = '800 20px "Cabinet Grotesk", sans-serif'; ctx.fillText(NAMES[k], 16, 300);
+      ctx.fillStyle = '#a3a39d'; ctx.font = '500 10px "JetBrains Mono", monospace'; ctx.fillText(STITCH[k].toUpperCase(), 16, 278);
+      ctx.save(); ctx.translate(0, 18); ctx.scale(1, 0.78);
       ctx.strokeStyle = RED; ctx.lineWidth = 3; ctx.lineCap = 'round';
       const segs: [number, number, number, number][] = [];
       if (k === 0) { for (let r = 0; r < 9; r++) for (let c = 0; c < 6; c++) { const x0 = 30 + c * 36, y0 = 30 + r * 30; segs.push([x0, y0, x0 + 18, y0 + 15], [x0 + 18, y0 + 15, x0 + 36, y0]); } }       // zigzag: testing
@@ -257,6 +266,7 @@ function startStitch() {
       else { for (let a = 0; a < 60; a++) { const t = a / 60, r0 = 8 + t * 110, a0 = t * Math.PI * 9; const r1 = 8 + (a + 1) / 60 * 110, a1 = (a + 1) / 60 * Math.PI * 9; segs.push([130 + Math.cos(a0) * r0, 160 + Math.sin(a0) * r0, 130 + Math.cos(a1) * r1, 160 + Math.sin(a1) * r1]); } } // spiral: data
       const n = Math.floor(segs.length * p);
       ctx.beginPath(); for (let i = 0; i < n; i++) { const s = segs[i]; ctx.moveTo(s[0], s[1]); ctx.lineTo(s[2], s[3]); } ctx.stroke();
+      ctx.restore();
     };
     const tick = () => { if (!active && prog <= 0) return; prog = Math.min(1, prog + 0.035); stitch(kind, prog); };
     gsap.ticker.add(tick);
@@ -266,7 +276,7 @@ function startStitch() {
     }));
     const hide = () => { active = false; gsap.to(canvas, { autoAlpha: 0, scale: 0.85, duration: 0.4, ease: 'expo.out' }); };
     list.addEventListener('pointerleave', hide);
-    addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; x(px + 170); y(py); rot(gsap.utils.clamp(-10, 10, (px - lastX) * 0.5)); lastX = px; }, { passive: true });
+    addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; const r = list.getBoundingClientRect(); x(Math.min(innerWidth - 290, r.left + r.width * 0.66)); y(py); rot(gsap.utils.clamp(-6, 6, (px - lastX) * 0.3)); lastX = px; }, { passive: true });
     onScroll(() => { if (!list.contains(document.elementFromPoint(px, py))) hide(); });
   });
 }
@@ -280,8 +290,34 @@ function startSign() {
   });
 }
 
+function startFrame() {
+  onPage(() => {
+    const frame = document.querySelector<HTMLElement>('.d4-frame');
+    if (!frame) return;
+    let last = 0;
+    onScroll(({ y }) => { if (Math.abs(y - last) < 6) return; frame.classList.toggle('is-away', y > 240 && y > last && !document.querySelector('[data-menu]:not([hidden])')); last = y; });
+    const watch = document.getElementById('watch');
+    if (watch) ScrollTrigger.create({ trigger: watch, start: 'top 64px', end: 'bottom 64px', onToggle: (st) => frame.classList.toggle('is-night', st.isActive) });
+    const menu = document.querySelector<HTMLElement>('[data-menu]');
+    const open = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+    if (!menu || !open) return;
+    const close = (back = true) => { menu.hidden = true; open.setAttribute('aria-expanded', 'false'); if (back) open.focus(); };
+    open.addEventListener('click', () => { menu.hidden = false; open.setAttribute('aria-expanded', 'true'); menu.querySelector<HTMLElement>('a')?.focus(); });
+    menu.querySelector('[data-menu-close]')?.addEventListener('click', () => close());
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => close(false)));
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+      if (e.key !== 'Tab') return;
+      const f = [...menu.querySelectorAll<HTMLElement>('a, button')];
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    });
+  });
+}
+
 void scrollState;
 boot(() => {
+  startFrame();
   startRope();
   startTest();
   startWall();
