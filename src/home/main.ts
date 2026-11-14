@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { bootDark } from '../site-dark';
 import { isTouch, onPage, prefersReducedMotion } from '../engine';
 import { startRadar } from './radar';
+import { startCore } from './core3d';
 import { Loop } from '../products/loops/kit';
 import { aegis, darkintel, mobile, shadowad, sysbastion } from '../products/loops/scenes';
 
@@ -49,6 +50,7 @@ function startSweeps() {
 
 bootDark(() => {
   startRadar();
+  startCore();
   startCards();
   startSweeps();
 });

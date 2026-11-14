@@ -195,3 +195,14 @@ html:not(.radar-on) .hm-tags, html:not(.radar-on) .hm-sound, html:not(.radar-on)
 .hm-sound[aria-pressed='true'] { color: #03070f; background: var(--cool); border-color: var(--cool); }
 .hm-hero__hint { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mut); }
 @media (max-width: 760px) { .hm-tip { display: none; } .hm-hero__hint { display: none; } }
+
+/* ---------- The 360 core (Three.js), over the radar, under the tags and content ---------- */
+.hm-core { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 0.8s; }
+.hm-core.is-on { opacity: 1; }
+.hud-away .hm-core { opacity: 0; }
+
+/* Phones: text runs over the radar, so the core and the risk labels step back outside the hero */
+@media (max-width: 760px) {
+  html:not(.at-hero) .hm-core.is-on { opacity: 0.28; }
+  html:not(.at-hero) .hm-tags .hm-tag { display: none; }
+}

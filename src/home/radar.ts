@@ -7,6 +7,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { isTouch, onPage, onScroll, prefersReducedMotion, scrollState } from '../engine';
 import { createTargets } from './targets';
+import { home } from './state';
 
 const FRAG = /* glsl */ `
 precision highp float;
@@ -204,7 +205,7 @@ export function startRadar() {
     resize();
     addEventListener('resize', resize);
     const foot = document.querySelector('.site-footer');
-    if (foot) ScrollTrigger.create({ trigger: foot, start: 'top bottom', onToggle: (st) => root.classList.toggle('hud-away', st.isActive) });
+    if (foot) ScrollTrigger.create({ trigger: foot, start: 'top bottom', onToggle: (st) => { root.classList.toggle('hud-away', st.isActive); home.footer = st.isActive; } });
     ScrollTrigger.addEventListener('refresh', measure);
 
     const setHud = (deg: number, name: string) => {
@@ -287,6 +288,8 @@ export function startRadar() {
       const shown = t.deg >= 359.5 && he >= 1 ? 360 : ((Math.round(s.angle) % 360) + 360) % 360;
       if (shown !== last && s.intro >= 1) { last = shown; setHud(shown, t.name); }
       vel += (Math.min(1, Math.abs(scrollState().velocity || 0) / 40) - vel) * 0.08;
+      home.scrollDeg += (t.deg - home.scrollDeg) * k; home.cx = s.L.cx; home.cy = s.L.cy; home.r = s.L.r;
+      const atHero = home.scrollDeg < 24; if (atHero !== root.classList.contains('at-hero')) root.classList.toggle('at-hero', atHero);
       if (targets) arrays = targets.update(prevAngle, s.angle, s.L, tSec, dpr(), innerHeight, s.intro >= 1);
       if (tip) {
         const a = (s.angle / 180) * Math.PI, rr = s.L.r + 40;
@@ -298,7 +301,7 @@ export function startRadar() {
     });
 
     // ---------- loader: 000° → 360°, then the ring opens into the radar ----------
-    runLoader(s, () => s.L, setHud).then(() => { setHud(s.angle, targetFor(scrollY).name); });
+    runLoader(s, () => s.L, setHud).then(() => { home.ready = true; setHud(s.angle, targetFor(scrollY).name); });
   });
 }
 

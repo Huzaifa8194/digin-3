@@ -48,3 +48,14 @@ Screenshot:  hero: "See risk from every angle." beside the radar mid-sweep, a re
   (45° → 0°); product cards fast-forward their loop.
 - **Idle:** a ghost beam keeps sweeping and the pointer lens drifts; off under reduced motion.
 - **Reduced motion / no WebGL:** no loader theatre, a static CSS radar, all content visible.
+
+## 3D layer: the 360 core (experiment)
+
+Per the skill's 3D rule (only when the concept is spatial; lazy Three.js; own canvas; render only
+while visible; never block the loader), a procedural geodesic shield floats at the radar's centre
+(`src/home/core3d.ts`, no model file). It turns with the page's bearing, so the visitor literally
+sees it from every angle, and it changes state per chapter: gaps with red risks (See), a red scan
+plane (Test), gaps fly in and lock blue (Protect), orbit rings with sensors (Watch), exploded view
+(Build), whole and calm (Talk). Drag empty space to look around it. Three is fetched in parallel
+with the loader but built and rendered only after the handoff; off under reduced motion; on phones
+it dims behind text outside the hero.
