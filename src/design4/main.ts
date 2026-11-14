@@ -20,14 +20,15 @@ function startRope() {
     type P = { x: number; y: number; px: number; py: number };
     let pts: P[] = [], seg = 0, W = 0, H = 0, dpr = 1;
     let redraw = () => {};
-    const pin = () => ({ ax: W * 0.66, ay: 0, bx: W * 0.62, by: H });
+    const narrow = () => W < 768;
+    const pin = () => (narrow() ? { ax: 9, ay: 0, bx: 9, by: H } : { ax: W * 0.66, ay: 0, bx: W * 0.62, by: H });
     const build = () => {
       dpr = Math.min(devicePixelRatio || 1, 2);
       const r = hero.getBoundingClientRect(); W = r.width; H = r.height;
       canvas.width = W * dpr; canvas.height = H * dpr;
       const { ax, ay, bx, by } = pin();
-      seg = (Math.hypot(bx - ax, by - ay) * 1.08) / (N - 1);
-      pts = Array.from({ length: N }, (_, i) => { const t = i / (N - 1); const x = ax + (bx - ax) * t + Math.sin(t * Math.PI) * 60; const y = ay + (by - ay) * t; return { x, y, px: x, py: y }; });
+      seg = (Math.hypot(bx - ax, by - ay) * (narrow() ? 1.004 : 1.08)) / (N - 1);
+      pts = Array.from({ length: N }, (_, i) => { const t = i / (N - 1); const x = ax + (bx - ax) * t + Math.sin(t * Math.PI) * (narrow() ? 0 : 60); const y = ay + (by - ay) * t; return { x, y, px: x, py: y }; });
       redraw();
     };
     build();
@@ -76,6 +77,7 @@ function startRope() {
           if (i + 1 < N - 1) { b.x -= dx * diff; b.y -= dy * diff; }
         }
       }
+      if (narrow()) for (const p of pts) p.x = Math.min(16, Math.max(4, p.x));   // phone: the thread sways inside the gutter
       draw();
     };
     ScrollTrigger.create({ trigger: hero, start: 'top bottom', end: 'bottom top', onToggle: (s) => { on = s.isActive; on ? gsap.ticker.add(tick) : gsap.ticker.remove(tick); } });
@@ -95,7 +97,8 @@ function startThread() {
       const mr = main.getBoundingClientRect();
       const ox = mr.left, oy = mr.top + scrollY;
       const nodes = [...document.querySelectorAll<HTMLElement>('[data-anchor]')].sort((a, b) => +a.dataset.anchor! - +b.dataset.anchor!);
-      const pts = nodes.map((n) => { const r = n.getBoundingClientRect(); return { x: r.left - ox, y: r.top + scrollY - oy, i: +n.dataset.anchor! }; });
+      const gutter = innerWidth < 768;   // phone: the thread runs straight down the left gutter
+      const pts = nodes.map((n) => { const r = n.getBoundingClientRect(); return { x: gutter ? 9 - ox : r.left - ox, y: r.top + scrollY - oy, i: +n.dataset.anchor! }; });
       // subpath break between anchors 6 and 7: the pulse draws that stretch itself
       const groups: (typeof pts)[] = [[]];
       pts.forEach((p) => { if (p.i === 7) groups.push([]); groups[groups.length - 1].push(p); });
@@ -148,6 +151,8 @@ function startTest() {
     const tl = gsap.timeline({ scrollTrigger: { trigger: section, start: 'top top', end: () => `+=${dist()}`, pin: true, scrub: 0.8, invalidateOnRefresh: true,
       onUpdate: (s) => stations.forEach((st, i) => st.classList.toggle('is-hit', s.progress > (i + 0.2) / (stations.length + 0.4))) } });
     tl.to(track, { x: () => -dist(), ease: 'none' }, 0).to(line, { scaleX: 1, ease: 'none' }, 0);
+    // a stop leaving at the left fades out as it reaches the gutter, so no heading is ever shown cut
+    tl.eventCallback('onUpdate', () => stations.forEach((st) => { const l = st.getBoundingClientRect().left; const w = st.offsetWidth; st.style.opacity = String(Math.min(gsap.utils.clamp(0, 1, (l + 40) / 130), gsap.utils.clamp(0, 1, (innerWidth - 56 - l - w) / (w * 0.5) + 1))); }));
   });
 }
 
@@ -181,7 +186,8 @@ function startPulse() {
     const EVENTS = ['Unknown autorun entry', 'Leaked credentials on a forum', 'Suspicious PowerShell', 'New program at boot', 'Exposed data set', 'Macro-enabled attachment'];
     let W = 0, H = 0, dpr = 1, buf: number[] = [];
     const step = 3;
-    const size = () => { dpr = Math.min(devicePixelRatio || 1, 2); const r = box.getBoundingClientRect(); W = r.width; H = r.height; canvas.width = W * dpr; canvas.height = H * dpr; buf = new Array(Math.ceil(W / step) + 2).fill(0); };
+    const size = () => { dpr = Math.min(devicePixelRatio || 1, 2); const r = box.getBoundingClientRect(); W = r.width; H = r.height; canvas.width = W * dpr; canvas.height = H * dpr; const a7 = document.querySelector<HTMLElement>('[data-anchor="7"]'); endX = a7 ? a7.getBoundingClientRect().left - r.left : W; buf = new Array(Math.max(2, Math.floor(endX / step) + 1)).fill(0); };
+    let endX = 0; const AMP = 0.36, blur = isMobile() ? 0 : 14;
     size(); new ResizeObserver(size).observe(box);
     const tags: { el: HTMLElement; x: number }[] = [];
     let spike = 0, next = 1.2, ev = 0, acc = 0;
@@ -190,10 +196,10 @@ function startPulse() {
       ctx.strokeStyle = 'rgba(243,243,239,0.08)'; ctx.lineWidth = 1;
       for (let y = H * 0.25; y < H; y += H * 0.25) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
       ctx.beginPath();
-      buf.forEach((v, i) => { const x = i * step, y = H / 2 - v * H * 0.42; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
-      ctx.strokeStyle = RED; ctx.lineWidth = 2.5; ctx.shadowColor = 'rgba(225,6,0,0.7)'; ctx.shadowBlur = 14; ctx.stroke(); ctx.shadowBlur = 0;
-      const lx = (buf.length - 1) * step, ly = H / 2 - buf[buf.length - 1] * H * 0.42;
-      ctx.beginPath(); ctx.arc(Math.min(lx, W - 4), ly, 5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+      buf.forEach((v, i) => { const x = i * step, y = H / 2 - v * H * AMP; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.strokeStyle = RED; ctx.lineWidth = 2.5; ctx.shadowColor = 'rgba(225,6,0,0.7)'; ctx.shadowBlur = blur; ctx.stroke(); ctx.shadowBlur = 0;
+      const lx = (buf.length - 1) * step, ly = H / 2 - buf[buf.length - 1] * H * AMP;
+      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
     };
     if (reduced()) { buf = buf.map((_, i) => (i % 70 === 40 ? 0.8 : 0)); draw(); return; }
     const tick = (t: number, dms: number) => {
@@ -210,11 +216,11 @@ function startPulse() {
       if (next <= 0) {
         spike = 1; next = 1.4 + Math.random() * 1.2;
         const el = document.createElement('span'); el.className = 'd4-pulse__tag'; el.textContent = EVENTS[ev++ % EVENTS.length];
-        tagHost.appendChild(el); tags.push({ el, x: W - 6 });
+        tagHost.appendChild(el); tags.push({ el, x: endX - 6 });
       }
       for (let i = tags.length - 1; i >= 0; i--) {
         const g = tags[i];
-        g.el.style.transform = `translate(${g.x.toFixed(0)}px, ${(H / 2 - H * 0.42).toFixed(0)}px)`;
+        g.el.style.transform = `translate(${g.x.toFixed(0)}px, ${(H / 2 - H * AMP).toFixed(0)}px)`;
         g.el.style.opacity = String(Math.min(1, g.x / (W * 0.3)));
         if (g.x < -200) { g.el.remove(); tags.splice(i, 1); }
       }
@@ -254,14 +260,17 @@ function startStitch() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, 260, 320);
       ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0, 0, 260, 320);
       ctx.fillStyle = '#f3f3ef'; ctx.font = '500 11px "JetBrains Mono", monospace'; ctx.fillText(`0${k + 1} / THE THREAD`, 16, 24);
-      ctx.font = '800 20px "Cabinet Grotesk", sans-serif'; ctx.fillText(NAMES[k], 16, 300);
-      ctx.fillStyle = '#a3a39d'; ctx.font = '500 10px "JetBrains Mono", monospace'; ctx.fillText(STITCH[k].toUpperCase(), 16, 278);
-      ctx.save(); ctx.translate(0, 18); ctx.scale(1, 0.78);
+      ctx.font = '800 20px "Cabinet Grotesk", sans-serif';
+      const lines: string[] = []; let line = '';
+      NAMES[k].split(' ').forEach((w) => { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > 226 && line) { lines.push(line); line = w; } else line = t; }); lines.push(line);
+      lines.forEach((l, i) => ctx.fillText(l, 16, 302 - (lines.length - 1 - i) * 22));
+      ctx.fillStyle = '#a3a39d'; ctx.font = '500 10px "JetBrains Mono", monospace'; ctx.fillText(STITCH[k].toUpperCase(), 16, 280 - (lines.length - 1) * 22);
+      ctx.save(); ctx.translate(10, 26); ctx.scale(0.92, 0.7);
       ctx.strokeStyle = RED; ctx.lineWidth = 3; ctx.lineCap = 'round';
       const segs: [number, number, number, number][] = [];
       if (k === 0) { for (let r = 0; r < 9; r++) for (let c = 0; c < 6; c++) { const x0 = 30 + c * 36, y0 = 30 + r * 30; segs.push([x0, y0, x0 + 18, y0 + 15], [x0 + 18, y0 + 15, x0 + 36, y0]); } }       // zigzag: testing
       else if (k === 1) { for (let r = 0; r < 8; r++) for (let c = 0; c < 6; c++) { if (r === 5 && c === 3) continue; const x0 = 32 + c * 34, y0 = 34 + r * 33; segs.push([x0, y0, x0 + 20, y0 + 20], [x0 + 20, y0, x0, y0 + 20]); } } // cross-stitch with one gap: compliance
-      else if (k === 2) { for (let r = 0; r < 7; r++) for (let i = 0; i < 22; i++) { const x0 = 20 + i * 10, y0 = 50 + r * 38 + (i % 7 === 3 ? -16 : 0); segs.push([x0, y0, x0 + 6, y0 + (i % 7 === 3 ? 16 : 0)]); } }  // running stitch with pulses: monitoring
+      else if (k === 2) { for (let r = 0; r < 7; r++) { const y0 = 48 + r * 38, sx = 60 + ((r * 47) % 120); const p: [number, number][] = [[24, y0], [sx, y0], [sx + 8, y0 - 22], [sx + 18, y0 + 18], [sx + 26, y0], [236, y0]]; for (let i = 0; i < p.length - 1; i++) segs.push([p[i][0], p[i][1], p[i + 1][0], p[i + 1][1]]); } }  // running stitch with pulses: monitoring
       else if (k === 3) { for (let r = 0; r < 8; r++) for (let c = 0; c < 5; c++) { const x0 = 24 + c * 44 + (r % 2) * 22, y0 = 28 + r * 34; segs.push([x0, y0, x0 + 40, y0], [x0, y0, x0, y0 + 30]); } }                  // brick: infrastructure
       else { for (let a = 0; a < 60; a++) { const t = a / 60, r0 = 8 + t * 110, a0 = t * Math.PI * 9; const r1 = 8 + (a + 1) / 60 * 110, a1 = (a + 1) / 60 * Math.PI * 9; segs.push([130 + Math.cos(a0) * r0, 160 + Math.sin(a0) * r0, 130 + Math.cos(a1) * r1, 160 + Math.sin(a1) * r1]); } } // spiral: data
       const n = Math.floor(segs.length * p);
@@ -276,7 +285,7 @@ function startStitch() {
     }));
     const hide = () => { active = false; gsap.to(canvas, { autoAlpha: 0, scale: 0.85, duration: 0.4, ease: 'expo.out' }); };
     list.addEventListener('pointerleave', hide);
-    addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; const r = list.getBoundingClientRect(); x(Math.min(innerWidth - 290, r.left + r.width * 0.66)); y(py); rot(gsap.utils.clamp(-6, 6, (px - lastX) * 0.3)); lastX = px; }, { passive: true });
+    addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; const r = list.getBoundingClientRect(); const sub = list.querySelector<HTMLElement>('.d4-index__sub'); const sx = sub && sub.offsetParent ? sub.getBoundingClientRect().left : r.left + r.width * 0.7; x(Math.min(innerWidth - 290, sx)); y(py); rot(gsap.utils.clamp(-6, 6, (px - lastX) * 0.3)); lastX = px; }, { passive: true });
     onScroll(() => { if (!list.contains(document.elementFromPoint(px, py))) hide(); });
   });
 }
@@ -297,7 +306,8 @@ function startFrame() {
     let last = 0;
     onScroll(({ y }) => { if (Math.abs(y - last) < 6) return; frame.classList.toggle('is-away', y > 240 && y > last && !document.querySelector('[data-menu]:not([hidden])')); last = y; });
     const watch = document.getElementById('watch');
-    if (watch) ScrollTrigger.create({ trigger: watch, start: 'top 64px', end: 'bottom 64px', onToggle: (st) => frame.classList.toggle('is-night', st.isActive) });
+    const night = () => { if (!watch) return; const r = watch.getBoundingClientRect(), b = frame.offsetHeight; frame.classList.toggle('is-night', r.top <= b && r.bottom > b); };
+    night(); onScroll(night); ScrollTrigger.addEventListener('refresh', night);
     const menu = document.querySelector<HTMLElement>('[data-menu]');
     const open = document.querySelector<HTMLButtonElement>('[data-menu-open]');
     if (!menu || !open) return;
@@ -315,6 +325,30 @@ function startFrame() {
   });
 }
 
+function startLeave() {
+  onPage(() => {
+    const cur = document.querySelector<HTMLElement>('[data-leave]');
+    const line = cur?.querySelector('i');
+    if (!cur || !line) return;
+    const reset = () => gsap.set(cur, { autoAlpha: 0, clipPath: 'inset(49.5% 0 49.5% 0)' });
+    addEventListener('pageshow', (e) => { if (e.persisted) { reset(); gsap.set(line, { scaleX: 0 }); } });
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest?.('a');
+      if (!a || reduced() || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target) return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || url.pathname === location.pathname || a.hasAttribute('download')) return;
+      e.preventDefault();
+      gsap.timeline()
+        .set(cur, { visibility: 'visible', autoAlpha: 1, clipPath: 'inset(49.5% 0 49.5% 0)', background: 'transparent' })
+        .fromTo(line, { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: 'expo.inOut' })
+        .set(cur, { background: '#0d0d0d' })
+        .to(cur, { clipPath: 'inset(0% 0 0% 0)', duration: 0.42, ease: 'expo.inOut' })
+        .to(line, { autoAlpha: 0, duration: 0.2 }, '-=0.25')
+        .call(() => { location.href = a.href; }, [], '-=0.12');
+    });
+  });
+}
+
 void scrollState;
 boot(() => {
   startFrame();
@@ -327,4 +361,5 @@ boot(() => {
   startSign();
   startButtons();
   startThread();
+  startLeave();
 });

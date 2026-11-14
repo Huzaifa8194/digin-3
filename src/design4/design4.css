@@ -250,3 +250,84 @@ section { position: relative; padding: clamp(5rem, 12vh, 9rem) var(--gut); }
   .d4-index__thumb { display: block; width: 3rem; height: 3rem; fill: none; stroke: var(--red); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; background: none; opacity: 1; }
   .d4-foot__cols { grid-template-columns: 1fr; }
 }
+
+/* round 2: contrast-safe red for small text, pointer through the pinned label, phone row clipped */
+:root { --red-t: #c40500; }
+.d4-foot__cols .d4-meta, .d4-product .d4-meta, .d4-index__n, .d4-faq__n, .d4-menu__n, .d4-hint { color: var(--red-t); }
+.d4-test__head { pointer-events: none; }
+.d4-test__head a { pointer-events: auto; }
+@media (max-width: 767px) {
+  .d4-test { overflow: clip; }
+  .d4-track { margin: 0; padding: 0 0 1rem; }
+}
+
+/* ---------- jury round 3 ---------- */
+/* solid header: nothing shows through it */
+.d4-frame { background: var(--paper); }
+.d4-frame.is-night { background: var(--ink); }
+.d4-frame__nav a, .d4-frame__cta { padding: 0.6rem 0; }
+/* link fill gets breathing room; the text stays on the grid line */
+.d4-link { padding: 0.2em 0.45em 0.18em; margin: 0 -0.45em; background-position: 0.45em 100%; background-size: calc(100% - 0.9em) 1.5px; transition: background-size 0.45s var(--e), background-position 0.45s var(--e), color 0.3s, translate 0.45s var(--taut); }
+.d4-link:hover, .d4-link:focus-visible, .d4-station__card:hover .d4-link { background-position: 0 100%; background-size: 100% 100%; color: #fff; translate: 3px 0; }
+/* attack path: a narrower fade so the stop in view reads at full strength */
+.d4-trackwrap { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%); }
+/* index: descriptions get their own column, which the preview card takes over on hover */
+@media (min-width: 1024px) {
+  .d4-index a { grid-template-columns: 4rem minmax(0, 1fr) 19rem; }
+  .d4-index__sub { transition: opacity 0.35s var(--e); }
+  @media (hover: hover) { .d4-index:hover .d4-index__sub { opacity: 0; } }
+}
+/* contact: the direct lines sit beside the form, from the top */
+.d4-talk__grid { align-items: start; }
+.d4-lines { padding-top: 1.5rem; border-top: 1.5px solid var(--ink); }
+.d4-lines .d4-link { font-size: 1.15rem; }
+/* leaving the page: the thread crosses the screen and opens into night */
+.d4-leave { position: fixed; inset: 0; z-index: 200; pointer-events: none; visibility: hidden; background: var(--ink); clip-path: inset(49.5% 0 49.5% 0); }
+.d4-leave i { position: absolute; left: 0; right: 0; top: 50%; height: 3px; margin-top: -1.5px; background: var(--red); transform-origin: left; scale: 0 1; }
+@media (max-width: 767px) {
+  /* the thread keeps to the left gutter so it never crosses copy */
+  /* (thread x is set to the gutter in script) */
+  .d4-hero { padding-bottom: 1.5rem; }
+}
+
+/* ---------- jury round 4 ---------- */
+/* desktop attack path: the heading sits in flow above the rail, nothing slides under it */
+@media (min-width: 768px) {
+  .d4-test { display: grid; grid-template-rows: auto minmax(0, 1fr); align-items: center; height: 100svh; min-height: 40rem; padding-top: 5.5rem; padding-bottom: 1rem; }
+  .d4-test__head { position: static; max-width: none; padding-bottom: 0; background: none; display: grid; grid-template-columns: auto minmax(0, 26rem); column-gap: 3rem; align-items: end; }
+  .d4-test__head .d4-meta { grid-column: 1 / -1; }
+  .d4-test .d4-h2 { font-size: clamp(2rem, 0.8rem + 2.6vw, 3.6rem); white-space: nowrap; }
+  .d4-test .d4-p { margin: 0; }
+  .d4-trackwrap { align-self: center; }
+  .d4-track { margin-top: 0; }
+  .d4-station { height: min(36rem, calc(100svh - 16rem)); }
+  .d4-station h3 { font-size: clamp(2.2rem, 1rem + 2.4vw, 3.4rem); }
+  .d4-index__n { padding-left: 1.4rem; }
+}
+@media (min-width: 1024px) { .d4-index a { grid-template-columns: 5rem minmax(0, 1fr) 19rem; } }
+@media (min-width: 768px) and (max-width: 1023px) { .d4-test__head { grid-template-columns: 1fr; } .d4-test .d4-h2 { white-space: normal; } .d4-test .d4-p { margin-top: 0.5rem; } }
+section[id] { scroll-margin-top: 5rem; }
+.d4-talk { padding-top: clamp(4rem, 8vw, 7rem); }
+@media (min-width: 768px) {
+  .d4-test { grid-template-columns: minmax(0, 1fr); }
+  .d4-test__head { justify-content: start; }
+}
+@media (min-width: 768px) { .d4-test__head { grid-template-columns: minmax(0, 1fr); } .d4-test .d4-p { margin-top: 0.4rem; max-width: 56rem; } }
+@media (min-width: 768px) { .d4-trackwrap { -webkit-mask-image: linear-gradient(90deg, #000 0, #000 93%, transparent 100%); mask-image: linear-gradient(90deg, #000 0, #000 93%, transparent 100%); } }
+
+/* ---------- jury round 5 ---------- */
+@media (min-width: 768px) {
+  .d4-trackwrap { -webkit-mask-image: none; mask-image: none; }   /* stops fade by opacity in script */
+  .d4-wall__count { padding-left: 1.1rem; }
+}
+.d4-pulse__tag { translate: -50% -120%; }
+@media (max-width: 767px) {
+  .d4-ctas { display: grid; grid-template-columns: 1fr; gap: 0.75rem; width: 100%; }
+  .d4-ctas .d4-btn { width: 100%; justify-content: center; }
+  .d4-test { padding-top: 3rem; }
+  .d4-pulse { height: 18rem; }
+}
+
+/* ---------- jury round 6 ---------- */
+.d4-talk__title { text-wrap: balance; }
+.d4-marquee { position: relative; z-index: 7; background: var(--ink); }
