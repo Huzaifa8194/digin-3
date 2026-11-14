@@ -6,11 +6,14 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { isTouch, onPage, onScroll, prefersReducedMotion, scrollState } from '../engine';
+import { createTargets } from './targets';
 
 const FRAG = /* glsl */ `
 precision highp float;
 uniform vec2 uRes, uCenter, uMouse;
-uniform float uRadius, uAngle, uGhost, uTime, uLens, uIntro, uCool, uDim, uDpr;
+uniform float uRadius, uAngle, uGhost, uTime, uLens, uIntro, uCool, uDim, uDpr, uVel;
+uniform vec4 uT[10];
+uniform vec3 uP[3];
 #define TAU 6.28318530718
 float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float bearing(vec2 p){ return mod(1.5707963 - atan(p.y, p.x) + TAU, TAU); }
@@ -30,7 +33,7 @@ void main(){
   // rings and cross hairs
   float rr = r * 5.0;
   float ring = 1.0 - smoothstep(0.0, 1.2 * uDpr, abs(rr - floor(rr + 0.5)) * R / 5.0);
-  col += vec3(0.3, 0.42, 0.6) * ring * 0.32 * inside;
+  col += vec3(0.3, 0.42, 0.6) * ring * (0.32 + uVel * 0.9) * inside;
   col += vec3(0.75, 0.85, 1.0) * (1.0 - smoothstep(0.0, 1.5 * uDpr, abs(r - 1.0) * R)) * 0.65;
   float cross = min(abs(p.x), abs(p.y));
   col += vec3(0.3, 0.42, 0.6) * (1.0 - smoothstep(0.0, uDpr, cross)) * 0.18 * inside;
@@ -46,7 +49,7 @@ void main(){
   col += vec3(0.6, 0.7, 0.85) * min(tick, 1.0) * 0.55;
   // beam wedge + line
   float sp = behind(b, uAngle);
-  col += vec3(0.3, 0.55, 1.0) * exp(-sp * 3.2) * inside * 0.28;
+  col += vec3(0.3, 0.55, 1.0) * exp(-sp * (3.2 - uVel * 1.6)) * inside * (0.28 + uVel * 0.35);
   col += vec3(0.85, 0.94, 1.0) * (1.0 - smoothstep(0.0, 2.0 * uDpr, sp * length(p))) * inside;
   // ghost beam (idle)
   float gp = behind(b, uGhost);
@@ -62,7 +65,9 @@ void main(){
   float risk = step(hash(cell + 9.2), 0.15);
   float pb = bearing(q);
   float since = behind(pb, uAngle);
-  float flare = exp(-since * 1.5);
+  float boost = 0.0;
+  for (int i = 0; i < 3; i++) { float age = uTime - uP[i].z; if (age < 0.0 || age > 2.2) continue; float rad2 = age * 600.0 * uDpr; boost += (1.0 - smoothstep(0.0, 34.0 * uDpr, abs(length(pc - uP[i].xy) - rad2))) * (1.0 - age / 2.2); }
+  float flare = max(exp(-since * 1.5), min(boost, 1.0));
   float ghost = exp(-behind(pb, uGhost) * 5.0) * 0.45;
   float dist = length(frag - pc);
   float rad = mix(1.5, 2.6, risk) * uDpr;
@@ -74,6 +79,24 @@ void main(){
   float halo = (1.0 - smoothstep(0.0, 1.3 * uDpr, abs(dist - rad - (5.0 + since * 14.0) * uDpr))) * risk * present * flare * (1.0 - cool);
   col += vec3(1.0, 0.28, 0.32) * halo * 0.9;
   col *= rev;
+  for (int i = 0; i < 10; i++) {
+    vec4 T = uT[i];
+    if (T.z < 0.01) continue;
+    vec2 dv = frag - T.xy; float dd = length(dv);
+    vec3 tc = mix(vec3(1.0, 0.24, 0.3), vec3(0.42, 0.72, 1.0), T.w);
+    col += tc * (1.0 - smoothstep(2.5 * uDpr, 4.0 * uDpr, dd)) * T.z * 1.4;
+    float rr = (11.0 + 10.0 * (1.0 - T.z)) * uDpr;
+    col += tc * (1.0 - smoothstep(0.0, 1.3 * uDpr, abs(dd - rr))) * T.z;
+    vec2 a = abs(dv); float sq = 20.0 * uDpr;
+    float br = (1.0 - smoothstep(0.0, 1.3 * uDpr, abs(max(a.x, a.y) - sq))) * step(sq * 0.55, min(a.x, a.y));
+    col += tc * br * T.z * 0.9;
+  }
+  for (int i = 0; i < 3; i++) {
+    float age = uTime - uP[i].z; if (age < 0.0 || age > 2.2) continue;
+    float rad2 = age * 600.0 * uDpr;
+    float band = 1.0 - smoothstep(0.0, 2.0 * uDpr, abs(length(frag - uP[i].xy) - rad2));
+    col += vec3(0.6, 0.82, 1.0) * band * (1.0 - age / 2.2) * 0.75;
+  }
   // the lens: every risk, fully lit
   float ld = length(frag - uMouse);
   float lens = (1.0 - smoothstep(uLens - 1.5 * uDpr, uLens, ld)) * uIntro;
@@ -117,7 +140,7 @@ function compile(gl: WebGLRenderingContext) {
   gl.enableVertexAttribArray(loc);
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   const u = (n: string) => gl.getUniformLocation(prog, n);
-  return { uRes: u('uRes'), uCenter: u('uCenter'), uMouse: u('uMouse'), uRadius: u('uRadius'), uAngle: u('uAngle'), uGhost: u('uGhost'), uTime: u('uTime'), uLens: u('uLens'), uIntro: u('uIntro'), uCool: u('uCool'), uDim: u('uDim'), uDpr: u('uDpr') };
+  return { uRes: u('uRes'), uCenter: u('uCenter'), uMouse: u('uMouse'), uRadius: u('uRadius'), uAngle: u('uAngle'), uGhost: u('uGhost'), uTime: u('uTime'), uLens: u('uLens'), uIntro: u('uIntro'), uCool: u('uCool'), uDim: u('uDim'), uDpr: u('uDpr'), uVel: u('uVel'), uT: u('uT'), uP: u('uP') };
 }
 
 const pad = (n: number) => String(Math.round(n)).padStart(3, '0');
@@ -189,6 +212,8 @@ export function startRadar() {
       if (hudName && hudName.textContent !== name) hudName.textContent = name;
     };
 
+    let arrays: { T: Float32Array; P: Float32Array } | null = null;
+    let vel = 0;
     const draw = (time: number) => {
       if (!gl || !U) return;
       const d = dpr();
@@ -205,6 +230,8 @@ export function startRadar() {
       gl.uniform1f(U.uCool, L.cool);
       gl.uniform1f(U.uDim, L.dim);
       gl.uniform1f(U.uDpr, d);
+      gl.uniform1f(U.uVel, vel);
+      if (arrays) { gl.uniform4fv(U.uT, arrays.T); gl.uniform3fv(U.uP, arrays.P); }
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
@@ -225,7 +252,22 @@ export function startRadar() {
     }
 
     let last = 0;
+    const tagHost = document.querySelector<HTMLElement>('[data-tags]');
+    const tip = document.querySelector<HTMLElement>('[data-tip]');
+    const targets = tagHost ? createTargets(tagHost, mobile) : null;
+    // Click or tap anywhere that is not a control: a sonar ping from that point.
+    addEventListener('pointerdown', (e) => {
+      if ((e.target as HTMLElement).closest('a, button, input, select, textarea, summary, label, header, [data-card]')) return;
+      targets?.ping(e.clientX, e.clientY, gsap.ticker.time);
+    });
+    const soundBtn = document.querySelector<HTMLButtonElement>('[data-sound]');
+    soundBtn?.addEventListener('click', () => {
+      const on = targets?.sonar.toggle() ?? false;
+      soundBtn.setAttribute('aria-pressed', String(on));
+      soundBtn.textContent = on ? 'Sound on' : 'Sound off';
+    });
     gsap.ticker.add((tSec) => {
+      const prevAngle = s.angle;
       const t = update();
       const r = gsap.ticker.deltaRatio();
       const k = 1 - Math.pow(0.88, r);
@@ -244,6 +286,14 @@ export function startRadar() {
       s.my += (s.tmy - s.my) * 0.12;
       const shown = t.deg >= 359.5 && he >= 1 ? 360 : ((Math.round(s.angle) % 360) + 360) % 360;
       if (shown !== last && s.intro >= 1) { last = shown; setHud(shown, t.name); }
+      vel += (Math.min(1, Math.abs(scrollState().velocity || 0) / 40) - vel) * 0.08;
+      if (targets) arrays = targets.update(prevAngle, s.angle, s.L, tSec, dpr(), innerHeight, s.intro >= 1);
+      if (tip) {
+        const a = (s.angle / 180) * Math.PI, rr = s.L.r + 40;
+        tip.style.transform = `translate(${(s.L.cx + Math.sin(a) * rr).toFixed(1)}px, ${(s.L.cy - Math.cos(a) * rr).toFixed(1)}px)`;
+        const tx = `${pad(((Math.round(s.angle) % 360) + 360) % 360)}°`;
+        if (tip.textContent !== tx) tip.textContent = tx;
+      }
       draw(tSec);
     });
 
@@ -261,7 +311,7 @@ async function runLoader(s: { intro: number; angle: number }, L: () => Layout, s
   if (!el || !count || !arc || !ring) { s.intro = 1; root.classList.add('is-loaded'); return; }
   let seen = false;
   try { seen = sessionStorage.getItem('dg-seen') === '1'; sessionStorage.setItem('dg-seen', '1'); } catch { /* storage blocked */ }
-  const MIN = seen ? 0.35 : 1.15, MAX = 2.2;
+  const MIN = seen ? 0.35 : 1.0, MAX = 1.5;
   const start = performance.now();
   const ready = Promise.race([document.fonts.ready, wait(MAX)]);
   let done = false; ready.then(() => { done = true; });
@@ -285,14 +335,15 @@ async function runLoader(s: { intro: number; angle: number }, L: () => Layout, s
   const hud = document.querySelector<HTMLElement>('[data-hud-deg]')?.getBoundingClientRect();
   const cr = count.getBoundingClientRect();
   const tl = gsap.timeline();
-  tl.to(ring, { x: l.cx - (rr.left + rr.width / 2), y: l.cy - (rr.top + rr.height / 2), scale: (l.r * 2) / rr.width, duration: 0.85, ease: 'expo.inOut' }, 0)
-    .to(el, { backgroundColor: 'rgba(3,7,15,0)', duration: 0.6, ease: 'power2.inOut' }, 0.35)
+  tl.to(ring, { x: l.cx - (rr.left + rr.width / 2), y: l.cy - (rr.top + rr.height / 2), scale: (l.r * 2) / rr.width, duration: 0.75, ease: 'expo.inOut' }, 0)
+    .to(el, { backgroundColor: 'rgba(3,7,15,0)', duration: 0.45, ease: 'power2.inOut' }, 0.25)
     .to(el.querySelector('.hm-loader__brand'), { autoAlpha: 0, duration: 0.3 }, 0.1)
-    .add(() => root.classList.add('is-loaded'), 0.45)
-    .to(s, { intro: 1, duration: 1.1, ease: 'power2.inOut' }, 0.55)
+    .add(() => root.classList.add('is-loaded'), 0.35)
+    .add(() => { el.style.pointerEvents = 'none'; }, 0.5)
+    .to(s, { intro: 1, duration: 1.0, ease: 'power2.inOut' }, 0.4)
     .to(ring, { autoAlpha: 0, duration: 0.3 }, 0.8);
-  if (hud) tl.to(count, { x: hud.left + hud.width / 2 - (cr.left + cr.width / 2), y: hud.top + hud.height / 2 - (cr.top + cr.height / 2), scale: hud.height / cr.height, duration: 0.85, ease: 'expo.inOut' }, 0);
-  tl.to(count, { autoAlpha: 0, duration: 0.15 }, 0.85);
+  if (hud) tl.to(count, { x: hud.left + hud.width / 2 - (cr.left + cr.width / 2), y: hud.top + hud.height / 2 - (cr.top + cr.height / 2), scale: hud.height / cr.height, duration: 0.75, ease: 'expo.inOut' }, 0);
+  tl.to(count, { autoAlpha: 0, duration: 0.15 }, 0.75);
   await tl;
   setHud(s.angle, '');
   el.hidden = true;

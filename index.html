@@ -21,10 +21,12 @@
 
 <canvas class="hm-radar" data-radar aria-hidden="true"></canvas>
 <div class="hm-radar-fallback" aria-hidden="true"></div>
+<div class="hm-tags" data-tags aria-hidden="true"><span class="hm-tip" data-tip>000°</span></div>
 
 <header><a class="brand" href="/" aria-label="Digiinn360 home"><img class="brand-logo" src="/brand/digiinn360.png" width="764" height="228" alt=""><img class="brand-logo brand-logo-light" src="/brand/digiinn360-light.png" width="764" height="228" alt=""></a><nav class="tube-nav" aria-label="Main navigation"><a href="/" aria-current="page">Home</a><a href="/services/">Services</a><a href="/products/">Our Products</a><a href="/about/">About</a></nav><div class="header-actions"><a class="header-contact" href="/contact/">Let’s talk</a></div></header>
 
 <!-- Bearing readout (the loader counter lands here) -->
+<button class="hm-sound" type="button" data-sound aria-pressed="false">Sound off</button>
 <div class="hm-hud" aria-hidden="true"><span class="hm-hud__deg" data-hud-deg>000°</span><span class="hm-hud__name" data-hud-name>See</span></div>
 
 <main id="story" class="dk-main hm" tabindex="-1">
@@ -46,6 +48,7 @@
       <a href="#build"><span class="dk-mono">288°</span>Build</a>
       <a href="#talk"><span class="dk-mono">360°</span>Talk</a>
     </nav>
+    <p class="hm-hero__hint hm-in" style="--d:0.6">Click or tap any empty space to send a ping.</p>
   </section>
 
     <section class="hm-ch" id="test" data-bearing="72" data-layout="right" data-name="Test" aria-labelledby="test-heading">

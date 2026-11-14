@@ -164,3 +164,34 @@ a:focus-visible .hm-dial { rotate: 0deg; }
 @media (prefers-reduced-motion: reduce) {
   .motion [data-sweep] > * { -webkit-mask: none; mask: none; }
 }
+
+/* ---------- Named risks, beam tip, sound ---------- */
+.hm-tags { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+html:not(.radar-on) .hm-tags, html:not(.radar-on) .hm-sound, html:not(.radar-on) .hm-hero__hint { display: none; }
+.hm-tag { position: absolute; left: 0; top: 0; opacity: 0; transition: opacity 0.35s; }
+.hm-tag.is-risk, .hm-tag.is-fixed { opacity: 1; }
+.hm-tag__line { position: absolute; left: 14px; top: -14px; width: 26px; height: 1px; background: currentColor; rotate: -40deg; transform-origin: left; }
+.hm-tag__text {
+  position: absolute; left: 34px; top: -40px; white-space: nowrap; padding: 0.3em 0.65em; border-radius: 4px;
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase;
+  background: rgb(3 7 15 / 0.82); border: 1px solid currentColor;
+}
+.hm-tag.is-risk { color: #ff6b75; }
+.hm-tag.is-fixed { color: #8cc0ff; }
+.hm-tag.is-flip .hm-tag__line { left: auto; right: 14px; rotate: 40deg; transform-origin: right; }
+.hm-tag.is-flip .hm-tag__text { left: auto; right: 34px; }
+.hm-tag.is-compact .hm-tag__text { font-size: 0.62rem; }
+.hm-tip { position: absolute; left: 0; top: 0; translate: -50% -50%; font-family: var(--mono); font-size: 0.72rem; color: #cfe6ff; padding: 0.2em 0.5em; border: 1px solid rgb(207 230 255 / 0.4); border-radius: 999px; background: rgb(3 7 15 / 0.7); opacity: 0; transition: opacity 0.6s; }
+.is-loaded .hm-tip { opacity: 1; }
+.hud-away .hm-tip { opacity: 0; }
+.hm-sound {
+  position: fixed; right: var(--gut); bottom: calc(clamp(1rem, 3vh, 2rem) + 3.6rem); z-index: 41; min-height: 32px; padding: 0.3em 0.8em;
+  border: 1px solid var(--ln2); border-radius: 999px; background: rgb(3 7 15 / 0.7); color: var(--mut);
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0; transition: opacity 0.6s, color 0.3s, border-color 0.3s;
+}
+.is-loaded .hm-sound { opacity: 1; }
+.is-loaded.hud-away .hm-sound { opacity: 0; pointer-events: none; }
+.hm-sound:hover, .hm-sound:focus-visible { color: var(--ink); border-color: var(--cool); }
+.hm-sound[aria-pressed='true'] { color: #03070f; background: var(--cool); border-color: var(--cool); }
+.hm-hero__hint { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mut); }
+@media (max-width: 760px) { .hm-tip { display: none; } .hm-hero__hint { display: none; } }
