@@ -56,9 +56,10 @@ function blockTween(el: HTMLElement, paused: boolean) {
   const from: gsap.TweenVars =
     kind === 'fade' ? { autoAlpha: 0 }
     : kind === 'clip' ? { clipPath: 'inset(100% 0% 0% 0%)', autoAlpha: 1 }
+    : kind === 'scan' ? { clipPath: 'inset(0% 100% 0% 0%)', autoAlpha: 1 }
     : kind === 'scale' ? { scale: 1.08, clipPath: 'inset(8% 8% 8% 8% round 6px)', autoAlpha: 1 }
     : { y: 40, autoAlpha: 0 };
-  const to: gsap.TweenVars = kind === 'clip' ? { clipPath: 'inset(0% 0% 0% 0%)' }
+  const to: gsap.TweenVars = kind === 'clip' || kind === 'scan' ? { clipPath: 'inset(0% 0% 0% 0%)' }
     : kind === 'scale' ? { clipPath: 'inset(0% 0% 0% 0% round 6px)', scale: 1 } : {};
   gsap.set(el, { visibility: 'visible' });
   return gsap.fromTo(el, from, {
@@ -69,7 +70,7 @@ function blockTween(el: HTMLElement, paused: boolean) {
     ease: ease.out,
     delay,
     paused,
-    clearProps: kind === 'scale' || kind === 'clip' ? 'clipPath,transform' : 'transform',
+    clearProps: kind === 'scale' || kind === 'clip' || kind === 'scan' ? 'clipPath,transform' : 'transform',
     scrollTrigger: paused ? undefined : { trigger: el, start: 'top 90%', once: true },
   });
 }

@@ -3,7 +3,7 @@
 // Runs on gsap.ticker only while the diagram is on screen; nothing moves under reduced motion.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { onPage, prefersReducedMotion } from '../engine';
+import { onPage, prefersReducedMotion } from '../../engine';
 
 const NS = 'http://www.w3.org/2000/svg';
 const WALL_X = 322;

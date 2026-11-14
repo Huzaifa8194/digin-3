@@ -1,7 +1,7 @@
 // Page chrome: top bar steps aside on scroll down, nav marks the current region,
 // phone menu overlay (focus trap, Escape), and the journal drawer on the bottom bar.
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { onPage, onScroll, startScroll, stopScroll } from '../engine';
+import { onPage, onScroll, startScroll, stopScroll } from '../../engine';
 
 export function startChrome() {
   let last = 0;

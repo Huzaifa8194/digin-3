@@ -5,7 +5,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { groups } from '../data';
-import { onPage, prefersReducedMotion } from '../engine';
+import { onPage, prefersReducedMotion } from '../../engine';
 
 type RowState = 'applied' | 'restored';
 type Row = { setting: string; from: string; to: string; state: RowState; fresh: boolean };

@@ -2,7 +2,7 @@
 // Plays muted while in view (unless the visitor paused it or prefers reduced motion).
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { isMobile, onPage, prefersReducedMotion, scrollToTarget } from '../engine';
+import { isMobile, onPage, prefersReducedMotion, scrollToTarget } from '../../engine';
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 

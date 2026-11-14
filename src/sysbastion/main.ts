@@ -1,4 +1,4 @@
-import { boot } from './engine';
+import { boot } from '../engine';
 import { startJournal } from './motion/journal';
 import { startFilm } from './motion/film';
 import { startButtons, startClips } from './motion/media';

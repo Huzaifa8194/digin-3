@@ -1,164 +1,225 @@
 <!doctype html>
 
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#edf3f8"><meta name="description" content="Explore Digiinn360 cybersecurity services, from penetration testing and risk assessments to managed security and data protection."><title>Services | Digiinn360</title>
-
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#050a14"><meta name="description" content="Explore Digiinn360 cybersecurity services, from penetration testing and risk assessments to managed security and data protection."><title>Services | Digiinn360</title>
+<link rel="canonical" href="https://digin-3.vercel.app/services/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Digiinn360">
+<meta property="og:title" content="Cybersecurity services | Digiinn360">
+<meta property="og:description" content="28 services in five steps, from testing your defences the way an attacker would to protecting your data and applications.">
+<meta property="og:url" content="https://digin-3.vercel.app/services/">
+<meta property="og:image" content="https://digin-3.vercel.app/services-og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cybersecurity services | Digiinn360">
+<meta name="twitter:description" content="See the risk. Stay ahead. 28 services in five steps.">
+<meta name="twitter:image" content="https://digin-3.vercel.app/services-og.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="/button-theme.css">
+<script>
+  document.documentElement.classList.add('js');
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+</script>
 </head>
-<body id="top" class="standalone-page services-route">
+<body id="top" class="standalone-page svc-route">
 <a class="skip" href="#story">Skip to content</a>
 <header><a class="brand" href="/" aria-label="Digiinn360 home"><img class="brand-logo" src="/brand/digiinn360.png" width="764" height="228" alt=""><img class="brand-logo brand-logo-light" src="/brand/digiinn360-light.png" width="764" height="228" alt=""></a><nav class="tube-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/services/" aria-current="page">Services</a><a href="/products/">Our Products</a><a href="/about/">About</a></nav><div class="header-actions"><a class="header-contact" href="/contact/">Let’s talk</a></div></header>
-<main id="story" class="services-page" tabindex="-1">
-  <section class="services-hero" aria-labelledby="services-title">
-    <div class="services-shell services-hero-grid">
-      <div class="services-intro">
-        <p class="services-label">Digiinn360 / Cybersecurity services</p>
-        <h1 id="services-title">See the risk.<br><em>Stay ahead.</em></h1>
-        <p>Cybersecurity services to test your defenses, manage risk, and protect critical systems.</p>
-        <a class="services-button" href="#capabilities">Explore services <span aria-hidden="true">↓</span></a>
-      </div>
-      <div class="services-visual">
-        <canvas data-service-art="hero" aria-hidden="true"></canvas>
-        <div class="services-visual-footer" aria-hidden="true"><span>Security coverage</span><span data-art-label>01 / Offensive Security Services</span></div>
+
+<!-- The sculpture and its rail: one fixed stage shared by the hero and the five chapters. -->
+<div class="svc-stage" aria-hidden="true" data-stage>
+  <canvas class="svc-stage__canvas" data-sculpture></canvas>
+  <div class="svc-rail" data-rail>
+    <span class="svc-rail__end svc-rail__end--risk">See the risk</span>
+    <span class="svc-rail__track"><span class="svc-rail__fill" data-rail-fill></span><span class="svc-rail__dot" data-rail-dot></span>
+      <i style="--k:0"></i><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i><i style="--k:4"></i>
+    </span>
+    <span class="svc-rail__end svc-rail__end--ahead">Stay ahead</span>
+  </div>
+  <div class="svc-stage__label"><span class="svc-mono" data-stage-num>01</span> <span data-stage-name>Offensive Security Services</span></div>
+</div>
+
+<main id="story" class="svc" tabindex="-1">
+
+  <!-- HERO -->
+  <section class="svc-hero" aria-labelledby="services-title">
+    <p class="svc-kicker svc-rise" style="--d:0">Digiinn360 / Cybersecurity services</p>
+    <h1 class="svc-hero__title" id="services-title"><span class="svc-rise svc-risk" style="--d:0.08">See the risk.</span> <span class="svc-rise svc-ahead" style="--d:0.2">Stay ahead.</span></h1>
+    <div class="svc-hero__foot">
+      <p class="svc-hero__copy">Cybersecurity services to test your defenses, manage risk, and protect critical systems. Five steps, from seeing your organization the way an attacker does to keeping it protected.</p>
+      <div class="svc-hero__actions svc-rise" style="--d:0.5">
+        <a class="svc-btn svc-btn--solid" href="#capabilities" data-fill><span class="svc-btn__fill" aria-hidden="true"></span><span class="svc-btn__label">Explore services <span aria-hidden="true">↓</span></span></a>
+        <a class="svc-btn svc-btn--line" href="/contact/" data-fill><span class="svc-btn__fill" aria-hidden="true"></span><span class="svc-btn__label">Talk to our team</span></a>
       </div>
     </div>
-    <nav class="services-shell services-preview" aria-label="Preview service categories">
-      <a href="#offensive-security" data-service-preview="0"><span aria-hidden="true">01</span><span class="services-preview-name">Offensive Security Services</span><span aria-hidden="true">↘</span></a>
-      <a href="#grc" data-service-preview="1"><span aria-hidden="true">02</span><span class="services-preview-name">Governance, Risk &amp; Compliance (GRC)</span><span aria-hidden="true">↘</span></a>
-      <a href="#managed-security" data-service-preview="2"><span aria-hidden="true">03</span><span class="services-preview-name">Security Operations &amp; Managed Security</span><span aria-hidden="true">↘</span></a>
-      <a href="#infrastructure-security" data-service-preview="3"><span aria-hidden="true">04</span><span class="services-preview-name">Network &amp; Infrastructure Security</span><span aria-hidden="true">↘</span></a>
-      <a href="#data-application-security" data-service-preview="4"><span aria-hidden="true">05</span><span class="services-preview-name">Data &amp; Application Security</span><span aria-hidden="true">↘</span></a>
+    <nav class="svc-steps svc-rise" style="--d:0.6" aria-label="The five service categories">
+      <a href="#offensive-security" data-step-preview="0"><span class="svc-mono">01</span><span>Offensive Security</span></a>
+      <a href="#grc" data-step-preview="1"><span class="svc-mono">02</span><span>Governance, Risk &amp; Compliance</span></a>
+      <a href="#managed-security" data-step-preview="2"><span class="svc-mono">03</span><span>Security Operations</span></a>
+      <a href="#infrastructure-security" data-step-preview="3"><span class="svc-mono">04</span><span>Network &amp; Infrastructure</span></a>
+      <a href="#data-application-security" data-step-preview="4"><span class="svc-mono">05</span><span>Data &amp; Application</span></a>
     </nav>
   </section>
-  <section id="capabilities" class="services-capabilities" aria-labelledby="capabilities-title">
-    <div class="services-shell services-section-intro">
-      <h2 id="capabilities-title">Where do you<br>need protection?</h2>
-      <p>Start with what you need today, from testing a single application to monitoring your organization around the clock.</p>
-    </div>
-    <div class="services-shell services-dossier">
-      <nav class="services-directory" aria-label="Jump to a service">
-        <a href="#offensive-security"><span aria-hidden="true">01</span>Offensive Security Services</a>
-        <a href="#grc"><span aria-hidden="true">02</span>Governance, Risk &amp; Compliance (GRC)</a>
-        <a href="#managed-security"><span aria-hidden="true">03</span>Security Operations &amp; Managed Security</a>
-        <a href="#infrastructure-security"><span aria-hidden="true">04</span>Network &amp; Infrastructure Security</a>
-        <a href="#data-application-security"><span aria-hidden="true">05</span>Data &amp; Application Security</a>
-      </nav>
-      <div class="services-chapters">
-        <section class="services-chapter" id="offensive-security" aria-labelledby="offensive-security-title">
-          <div class="services-chapter-top">
-            <div class="services-chapter-copy">
-              <div class="services-chapter-title">
-                <p class="services-label">Test defenses</p>
-                <h3 id="offensive-security-title">Offensive Security Services</h3>
-              </div>
-              <p>Find weaknesses before they become incidents. We assess your applications, APIs, networks, and configurations so you can prioritize fixes.</p>
-            </div>
-            <figure class="services-explainer"><canvas data-service-art="0" role="img" aria-label="A scanner passes over a website and marks two weak spots."></canvas></figure>
-          </div>
-          <h4>What we cover</h4>
-          <ul>
-            <li>Vulnerability Assessment &amp; Penetration Testing (VAPT)</li>
-            <li>Web Application Penetration Testing</li>
-            <li>API Security Testing</li>
-            <li>Network Penetration Testing</li>
-            <li>Security Configuration Assessments</li>
-          </ul>
-        </section>
-        <section class="services-chapter" id="grc" aria-labelledby="grc-title">
-          <div class="services-chapter-top">
-            <div class="services-chapter-copy">
-              <div class="services-chapter-title">
-                <p class="services-label">Manage risk</p>
-                <h3 id="grc-title">Governance, Risk &amp; Compliance (GRC)</h3>
-              </div>
-              <p>Understand where your controls fall short and what to address first across your organization and suppliers.</p>
-            </div>
-            <figure class="services-explainer"><canvas data-service-art="1" role="img" aria-label="A checklist review marks completed items and highlights one gap."></canvas></figure>
-          </div>
-          <h4>What we cover</h4>
-          <ul>
-            <li>Cybersecurity Audits</li>
-            <li>Compliance &amp; Regulatory Assessments</li>
-            <li>IT Security Risk Assessments</li>
-            <li>Security Gap Analysis</li>
-            <li>Third-Party &amp; Vendor Risk Assessments</li>
-            <li>Security Policies &amp; Compliance Consulting</li>
-          </ul>
-        </section>
-        <section class="services-chapter" id="managed-security" aria-labelledby="managed-security-title">
-          <div class="services-chapter-top">
-            <div class="services-chapter-copy">
-              <div class="services-chapter-title">
-                <p class="services-label">Monitor threats</p>
-                <h3 id="managed-security-title">Security Operations &amp; Managed Security</h3>
-              </div>
-              <p>Give your team continuous visibility into security events and the support to investigate and respond.</p>
-            </div>
-            <figure class="services-explainer"><canvas data-service-art="2" role="img" aria-label="A spike on a security monitor triggers a warning."></canvas></figure>
-          </div>
-          <h4>What we cover</h4>
-          <ul>
-            <li>Security Operations Center (SOC)</li>
-            <li>Security Information &amp; Event Management (SIEM)</li>
-            <li>Continuous Security Monitoring</li>
-            <li>Incident Detection &amp; Response</li>
-            <li>Threat Hunting &amp; Malware Analysis</li>
-            <li>Malware Detection &amp; Removal</li>
-          </ul>
-        </section>
-        <section class="services-chapter" id="infrastructure-security" aria-labelledby="infrastructure-security-title">
-          <div class="services-chapter-top">
-            <div class="services-chapter-copy">
-              <div class="services-chapter-title">
-                <p class="services-label">Secure infrastructure</p>
-                <h3 id="infrastructure-security-title">Network &amp; Infrastructure Security</h3>
-              </div>
-              <p>Reduce exposure across networks, endpoints, and access controls that keep your business running.</p>
-            </div>
-            <figure class="services-explainer"><canvas data-service-art="3" role="img" aria-label="A router sends traffic along separate paths to a guest device and a protected system."></canvas></figure>
-          </div>
-          <h4>What we cover</h4>
-          <ul>
-            <li>Network Security Assessments</li>
-            <li>Firewall Security &amp; Configuration</li>
-            <li>Endpoint Security</li>
-            <li>Intrusion Detection &amp; Prevention</li>
-            <li>Infrastructure Security Hardening</li>
-            <li>Identity &amp; Access Management (IAM)</li>
-          </ul>
-        </section>
-        <section class="services-chapter" id="data-application-security" aria-labelledby="data-application-security-title">
-          <div class="services-chapter-top">
-            <div class="services-chapter-copy">
-              <div class="services-chapter-title">
-                <p class="services-label">Protect data and apps</p>
-                <h3 id="data-application-security-title">Data &amp; Application Security</h3>
-              </div>
-              <p>Build protection into how you store data, develop software, and ship applications.</p>
-            </div>
-            <figure class="services-explainer"><canvas data-service-art="4" role="img" aria-label="A readable document passes through a lock and emerges as protected data."></canvas></figure>
-          </div>
-          <h4>What we cover</h4>
-          <ul>
-            <li>Data Protection &amp; Encryption</li>
-            <li>Application Security Assessments</li>
-            <li>DevSecOps Security Assessments</li>
-            <li>Software Supply Chain Security</li>
-            <li>Secure Configuration Reviews</li>
-          </ul>
-        </section>
-      </div>
-    </div>
+
+  <!-- STATEMENT -->
+  <section id="capabilities" class="svc-statement" aria-labelledby="capabilities-title">
+    <h2 id="capabilities-title" data-split="lines">Where do you need protection?</h2>
+    <p data-reveal="up">Start with what you need today, from testing a single application to monitoring your organization around the clock. The five steps below run in the order an engagement often does: find the weak spots, decide what matters, watch for trouble, close the gaps, and protect what you build.</p>
   </section>
-  <section class="services-contact" aria-labelledby="services-contact-title">
-    <div class="services-shell services-contact-inner">
-      <div>
-        <h2 id="services-contact-title">What do you need<br>to protect?</h2>
-        <p>Tell us which systems or processes you want to assess, monitor, or secure.</p>
+
+  <!-- FIVE CHAPTERS, SHARED STAGE -->
+  <div class="svc-chapters" data-chapters>
+
+    <section class="svc-ch" id="offensive-security" data-chapter="0" aria-labelledby="offensive-security-title">
+      <div class="svc-ch__head">
+        <span class="svc-ch__num" aria-hidden="true">01</span>
+        <p class="svc-kicker">Test defenses</p>
       </div>
-      <a class="services-button" href="/contact/">Talk to our team <span aria-hidden="true">↗</span></a>
+      <h2 class="svc-ch__title" id="offensive-security-title" data-split="lines">Offensive Security Services</h2>
+      <p class="svc-ch__lede">Find weaknesses before they become incidents. We assess your applications, APIs, networks, and configurations so you can prioritize fixes.</p>
+      <figure class="svc-ch__fig" data-reveal="scan"><canvas data-service-art="0" role="img" aria-label="A scanner passes over a website and marks two weak spots."></canvas></figure>
+      <h3 class="svc-ch__sub">What we cover</h3>
+      <ol class="svc-ch__list">
+        <li>Vulnerability Assessment &amp; Penetration Testing (VAPT)</li>
+        <li>Web Application Penetration Testing</li>
+        <li>API Security Testing</li>
+        <li>Network Penetration Testing</li>
+        <li>Security Configuration Assessments</li>
+      </ol>
+    </section>
+
+    <section class="svc-ch" id="grc" data-chapter="1" aria-labelledby="grc-title">
+      <div class="svc-ch__head">
+        <span class="svc-ch__num" aria-hidden="true">02</span>
+        <p class="svc-kicker">Manage risk</p>
+      </div>
+      <h2 class="svc-ch__title" id="grc-title" data-split="lines">Governance, Risk &amp; Compliance (GRC)</h2>
+      <p class="svc-ch__lede">Understand where your controls fall short and what to address first across your organization and suppliers.</p>
+      <figure class="svc-ch__fig" data-reveal="scan"><canvas data-service-art="1" role="img" aria-label="A checklist review marks completed items and highlights one gap."></canvas></figure>
+      <h3 class="svc-ch__sub">What we cover</h3>
+      <ol class="svc-ch__list">
+        <li>Cybersecurity Audits</li>
+        <li>Compliance &amp; Regulatory Assessments</li>
+        <li>IT Security Risk Assessments</li>
+        <li>Security Gap Analysis</li>
+        <li>Third-Party &amp; Vendor Risk Assessments</li>
+        <li>Security Policies &amp; Compliance Consulting</li>
+      </ol>
+    </section>
+
+    <section class="svc-ch" id="managed-security" data-chapter="2" aria-labelledby="managed-security-title">
+      <div class="svc-ch__head">
+        <span class="svc-ch__num" aria-hidden="true">03</span>
+        <p class="svc-kicker">Monitor threats</p>
+      </div>
+      <h2 class="svc-ch__title" id="managed-security-title" data-split="lines">Security Operations &amp; Managed Security</h2>
+      <p class="svc-ch__lede">Give your team continuous visibility into security events and the support to investigate and respond.</p>
+      <figure class="svc-ch__fig" data-reveal="scan"><canvas data-service-art="2" role="img" aria-label="A spike on a security monitor triggers a warning."></canvas></figure>
+      <h3 class="svc-ch__sub">What we cover</h3>
+      <ol class="svc-ch__list">
+        <li>Security Operations Center (SOC)</li>
+        <li>Security Information &amp; Event Management (SIEM)</li>
+        <li>Continuous Security Monitoring</li>
+        <li>Incident Detection &amp; Response</li>
+        <li>Threat Hunting &amp; Malware Analysis</li>
+        <li>Malware Detection &amp; Removal</li>
+      </ol>
+    </section>
+
+    <section class="svc-ch" id="infrastructure-security" data-chapter="3" aria-labelledby="infrastructure-security-title">
+      <div class="svc-ch__head">
+        <span class="svc-ch__num" aria-hidden="true">04</span>
+        <p class="svc-kicker">Secure infrastructure</p>
+      </div>
+      <h2 class="svc-ch__title" id="infrastructure-security-title" data-split="lines">Network &amp; Infrastructure Security</h2>
+      <p class="svc-ch__lede">Reduce exposure across networks, endpoints, and access controls that keep your business running.</p>
+      <figure class="svc-ch__fig" data-reveal="scan"><canvas data-service-art="3" role="img" aria-label="A router sends traffic along separate paths to a guest device and a protected system."></canvas></figure>
+      <h3 class="svc-ch__sub">What we cover</h3>
+      <ol class="svc-ch__list">
+        <li>Network Security Assessments</li>
+        <li>Firewall Security &amp; Configuration</li>
+        <li>Endpoint Security</li>
+        <li>Intrusion Detection &amp; Prevention</li>
+        <li>Infrastructure Security Hardening</li>
+        <li>Identity &amp; Access Management (IAM)</li>
+      </ol>
+    </section>
+
+    <section class="svc-ch" id="data-application-security" data-chapter="4" aria-labelledby="data-application-security-title">
+      <div class="svc-ch__head">
+        <span class="svc-ch__num" aria-hidden="true">05</span>
+        <p class="svc-kicker">Protect data and apps</p>
+      </div>
+      <h2 class="svc-ch__title" id="data-application-security-title" data-split="lines">Data &amp; Application Security</h2>
+      <p class="svc-ch__lede">Build protection into how you store data, develop software, and ship applications.</p>
+      <figure class="svc-ch__fig" data-reveal="scan"><canvas data-service-art="4" role="img" aria-label="A readable document passes through a lock and emerges as protected data."></canvas></figure>
+      <h3 class="svc-ch__sub">What we cover</h3>
+      <ol class="svc-ch__list">
+        <li>Data Protection &amp; Encryption</li>
+        <li>Application Security Assessments</li>
+        <li>DevSecOps Security Assessments</li>
+        <li>Software Supply Chain Security</li>
+        <li>Secure Configuration Reviews</li>
+      </ol>
+    </section>
+  </div>
+
+  <!-- INDEX OF ALL 28 -->
+  <section class="svc-index" aria-labelledby="index-title">
+    <div class="svc-index__head">
+      <h2 id="index-title" data-split="lines"><span class="svc-index__count">28</span> services, one list.</h2>
+      <p data-reveal="up">Know what you are looking for? Every service we offer, grouped by step. Pick one to read its section.</p>
     </div>
+    <ul class="svc-index__list" data-index>
+      <li class="svc-index__group" style="--c: color-mix(in oklab, var(--risk-t), var(--ahead-t) 0%)">01 Offensive Security</li>
+      <li><a href="#offensive-security" data-preview="offensive-security"><span>Vulnerability Assessment &amp; Penetration Testing (VAPT)</span><span class="svc-mono">01.1</span></a></li>
+      <li><a href="#offensive-security" data-preview="offensive-security"><span>Web Application Penetration Testing</span><span class="svc-mono">01.2</span></a></li>
+      <li><a href="#offensive-security" data-preview="offensive-security"><span>API Security Testing</span><span class="svc-mono">01.3</span></a></li>
+      <li><a href="#offensive-security" data-preview="offensive-security"><span>Network Penetration Testing</span><span class="svc-mono">01.4</span></a></li>
+      <li><a href="#offensive-security" data-preview="offensive-security"><span>Security Configuration Assessments</span><span class="svc-mono">01.5</span></a></li>
+      <li class="svc-index__group" style="--c: color-mix(in oklab, var(--risk-t), var(--ahead-t) 25%)">02 Governance, Risk &amp; Compliance</li>
+      <li><a href="#grc" data-preview="grc"><span>Cybersecurity Audits</span><span class="svc-mono">02.1</span></a></li>
+      <li><a href="#grc" data-preview="grc"><span>Compliance &amp; Regulatory Assessments</span><span class="svc-mono">02.2</span></a></li>
+      <li><a href="#grc" data-preview="grc"><span>IT Security Risk Assessments</span><span class="svc-mono">02.3</span></a></li>
+      <li><a href="#grc" data-preview="grc"><span>Security Gap Analysis</span><span class="svc-mono">02.4</span></a></li>
+      <li><a href="#grc" data-preview="grc"><span>Third-Party &amp; Vendor Risk Assessments</span><span class="svc-mono">02.5</span></a></li>
+      <li><a href="#grc" data-preview="grc"><span>Security Policies &amp; Compliance Consulting</span><span class="svc-mono">02.6</span></a></li>
+      <li class="svc-index__group" style="--c: color-mix(in oklab, var(--risk-t), var(--ahead-t) 50%)">03 Security Operations &amp; Managed Security</li>
+      <li><a href="#managed-security" data-preview="managed-security"><span>Security Operations Center (SOC)</span><span class="svc-mono">03.1</span></a></li>
+      <li><a href="#managed-security" data-preview="managed-security"><span>Security Information &amp; Event Management (SIEM)</span><span class="svc-mono">03.2</span></a></li>
+      <li><a href="#managed-security" data-preview="managed-security"><span>Continuous Security Monitoring</span><span class="svc-mono">03.3</span></a></li>
+      <li><a href="#managed-security" data-preview="managed-security"><span>Incident Detection &amp; Response</span><span class="svc-mono">03.4</span></a></li>
+      <li><a href="#managed-security" data-preview="managed-security"><span>Threat Hunting &amp; Malware Analysis</span><span class="svc-mono">03.5</span></a></li>
+      <li><a href="#managed-security" data-preview="managed-security"><span>Malware Detection &amp; Removal</span><span class="svc-mono">03.6</span></a></li>
+      <li class="svc-index__group" style="--c: color-mix(in oklab, var(--risk-t), var(--ahead-t) 75%)">04 Network &amp; Infrastructure Security</li>
+      <li><a href="#infrastructure-security" data-preview="infrastructure-security"><span>Network Security Assessments</span><span class="svc-mono">04.1</span></a></li>
+      <li><a href="#infrastructure-security" data-preview="infrastructure-security"><span>Firewall Security &amp; Configuration</span><span class="svc-mono">04.2</span></a></li>
+      <li><a href="#infrastructure-security" data-preview="infrastructure-security"><span>Endpoint Security</span><span class="svc-mono">04.3</span></a></li>
+      <li><a href="#infrastructure-security" data-preview="infrastructure-security"><span>Intrusion Detection &amp; Prevention</span><span class="svc-mono">04.4</span></a></li>
+      <li><a href="#infrastructure-security" data-preview="infrastructure-security"><span>Infrastructure Security Hardening</span><span class="svc-mono">04.5</span></a></li>
+      <li><a href="#infrastructure-security" data-preview="infrastructure-security"><span>Identity &amp; Access Management (IAM)</span><span class="svc-mono">04.6</span></a></li>
+      <li class="svc-index__group" style="--c: color-mix(in oklab, var(--risk-t), var(--ahead-t) 100%)">05 Data &amp; Application Security</li>
+      <li><a href="#data-application-security" data-preview="data-application-security"><span>Data Protection &amp; Encryption</span><span class="svc-mono">05.1</span></a></li>
+      <li><a href="#data-application-security" data-preview="data-application-security"><span>Application Security Assessments</span><span class="svc-mono">05.2</span></a></li>
+      <li><a href="#data-application-security" data-preview="data-application-security"><span>DevSecOps Security Assessments</span><span class="svc-mono">05.3</span></a></li>
+      <li><a href="#data-application-security" data-preview="data-application-security"><span>Software Supply Chain Security</span><span class="svc-mono">05.4</span></a></li>
+      <li><a href="#data-application-security" data-preview="data-application-security"><span>Secure Configuration Reviews</span><span class="svc-mono">05.5</span></a></li>
+    </ul>
+    <div class="svc-preview" aria-hidden="true" data-preview-box><video muted loop playsinline preload="none"></video></div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="svc-contact" aria-labelledby="services-contact-title">
+    <h2 id="services-contact-title" data-split="lines">What do you need to protect?</h2>
+    <div class="svc-contact__row">
+      <p data-reveal="up">Tell us which systems or processes you want to assess, monitor, or secure. We will tell you where to start.</p>
+      <a class="svc-btn svc-btn--solid svc-btn--big" href="/contact/" data-fill><span class="svc-btn__fill" aria-hidden="true"></span><span class="svc-btn__label">Talk to our team <span aria-hidden="true">↗</span></span></a>
+    </div>
+    <ul class="svc-contact__lines">
+      <li><span class="svc-mono">Call</span><a class="svc-link" href="tel:+92512748690">051 2748690</a></li>
+      <li><span class="svc-mono">Email</span><a class="svc-link" href="mailto:info@digiinn360.com">info@digiinn360.com</a></li>
+      <li><span class="svc-mono">Visit</span><span>Sector F7, Islamabad</span></li>
+    </ul>
   </section>
 </main>
 <footer class="site-footer">
@@ -174,5 +235,5 @@
     </div>
   </div>
 </footer>
-<script type="module" src="/src/services-page.ts"></script>
+<script type="module" src="/src/services/main.ts"></script>
 </body></html>
