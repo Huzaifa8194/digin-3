@@ -45,38 +45,50 @@ function ridge(r: () => number, y0: number, amp: number, n: number, w = 1600, h 
   return d + ` L${w + 20} ${py} L${w + 20} ${h + 20} Z`;
 }
 
-/** Illustrated landscape for a window or a reduced-motion world: outlined shapes, flat fills. */
+/** Illustrated valley for a window or a reduced-motion world: cliffs frame an open centre, soft fills, fine ink. */
 export function landscape(i: number) {
   const p = PALS[i], r = rng(i + 3), id = `l${i}`;
+  const line = `stroke="${INK}" stroke-opacity=".55" stroke-width="2.5" stroke-linejoin="round"`;
   let stars = '';
+  const nStars = p.stars ? 30 : 10;
+  for (let k = 0; k < nStars; k++) {
+    const x = r() * 1600, y = r() * 480, sz = r() * 2.4 + 1;
+    stars += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${sz.toFixed(1)}" fill="#fff" opacity="${((p.stars ? 0.45 : 0.25) + r() * 0.4).toFixed(2)}"/>`;
+  }
   if (p.stars) {
-    const pts: [number, number][] = [];
-    for (let k = 0; k < 26; k++) {
-      const x = r() * 1600, y = r() * 430, s = r() * 2.2 + 0.8;
-      stars += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${s.toFixed(1)}" fill="#fff" opacity="${(0.5 + r() * 0.5).toFixed(2)}"/>`;
-      if (k < 6) pts.push([x, y]);
-    }
-    pts.sort((a, b) => a[0] - b[0]);
-    stars += `<polyline points="${pts.map((q) => q.join(',')).join(' ')}" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2" stroke-dasharray="4 8"/>`;
-    pts.forEach(([x, y]) => (stars += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="7" fill="#fff" opacity=".25"/><circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="3.5" fill="#fff"/>`));
+    const pts: [number, number][] = [[330, 150], [560, 330], [800, 120], [1010, 470], [1240, 300], [1430, 160]].map(([x, y]) => [x + (r() - 0.5) * 80, y + (r() - 0.5) * 60]);
+    stars += `<polyline points="${pts.map((q) => q.join(',')).join(' ')}" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" stroke-dasharray="6 10"/>`;
+    pts.forEach(([x, y]) => (stars += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="26" fill="url(#${id}s)"/><circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="6" fill="#fff"/>`));
   }
-  const sun = p.sun ? `<circle cx="${(300 + r() * 1000).toFixed(0)}" cy="190" r="70" fill="${p.sun}" stroke="${INK}" stroke-width="4"/>` : '';
+  const sx = (1100 + r() * 250).toFixed(0);
+  const sun = p.sun ? `<circle cx="${sx}" cy="200" r="150" fill="url(#${id}s)" opacity=".8"/><circle cx="${sx}" cy="200" r="62" fill="${p.sun}" opacity=".95"/>` : '';
   let clouds = '';
-  for (let k = 0; k < 3; k++) {
-    const x = 200 + r() * 1200, y = 120 + r() * 220, w = 160 + r() * 200;
-    clouds += `<g fill="${p.cloud}" opacity=".9"><ellipse cx="${x}" cy="${y}" rx="${w / 2}" ry="${w / 9}"/><ellipse cx="${x - w / 6}" cy="${y - w / 12}" rx="${w / 5}" ry="${w / 9}"/><ellipse cx="${x + w / 7}" cy="${y - w / 10}" rx="${w / 6}" ry="${w / 10}"/></g>`;
+  for (let k = 0; k < 2; k++) {
+    const x = k ? 1150 + r() * 250 : 200 + r() * 250, y = 160 + r() * 200, w = 200 + r() * 160;
+    clouds += `<g fill="${p.cloud}" opacity=".75"><ellipse cx="${x}" cy="${y}" rx="${w / 2}" ry="${w / 10}"/><ellipse cx="${x - w / 7}" cy="${y - w / 13}" rx="${w / 5}" ry="${w / 9}"/><ellipse cx="${x + w / 8}" cy="${y - w / 11}" rx="${w / 6}" ry="${w / 10}"/></g>`;
   }
-  const rocks = Array.from({ length: 3 }, () => {
-    const x = 200 + r() * 1200, y = 780 + r() * 60, s = 18 + r() * 26;
-    return `<path d="M${x - s} ${y} L${x - s * 0.6} ${y - s * 0.8} L${x + s * 0.5} ${y - s} L${x + s} ${y} Z" fill="${p.far}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>`;
-  }).join('');
+  // cliffs: tall at the edges, falling toward a low horizon in the middle
+  const lc = 180 + r() * 120, rc = 160 + r() * 140;
+  const left = `M-20 920 L-20 ${lc} C 160 ${lc - 30} 260 ${lc + 120} 340 ${lc + 200} S 520 520 640 600 L 640 920 Z`;
+  const right = `M1620 920 L1620 ${rc} C 1460 ${rc + 10} 1380 ${rc + 150} 1300 ${rc + 230} S 1110 520 960 600 L 960 920 Z`;
+  const ledgeL = `M-20 ${lc + 160} C 120 ${lc + 150} 220 ${lc + 260} 300 ${lc + 330}`;
+  const ledgeR = `M1620 ${rc + 180} C 1500 ${rc + 190} 1420 ${rc + 280} 1340 ${rc + 350}`;
   return `<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.skyTop}"/><stop offset="1" stop-color="${p.skyBot}"/></linearGradient></defs>
+<defs>
+<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.skyTop}"/><stop offset=".85" stop-color="${p.skyBot}"/></linearGradient>
+<linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.far}" stop-opacity=".75"/><stop offset=".7" stop-color="${p.far}"/></linearGradient>
+<linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.mid}"/><stop offset="1" stop-color="${p.near}"/></linearGradient>
+<linearGradient id="${id}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.skyBot}" stop-opacity="0"/><stop offset="1" stop-color="${p.skyBot}" stop-opacity=".55"/></linearGradient>
+<radialGradient id="${id}s"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".25" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+</defs>
 <rect width="1600" height="900" fill="url(#${id})"/>${stars}${sun}${clouds}
-<path d="${ridge(r, 560, 260, 5)}" fill="${p.far}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
-<path d="${ridge(r, 640, 120, 7)}" fill="${p.mid}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
-<rect x="-10" y="660" width="1620" height="90" fill="${p.lake}" stroke="${INK}" stroke-width="4"/>
-<g stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"><path d="M240 690h90M720 712h140M1180 696h80M480 728h60"/></g>
-<path d="${ridge(r, 760, 50, 6)}" fill="${p.near}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>${rocks}
+<rect x="0" y="420" width="1600" height="180" fill="url(#${id}h)"/>
+<path d="M-20 600 C 300 580 520 592 800 586 S 1300 578 1620 596 L1620 640 L-20 640 Z" fill="${p.far}" ${line}/>
+<path d="${left}" fill="url(#${id}c)" ${line}/>
+<path d="${right}" fill="url(#${id}c)" ${line}/>
+<path d="${ledgeL} M 120 ${lc + 60} C 200 ${lc + 110} 240 ${lc + 170} 280 ${lc + 230} ${ledgeR}" fill="none" stroke="${INK}" stroke-opacity=".3" stroke-width="2"/>
+<path d="M-20 626 C 400 612 1000 640 1620 618 L1620 920 L-20 920 Z" fill="${p.lake}" ${line}/>
+<path d="M-20 700 C 420 676 900 720 1620 690 L1620 920 L-20 920 Z" fill="url(#${id}g)" ${line}/>
+<g stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"><path d="M300 652h90M760 660h150M1180 646h80"/></g>
 </svg>`;
 }

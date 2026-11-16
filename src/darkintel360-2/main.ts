@@ -173,13 +173,26 @@ const cabin = $('[data-cabin]'), track = $('[data-track]');
 const wins = $$('[data-win]'), dots = $$<HTMLButtonElement>('[data-dot]');
 let cur = 0;
 const visited = new Set<number>();
-function offsetFor(i: number) {
-  const w = wins[0].offsetWidth, gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-  return innerWidth / 2 - (i * (w + gap) + w / 2);
+// The windows sit on the inside of a cylinder, like the cockpit glass: side windows wrap toward you.
+const ring = { pos: 0 };
+function ringGeo() {
+  const W = wins[0].offsetWidth, phone = innerWidth < 761;
+  return { W, gap: phone ? 0.98 : 0.86, turn: phone ? 50 : 58, depth: phone ? 0.12 : 0.2 };
+}
+function layoutRing() {
+  const { W, gap, turn, depth } = ringGeo();
+  wins.forEach((w, i) => {
+    const d = i - ring.pos, far = Math.abs(d), k = Math.min(far, 1.6) * Math.sign(d);
+    gsap.set(w, {
+      x: d * W * gap, z: Math.min(far, 1.6) * W * depth, rotationY: -k * turn,
+      autoAlpha: far < 1.7 ? 1 : 0, zIndex: 10 - Math.round(far),
+    });
+  });
 }
 function goTo(i: number, instant = false) {
   cur = clamp(i, 0, wins.length - 1);
-  gsap.to(track, { x: offsetFor(cur), duration: instant ? 0 : 1.1, ease: EASE, overwrite: true });
+  gsap.to(ring, { pos: cur, duration: instant ? 0 : 1.15, ease: EASE, overwrite: true, onUpdate: layoutRing });
+  if (instant) { ring.pos = cur; layoutRing(); }
   wins.forEach((w, k) => {
     w.classList.toggle('is-cur', k === cur);
     $<HTMLButtonElement>('[data-explore]', w).tabIndex = k === cur ? 0 : -1;
@@ -217,14 +230,17 @@ function consoleIn() {
   track.addEventListener('pointerdown', (e) => {
     if (busy || state !== 'console') return;
     down = true; moved = false; sx = e.clientX; sy = e.clientY; dx = 0; t0 = performance.now();
-    base = gsap.getProperty(track, 'x') as number;
-    gsap.killTweensOf(track);
+    base = ring.pos;
+    gsap.killTweensOf(ring);
   });
   addEventListener('pointermove', (e) => {
     if (!down) return;
     dx = e.clientX - sx;
     if (!moved && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(e.clientY - sy)) { moved = true; track.classList.add('is-drag'); track.setPointerCapture?.(e.pointerId); }
-    if (moved) gsap.set(track, { x: base + dx * (cur === 0 && dx > 0 || cur === wins.length - 1 && dx < 0 ? 0.35 : 1) });
+    if (!moved) return;
+    const edge = (cur === 0 && dx > 0) || (cur === wins.length - 1 && dx < 0) ? 0.3 : 1;
+    ring.pos = base - (dx * edge) / (ringGeo().W * 0.8);
+    layoutRing();
   });
   const up = (e: PointerEvent) => {
     if (!down) return;
