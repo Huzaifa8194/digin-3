@@ -116,13 +116,14 @@
   <!-- 4. Worlds: one per module. Card first, then the signals hidden in the landscape -->
   <section class="dx-state dx-world" data-state="world" aria-labelledby="world-title">
     <h2 id="world-title" class="dx-sr">Module briefings</h2>
-    <p class="dx-find" data-find aria-hidden="true"><span class="dx-find__title">Find the signals</span><span class="dx-find__sub"><span class="dx-mouse-only">Move your pointer to look around.</span><span class="dx-touch-only">Drag to look around.</span></span></p>
+    <p class="dx-find" data-find aria-hidden="true"><span class="dx-find__title" data-find-title>Find the signals</span><span class="dx-find__sub"><span data-find-sub></span> <span class="dx-mouse-only">Move your pointer to look around.</span><span class="dx-touch-only">Drag to look around.</span></span></p>
 
-    <article class="dx-mod" id="live-map" data-mod="0">
+    <article class="dx-mod" id="live-map" data-mod="0" data-hunt-title="Scan the map" data-hunt-sub="Three exposures are pinned on this plain.">
       <div class="dx-card">
         <img class="dx-card__img" src="/media/darkintel360-2/lm.jpg" width="1600" height="900" alt="DarkIntel360 live map with counters for countries, data leaks and forum posts over a map of Europe and the Middle East.">
         <h3 class="dx-card__title" tabindex="-1">Where is your data exposed right now?</h3>
         <p>The live map plots exposure country by country, with running counters for countries, data leaks and forum posts across every source DarkIntel360 watches.</p>
+        <ul class="dx-card__facts" aria-label="What this module records"><li>100 countries</li><li>6.2K leaks</li><li>13.2K forum posts</li><li>demo view</li></ul>
         <button class="dx-pill dx-pill--dark" type="button" data-hunt>Explore</button>
       </div>
       <ul class="dx-sigs">
@@ -130,13 +131,23 @@
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="1"><span>Top affected countries</span></button><div class="dx-brief" role="dialog" aria-label="Top affected countries"><h4>Top affected countries</h4><p class="dx-brief__stat">Ranked by exposure volume across every source.</p><p>A running list, from Afghanistan to Bangladesh and on, that you can narrow to any date range.</p></div></li>
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="2"><span>Regional zoom</span></button><div class="dx-brief" role="dialog" aria-label="Regional zoom"><h4>Regional zoom</h4><p class="dx-brief__stat">6.3K phishing reports in the demo region.</p><p>Zoom into a region and the counters follow, so you see what is happening next door as well as at home.</p></div></li>
       </ul>
+      <div class="dx-debrief" role="dialog" aria-labelledby="db-0" tabindex="-1">
+        <p class="dx-debrief__k">Mission debrief · 01 / 07</p>
+        <h3 id="db-0">How DarkIntel360 shows you the whole picture</h3>
+        <ul class="dx-debrief__pts"><li>Exposure plotted country by country, with running counts of leaks, forum posts and affected organisations.</li><li>Start with the whole world, then open any country to see its leaks, its posts and its phishing.</li><li>Pick a date range and watch whether exposure is rising or falling before anyone asks.</li></ul>
+        <p class="dx-debrief__src"><span>Watches</span>Underground forums · Telegram channels · Twitter / X · Botnet logs · Leak and paste sites</p>
+        <ol class="dx-debrief__flow" aria-label="Where this module sits"><li>Collect</li><li>Analyse</li><li class="is-on">Visualise</li><li>Act</li></ol>
+        <div class="dx-debrief__row"><button class="dx-pill" type="button" data-to-console>Explore other modules</button><button class="dx-pill dx-pill--dark" type="button" data-finish>Finish the mission</button></div>
+        <button class="dx-debrief__close" type="button" data-close-debrief>Back to the landscape</button>
+      </div>
     </article>
 
-    <article class="dx-mod" id="forums" data-mod="1">
+    <article class="dx-mod" id="forums" data-mod="1" data-hunt-title="Listen in" data-hunt-sub="Three posts on these boards are worth reading.">
       <div class="dx-card">
         <img class="dx-card__img" src="/media/darkintel360-2/fo.jpg" width="1600" height="900" loading="lazy" alt="A forum intelligence report in DarkIntel360 with the post link, a translated source report and a credibility score of 50.">
         <h3 class="dx-card__title" tabindex="-1">What are underground forums saying about you?</h3>
         <p>Forum reports collect posts from the boards where breaches are announced, with the date, the countries named, the views and a credibility score on every one.</p>
+        <ul class="dx-card__facts" aria-label="What this module records"><li>Translated to English</li><li>Scored</li><li>Filter by keyword, country, actor</li></ul>
         <button class="dx-pill dx-pill--dark" type="button" data-hunt>Explore</button>
       </div>
       <ul class="dx-sigs">
@@ -144,13 +155,23 @@
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="1"><span>Translated source</span></button><div class="dx-brief" role="dialog" aria-label="Translated source"><h4>Translated source</h4><p class="dx-brief__stat">The original post, in English, with its ID and link.</p><p>Open a report to read the source in full. The link stays attached as evidence.</p></div></li>
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="2"><span>Credibility 50</span></button><div class="dx-brief" role="dialog" aria-label="Credibility 50"><h4>Credibility 50 / 100</h4><p class="dx-brief__stat">Mixed supporting signals.</p><p>Source quality and the evidence around a claim are weighed, so a rumour never looks like a confirmed sale.</p></div></li>
       </ul>
+      <div class="dx-debrief" role="dialog" aria-labelledby="db-1" tabindex="-1">
+        <p class="dx-debrief__k">Mission debrief · 02 / 07</p>
+        <h3 id="db-1">How DarkIntel360 reads the boards for you</h3>
+        <ul class="dx-debrief__pts"><li>Posts from onion forums and underground boards arrive in English, each with its source, its date and the countries it names.</li><li>Every post carries a credibility score, so a rumour and a confirmed sale never look alike.</li><li>Ask for ransomware chatter about Pakistan in the first half of November, and you get exactly that.</li></ul>
+        <p class="dx-debrief__src"><span>Watches</span>Underground forums · Telegram channels · Twitter / X</p>
+        <ol class="dx-debrief__flow" aria-label="Where this module sits"><li>Collect</li><li class="is-on">Analyse</li><li>Visualise</li><li>Act</li></ol>
+        <div class="dx-debrief__row"><button class="dx-pill" type="button" data-to-console>Explore other modules</button><button class="dx-pill dx-pill--dark" type="button" data-finish>Finish the mission</button></div>
+        <button class="dx-debrief__close" type="button" data-close-debrief>Back to the landscape</button>
+      </div>
     </article>
 
-    <article class="dx-mod" id="data-leaks" data-mod="2">
+    <article class="dx-mod" id="data-leaks" data-mod="2" data-hunt-title="Verify the claims" data-hunt-sub="Three leak claims are crated up here.">
       <div class="dx-card">
         <img class="dx-card__img" src="/media/darkintel360-2/dl.jpg" width="1600" height="900" loading="lazy" alt="Data leak intelligence: a source incident claim with a credibility score of 86 and its source details.">
         <h3 class="dx-card__title" tabindex="-1">Is that breach claim real?</h3>
         <p>Data leak intelligence lists every incident claim with its attacker, source and timeline, then checks it against supporting signals before it reaches you.</p>
+        <ul class="dx-card__facts" aria-label="What this module records"><li>Claims checked</li><li>Evidence kept</li><li>Scored 0 to 100</li></ul>
         <button class="dx-pill dx-pill--dark" type="button" data-hunt>Explore</button>
       </div>
       <ul class="dx-sigs">
@@ -158,13 +179,23 @@
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="1"><span>Credibility 86</span></button><div class="dx-brief" role="dialog" aria-label="Credibility 86"><h4>Credibility 86 / 100</h4><p class="dx-brief__stat">Strong supporting signals.</p><p>When the evidence holds up, the score says so, and the claim moves to the top of the queue.</p></div></li>
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="2"><span>Source details</span></button><div class="dx-brief" role="dialog" aria-label="Source details"><h4>Source details</h4><p class="dx-brief__stat">Reported, source status, last checked.</p><p>Each claim records when it was posted, whether the source is still reachable and when it was last checked.</p></div></li>
       </ul>
+      <div class="dx-debrief" role="dialog" aria-labelledby="db-2" tabindex="-1">
+        <p class="dx-debrief__k">Mission debrief · 03 / 07</p>
+        <h3 id="db-2">How DarkIntel360 separates a claim from a breach</h3>
+        <ul class="dx-debrief__pts"><li>A breach announced on a forum is not a breach confirmed. Each claim is checked against supporting signals first.</li><li>Sample data that matches, a seller with a history, a timeline that holds: the score rises only when the evidence does.</li><li>The original listing stays attached, with source status and the last time it was checked, for your incident file.</li></ul>
+        <p class="dx-debrief__src"><span>Watches</span>Leak and paste sites · Underground forums</p>
+        <ol class="dx-debrief__flow" aria-label="Where this module sits"><li>Collect</li><li class="is-on">Analyse</li><li>Visualise</li><li>Act</li></ol>
+        <div class="dx-debrief__row"><button class="dx-pill" type="button" data-to-console>Explore other modules</button><button class="dx-pill dx-pill--dark" type="button" data-finish>Finish the mission</button></div>
+        <button class="dx-debrief__close" type="button" data-close-debrief>Back to the landscape</button>
+      </div>
     </article>
 
-    <article class="dx-mod" id="credentials" data-mod="3">
+    <article class="dx-mod" id="credentials" data-mod="3" data-hunt-title="Find the keys" data-hunt-sub="Three exposed logins are lying in the open.">
       <div class="dx-card">
         <img class="dx-card__img" src="/media/darkintel360-2/cr.jpg" width="1600" height="900" loading="lazy" alt="Credential records table with the exposed logins column highlighted and values blurred.">
         <h3 class="dx-card__title" tabindex="-1">Which of your logins are already out there?</h3>
         <p>Credential records list the URL, username, password, country and date of every exposed login, with the sensitive values blurred until you need them.</p>
+        <ul class="dx-card__facts" aria-label="What this module records"><li>Search by domain</li><li>Username or URL</li><li>Values masked</li></ul>
         <button class="dx-pill dx-pill--dark" type="button" data-hunt>Explore</button>
       </div>
       <ul class="dx-sigs">
@@ -172,13 +203,23 @@
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="1"><span>Login pages</span></button><div class="dx-brief" role="dialog" aria-label="Login pages"><h4>Login pages</h4><p class="dx-brief__stat">The sign-in URL behind every record.</p><p>From design tools to webmail to mobile apps, you see exactly where each login works.</p></div></li>
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="2"><span>Date and country</span></button><div class="dx-brief" role="dialog" aria-label="Date and country"><h4>Date and country</h4><p class="dx-brief__stat">When and where each login surfaced.</p><p>Sort by date to see what is fresh, and by country to see where it is spreading.</p></div></li>
       </ul>
+      <div class="dx-debrief" role="dialog" aria-labelledby="db-3" tabindex="-1">
+        <p class="dx-debrief__k">Mission debrief · 04 / 07</p>
+        <h3 id="db-3">How DarkIntel360 finds your logins before anyone tries them</h3>
+        <ul class="dx-debrief__pts"><li>Search credential records by domain, username or URL to see which of your accounts are circulating.</li><li>See where each login surfaced and when, with the password kept masked until you need it.</li><li>Reset first, then follow the record back to the infected machine in botnet data.</li></ul>
+        <p class="dx-debrief__src"><span>Watches</span>Botnet logs · Leak and paste sites</p>
+        <ol class="dx-debrief__flow" aria-label="Where this module sits"><li>Collect</li><li>Analyse</li><li>Visualise</li><li class="is-on">Act</li></ol>
+        <div class="dx-debrief__row"><button class="dx-pill" type="button" data-to-console>Explore other modules</button><button class="dx-pill dx-pill--dark" type="button" data-finish>Finish the mission</button></div>
+        <button class="dx-debrief__close" type="button" data-close-debrief>Back to the landscape</button>
+      </div>
     </article>
 
-    <article class="dx-mod" id="botnet-data" data-mod="4">
+    <article class="dx-mod" id="botnet-data" data-mod="4" data-hunt-title="Trace the machines" data-hunt-sub="Three infected hosts are calling home.">
       <div class="dx-card">
         <img class="dx-card__img" src="/media/darkintel360-2/bo.jpg" width="1600" height="900" loading="lazy" alt="Botnet data table of infected computers with country, logins count and date.">
         <h3 class="dx-card__title" tabindex="-1">Is one of your machines infected?</h3>
         <p>Botnet data lists infected computers from stealer logs: the computer, the user, the country, the IP, how many logins it held and when it was seen.</p>
+        <ul class="dx-card__facts" aria-label="What this module records"><li>Machine</li><li>User</li><li>Country</li><li>IP</li><li>Logins</li></ul>
         <button class="dx-pill dx-pill--dark" type="button" data-hunt>Explore</button>
       </div>
       <ul class="dx-sigs">
@@ -186,13 +227,23 @@
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="1"><span>Host details</span></button><div class="dx-brief" role="dialog" aria-label="Host details"><h4>Host details</h4><p class="dx-brief__stat">System overview, saved logins, browser evidence.</p><p>Open a host to see its profile and every login it saved: 29 on the demo machine.</p></div></li>
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="2"><span>Security and access</span></button><div class="dx-brief" role="dialog" aria-label="Security and access"><h4>Security and access</h4><p class="dx-brief__stat">The antivirus it ran, and its status.</p><p>Endpoint context shows what protection the machine had, so you can see how the infection got past it.</p></div></li>
       </ul>
+      <div class="dx-debrief" role="dialog" aria-labelledby="db-4" tabindex="-1">
+        <p class="dx-debrief__k">Mission debrief · 05 / 07</p>
+        <h3 id="db-4">How DarkIntel360 traces an infection to the machine</h3>
+        <ul class="dx-debrief__pts"><li>Infostealer logs list the machine, the country, the date and every site it held a login for.</li><li>If a laptop in your company is in there, you see it here first, not in a ransom note.</li><li>Open a host for its system profile, saved logins and browser evidence, ready for your response team.</li></ul>
+        <p class="dx-debrief__src"><span>Watches</span>Botnet logs</p>
+        <ol class="dx-debrief__flow" aria-label="Where this module sits"><li>Collect</li><li class="is-on">Analyse</li><li>Visualise</li><li>Act</li></ol>
+        <div class="dx-debrief__row"><button class="dx-pill" type="button" data-to-console>Explore other modules</button><button class="dx-pill dx-pill--dark" type="button" data-finish>Finish the mission</button></div>
+        <button class="dx-debrief__close" type="button" data-close-debrief>Back to the landscape</button>
+      </div>
     </article>
 
-    <article class="dx-mod" id="phishing" data-mod="5">
+    <article class="dx-mod" id="phishing" data-mod="5" data-hunt-title="Follow the lures" data-hunt-sub="Three lures are floating on the water.">
       <div class="dx-card">
         <img class="dx-card__img" src="/media/darkintel360-2/ph.jpg" width="1600" height="900" loading="lazy" alt="Two phishing records compared, with a card showing the IP address, organisation, ISP and ASN of the host.">
         <h3 class="dx-card__title" tabindex="-1">Who is hosting the page pretending to be you?</h3>
         <p>Phishing records put suspicious pages side by side with their submission time, IP address, hosting organisation, ISP and ASN.</p>
+        <ul class="dx-card__facts" aria-label="What this module records"><li>IP</li><li>Organisation</li><li>ISP</li><li>ASN</li></ul>
         <button class="dx-pill dx-pill--dark" type="button" data-hunt>Explore</button>
       </div>
       <ul class="dx-sigs">
@@ -200,13 +251,23 @@
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="1"><span>Side by side</span></button><div class="dx-brief" role="dialog" aria-label="Side by side"><h4>Side by side</h4><p class="dx-brief__stat">Two lures, one screen.</p><p>Compare a suspect page with another copy and see what changed between them.</p></div></li>
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="2"><span>Country and timezone</span></button><div class="dx-brief" role="dialog" aria-label="Country and timezone"><h4>Country and timezone</h4><p class="dx-brief__stat">Where the page is served from.</p><p>Each record notes the country, city and timezone of the host, so you know whose jurisdiction you are dealing with.</p></div></li>
       </ul>
+      <div class="dx-debrief" role="dialog" aria-labelledby="db-5" tabindex="-1">
+        <p class="dx-debrief__k">Mission debrief · 06 / 07</p>
+        <h3 id="db-5">How DarkIntel360 turns a lure into a takedown</h3>
+        <ul class="dx-debrief__pts"><li>Pages that borrow your brand, with the IP address, hosting organisation, ISP and ASN behind each one.</li><li>The day it went live, the country it is served from, and earlier copies side by side.</li><li>The takedown request writes itself, because you know exactly whose desk it goes to.</li></ul>
+        <p class="dx-debrief__src"><span>Watches</span>Open web · Leak and paste sites · Twitter / X</p>
+        <ol class="dx-debrief__flow" aria-label="Where this module sits"><li>Collect</li><li>Analyse</li><li>Visualise</li><li class="is-on">Act</li></ol>
+        <div class="dx-debrief__row"><button class="dx-pill" type="button" data-to-console>Explore other modules</button><button class="dx-pill dx-pill--dark" type="button" data-finish>Finish the mission</button></div>
+        <button class="dx-debrief__close" type="button" data-close-debrief>Back to the landscape</button>
+      </div>
     </article>
 
-    <article class="dx-mod" id="websites-hacked" data-mod="6">
+    <article class="dx-mod" id="websites-hacked" data-mod="6" data-hunt-title="Check the mirrors" data-hunt-sub="Three defaced pages stand in this skyline.">
       <div class="dx-card">
         <img class="dx-card__img" src="/media/darkintel360-2/wh.jpg" width="1600" height="900" loading="lazy" alt="Websites hacked table with date, attacker and team columns.">
         <h3 class="dx-card__title" tabindex="-1">Which sites like yours are being defaced?</h3>
         <p>Every defacement is logged with the date, the attacker, the team, the server’s operating system and a mirror of the page as it was.</p>
+        <ul class="dx-card__facts" aria-label="What this module records"><li>Attacker</li><li>Team</li><li>Server OS</li><li>Mirror</li></ul>
         <button class="dx-pill dx-pill--dark" type="button" data-hunt>Explore</button>
       </div>
       <ul class="dx-sigs">
@@ -214,6 +275,15 @@
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="1"><span>Mirror captures</span></button><div class="dx-brief" role="dialog" aria-label="Mirror captures"><h4>Mirror captures</h4><p class="dx-brief__stat">The page, exactly as it was defaced.</p><p>Mirrors keep the evidence after the site owner has cleaned up.</p></div></li>
         <li class="dx-sig"><button type="button" class="dx-sig__btn" data-sig="2"><span>Server OS</span></button><div class="dx-brief" role="dialog" aria-label="Server OS"><h4>Server OS</h4><p class="dx-brief__stat">Linux, Windows or unknown.</p><p>The operating system column hints at how a site was reached, and which of yours run the same.</p></div></li>
       </ul>
+      <div class="dx-debrief" role="dialog" aria-labelledby="db-6" tabindex="-1">
+        <p class="dx-debrief__k">Mission debrief · 07 / 07</p>
+        <h3 id="db-6">How DarkIntel360 keeps the evidence of a defacement</h3>
+        <ul class="dx-debrief__pts"><li>Defacements logged with the date, the attacker, the team and the server’s operating system.</li><li>A mirror of every page as it was, kept after the owner has cleaned up.</li><li>See who hit whom this week, and which sites like yours are next in line.</li></ul>
+        <p class="dx-debrief__src"><span>Watches</span>Underground forums · Telegram channels</p>
+        <ol class="dx-debrief__flow" aria-label="Where this module sits"><li>Collect</li><li>Analyse</li><li class="is-on">Visualise</li><li>Act</li></ol>
+        <div class="dx-debrief__row"><button class="dx-pill" type="button" data-to-console>Explore other modules</button><button class="dx-pill dx-pill--dark" type="button" data-finish>Finish the mission</button></div>
+        <button class="dx-debrief__close" type="button" data-close-debrief>Back to the landscape</button>
+      </div>
     </article>
 
     <button class="dx-brief-close" type="button" data-close-brief aria-label="Close briefing"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>

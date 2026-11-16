@@ -4,6 +4,7 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { PALS, INK } from './palettes';
+import { buildWorld } from './props';
 
 export type GLState = {
   scene: 'space' | 'world';
@@ -286,19 +287,20 @@ export function createGL(canvas: HTMLCanvasElement) {
     c.scale.setScalar(1.6 + Math.random());
     clouds.add(c);
   }
-  // three signals on three islands
-  const sigs: { o: THREE.Group; isle: THREE.Group; p: THREE.Vector3 }[] = [];
-  const sigKinds = [
-    () => inked(new THREE.BoxGeometry(1.2, 1.2, 1.2), toon('#c6f36d'), 0.06),
-    () => { const g = new THREE.OctahedronGeometry(0.75, 0); g.scale(0.7, 1.5, 0.7); return inked(g, toon('#ec92f6'), 0.06); },
-    () => inked(new THREE.DodecahedronGeometry(0.8, 0), toon('#b9a0ff'), 0.06),
-  ];
+  // three signals on three platforms; what the signals are, and the props around them, depend on the module
+  const sigs: { isle: THREE.Group; p: THREE.Vector3 }[] = [];
   for (let i = 0; i < 3; i++) {
     const isle = inked(new THREE.CylinderGeometry(2.4, 2.8, 0.5, 9), mats.mid, 0.12);
-    const o = sigKinds[i]();
-    world.add(isle, o);
-    sigs.push({ o, isle, p: new THREE.Vector3() });
+    world.add(isle);
+    sigs.push({ isle, p: new THREE.Vector3() });
   }
+  const worldLeak = new THREE.MeshToonMaterial({ color: '#ff4f86', gradientMap: gradient, emissive: new THREE.Color('#ff2a62'), emissiveIntensity: 0.55 });
+  const worlds = PALS.map((_, i) => {
+    const wv = buildWorld(i, { toon, inked, leak: worldLeak });
+    wv.props.visible = false; world.add(wv.props);
+    wv.signals.forEach((o) => { o.visible = false; world.add(o); });
+    return wv;
+  });
   const LAYOUTS = [
     [[-8, -3], [7.5, -1], [7, -17]], [[-7, -17], [8, -5], [-7.5, 1.5]], [[7.5, -16], [-8, -5], [1.5, 3]],
   ];
@@ -322,6 +324,7 @@ export function createGL(canvas: HTMLCanvasElement) {
     mod = i;
     mats.near.color.set(p.near); mats.mid.color.set(p.mid); mats.far.color.set(p.far);
     mats.lake.color.set(p.lake); mats.cloud.color.set(p.cloud);
+    worlds.forEach((wv, k) => { wv.props.visible = k === i; wv.signals.forEach((o) => { o.visible = k === i; }); });
     placeSignals();
   }
 
@@ -430,8 +433,9 @@ export function createGL(canvas: HTMLCanvasElement) {
       wProbe.position.set(probeAt.x, probeAt.y + Math.sin(time * 1.3) * 0.18, probeAt.z);
       wProbe.rotation.set(0.1, Math.sin(time * 0.4) * 0.25, Math.sin(time * 0.9) * 0.03);
       sigs.forEach((s, k) => {
-        s.o.position.set(s.p.x, 1.6 + Math.sin(time * 1.4 + k * 2) * 0.22, s.p.z);
-        s.o.rotation.y += d * (0.5 + k * 0.15); s.o.rotation.x = Math.sin(time * 0.8 + k) * 0.25;
+        const o = worlds[mod].signals[k];
+        o.position.set(s.p.x, 1.7 + Math.sin(time * 1.4 + k * 2) * 0.22, s.p.z);
+        o.rotation.y += d * (0.45 + k * 0.12); o.rotation.z = Math.sin(time * 0.8 + k) * 0.12;
       });
       clouds.children.forEach((c, k) => { c.position.x += d * (0.4 + k * 0.05); if (c.position.x > 70) c.position.x = -70; });
       ripples.children.forEach((r, k) => { (r as THREE.Mesh).position.x += Math.sin(time * 0.5 + k) * d * 0.4; });

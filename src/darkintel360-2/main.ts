@@ -7,6 +7,7 @@ import { gsap } from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import { createGL } from './gl';
 import { PALS, landscape } from './palettes';
+import { VIZ } from './viz';
 
 gsap.registerPlugin(SplitText);
 
@@ -75,15 +76,11 @@ $$('[data-land]').forEach((el) => {
   const wall = Array.from({ length: 48 }, (_, k) => `${'    '.repeat(k % 3)}${lines[k % lines.length]}    ${hex(12)}    ${lines[(k + 4) % lines.length]}`).join(String.fromCharCode(10));
   $('.dx-cabin__feed').textContent = wall;
 }
-const ICONS = [
-  '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="6"/><path d="M24 4v8M24 36v8M4 24h8M36 24h8"/></svg>',
-  '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="9" y="6" width="26" height="34" rx="3"/><path d="M15 15h14M15 22h14M15 29h8"/><circle cx="35" cy="34" r="7" fill="#f3edff"/><path d="m40 39 4 4" stroke-linecap="round"/></svg>',
-  '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M8 34 18 22l8 7 14-17"/><path d="M32 12h8v8" stroke-linecap="round"/><path d="M6 42h36" stroke-linecap="round"/></svg>',
-];
-$$('.dx-brief').forEach((b, i) => {
+// Each briefing opens on a piece of the product: counters, scores, masked rows, host tabs, the hosting trail.
+$$('[data-mod]').forEach((m, mi) => $$('.dx-brief', m).forEach((b, k) => {
   b.setAttribute('tabindex', '-1');
-  b.insertAdjacentHTML('afterbegin', `<div class="dx-brief__tile" aria-hidden="true"><i>${ICONS[i % 3]}</i></div>`);
-});
+  b.insertAdjacentHTML('afterbegin', `<div class="dx-brief__viz" aria-hidden="true">${VIZ[mi][k]}</div>`);
+}));
 
 // ---------- loader → hero ----------
 const heroSplit = SplitText.create('.dx-hero__title', { type: 'lines', mask: 'lines' });
@@ -361,6 +358,8 @@ async function enterWorld(i: number, fromLoad = false) {
     html.style.setProperty('--sky-top', p.skyTop);
     html.style.setProperty('--sky-bot', p.skyBot);
     mods.forEach((m, k) => m.classList.toggle('is-cur', k === i));
+    $('[data-find-title]').textContent = mods[i].dataset.huntTitle || 'Find the signals';
+    $('[data-find-sub]').textContent = mods[i].dataset.huntSub || '';
     if (gl) {
       gl.setModule(i);
       glPause(false); gl.state.world = 0; gl.state.beam = -1; gl.state.beamAmt = 0;
@@ -374,7 +373,33 @@ async function enterWorld(i: number, fromLoad = false) {
   busy = false;
   $('.dx-card__title', mods[i]).focus({ preventScroll: true });
 }
+// ---------- the debrief: how DarkIntel360 helps, once all three signals are found ----------
+const debriefed = new Set<number>();
+let debriefOpen = false;
+function openDebrief() {
+  const d = $('.dx-debrief', mods[cur]);
+  debriefOpen = true; debriefed.add(cur);
+  d.classList.add('is-open');
+  gsap.set('.dx-done', { autoAlpha: 0 });
+  gsap.fromTo(d, { autoAlpha: 0, y: 40, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: reduced ? 0 : 1, ease: EASE, delay: reduced ? 0 : 0.35 });
+  gsap.fromTo($$('.dx-debrief__pts li, .dx-debrief__flow li', d), { autoAlpha: 0, x: -12 }, { autoAlpha: 1, x: 0, duration: reduced ? 0 : 0.7, ease: EASE, stagger: 0.07, delay: reduced ? 0 : 0.7 });
+  if (gl) gsap.to(gl.state, { world: 0.55, duration: reduced ? 0 : 2, ease: INOUT });
+  setTimeout(() => d.focus({ preventScroll: true }), reduced ? 0 : 400);
+  say(`Mission debrief. ${$('h3', d).textContent}.`);
+}
+function closeDebrief(showDone = true) {
+  if (!debriefOpen) return;
+  debriefOpen = false;
+  const d = $('.dx-debrief', mods[cur]);
+  gsap.to(d, { autoAlpha: 0, y: 30, duration: reduced || !showDone ? 0 : 0.45, ease: 'power2.in', onComplete: () => d.classList.remove('is-open') });
+  if (gl && showDone) gsap.to(gl.state, { world: 1, duration: reduced ? 0 : 1.6, ease: INOUT });
+  if (showDone) {
+    gsap.fromTo('.dx-done', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: EASE, delay: 0.3 });
+    setTimeout(() => $('.dx-done .dx-pill').focus({ preventScroll: true }), 350);
+  }
+}
 function setWorld(w: 'card' | 'hunt') {
+  closeDebrief(false);
   world = w;
   html.dataset.world = w;
   const all = found[cur].every(Boolean);
@@ -435,6 +460,7 @@ function closeBrief() {
   const all = found[cur].every(Boolean);
   if (all) {
     html.dataset.done = '1';
+    if (!debriefed.has(cur)) { openDebrief(); return; }
     gsap.fromTo('.dx-done', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.9, ease: EASE, delay: 0.4 });
     setTimeout(() => $('.dx-done .dx-pill').focus({ preventScroll: true }), 420);
     say('All three signals found. Explore other modules, or finish the mission.');
@@ -446,7 +472,7 @@ function closeBrief() {
 
 async function toConsole() {
   if (busy || state !== 'world') return;
-  closeBrief();
+  closeBrief(); closeDebrief(false);
   busy = true;
   const next = found[cur].every(Boolean) ? (cur + 1) % wins.length : cur;
   await flash(() => {
@@ -469,7 +495,7 @@ async function toConsole() {
 // ---------- outro ----------
 async function finish() {
   if (busy) return;
-  closeBrief();
+  closeBrief(); closeDebrief(false);
   busy = true;
   await flash(() => {
     show('outro');
@@ -591,7 +617,8 @@ addEventListener('pointermove', (e) => {
 addEventListener('keydown', (e) => {
   const k = e.key;
   if (k === 'Escape') {
-    if (briefOpen >= 0) closeBrief();
+    if (debriefOpen) closeDebrief();
+    else if (briefOpen >= 0) closeBrief();
     else if (state === 'world') toConsole();
     return;
   }
@@ -612,6 +639,7 @@ $('[data-skip]').addEventListener('click', skip);
 $$('[data-hunt]').forEach((b) => b.addEventListener('click', hunt));
 $$('[data-sig]').forEach((b) => b.addEventListener('click', () => openBrief(+b.dataset.sig!)));
 $('[data-close-brief]').addEventListener('click', closeBrief);
+$$('[data-close-debrief]').forEach((b) => b.addEventListener('click', () => closeDebrief()));
 $$('[data-to-console]').forEach((b) => b.addEventListener('click', toConsole));
 $$('[data-finish]').forEach((b) => b.addEventListener('click', finish));
 $('[data-restart]').addEventListener('click', restart);
@@ -620,7 +648,7 @@ $$<HTMLAnchorElement>('[data-jump]').forEach((a) => a.addEventListener('click', 
 show('loading');
 // GSAP owns these transforms (centring included), so CSS never sets translate on them
 gsap.set('.dx-card', { xPercent: -50, yPercent: -50 });
-gsap.set('.dx-brief', { xPercent: -50, yPercent: -50 });
+gsap.set('.dx-brief, .dx-debrief', { xPercent: -50, yPercent: -50 });
 gsap.set('.dx-find, .dx-done, [data-close-brief]', { xPercent: -50 });
 gsap.set('[data-hint]', { xPercent: -50, yPercent: -50 });
 gsap.set('[data-sig]', { xPercent: -50, yPercent: -100 });
