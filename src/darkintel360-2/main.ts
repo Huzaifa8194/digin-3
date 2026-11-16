@@ -22,6 +22,9 @@ const EASE = 'expo.out', INOUT = 'expo.inOut';
 
 const gl = reduced ? null : createGL($<HTMLCanvasElement>('.dx-gl'));
 if (!gl) html.classList.add('no-gl');
+const glCanvas = $<HTMLCanvasElement>('.dx-gl');
+/** Pause the GL scene and take its canvas out of compositing while a DOM scene covers it. */
+const glPause = (v: boolean) => { if (!gl) return; gl.state.paused = v; glCanvas.style.visibility = v ? 'hidden' : ''; };
 
 const sections = Object.fromEntries($$('[data-state]').map((s) => [s.dataset.state!, s])) as Record<Name, HTMLElement>;
 const live = $('[data-live]');
@@ -68,6 +71,9 @@ $$('[data-land]').forEach((el) => {
   const lines = Array.from({ length: 9 }, (_, k) => (k % 3 === 0 ? `${W[k % W.length]}_${2019 + (k % 7)}.txt · ${(1 + k * 0.7).toFixed(1)}M rows · for sale`
     : k % 3 === 1 ? `HOST-${hex(4).toUpperCase()} · passwords ${12 + k * 7} · cookies ${80 + k * 31}` : `[${hex(6)}] access offered · ${W[(k + 3) % W.length]}`));
   $('[data-ticker]').innerHTML = [...lines, ...lines].map((l) => `<li>${l}</li>`).join('');
+  // the cockpit walls: the dark web feed from the flight in, still running behind the glass
+  const wall = Array.from({ length: 48 }, (_, k) => `${'    '.repeat(k % 3)}${lines[k % lines.length]}    ${hex(12)}    ${lines[(k + 4) % lines.length]}`).join(String.fromCharCode(10));
+  $('.dx-cabin__feed').textContent = wall;
 }
 const ICONS = [
   '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="6"/><path d="M24 4v8M24 36v8M4 24h8M36 24h8"/></svg>',
@@ -124,7 +130,7 @@ function heroIn(first = false) {
   show('hero');
   scene('space');
   if (gl) {
-    gl.state.paused = false;
+    glPause(false);
     gl.state.outro = 0; gl.state.story = 0; story.cur = story.target = 0;
     gl.state.light = 0; gl.state.lamp = 0;
     gsap.fromTo(gl.state, { intro: first ? 0 : gl.state.intro }, { intro: 1, duration: 2.4, ease: EASE });
@@ -218,20 +224,29 @@ const cabin = $('[data-cabin]'), track = $('[data-track]');
 const wins = $$('[data-win]'), dots = $$<HTMLButtonElement>('[data-dot]');
 let cur = 0;
 const visited = new Set<number>();
+const pov = { x: 0, y: 0, tx: 0, ty: 0, last: -1e9 };
 // The windows sit on the inside of a cylinder, like the cockpit glass: side windows wrap toward you.
 const ring = { pos: 0 };
 function ringGeo() {
   const W = wins[0].offsetWidth, phone = innerWidth < 761;
   return { W, gap: phone ? 0.98 : 0.86, turn: phone ? 50 : 58, depth: phone ? 0.12 : 0.2 };
 }
+// Cached setters: the ring is laid out every frame while the eye moves, so skip gsap.set's parsing.
+const ringSet = wins.map((w) => ({
+  x: gsap.quickSetter(w, 'x', 'px'), z: gsap.quickSetter(w, 'z', 'px'),
+  ry: gsap.quickSetter(w, 'rotationY', 'deg'), rx: gsap.quickSetter(w, 'rotationX', 'deg'),
+  shown: null as boolean | null, zi: -1,
+}));
 function layoutRing() {
   const { W, gap, turn, depth } = ringGeo();
+  const head = pov.x * 0.05; // turning your head swings the curved wall a little
   wins.forEach((w, i) => {
-    const d = i - ring.pos, far = Math.abs(d), k = Math.min(far, 1.6) * Math.sign(d);
-    gsap.set(w, {
-      x: d * W * gap, z: Math.min(far, 1.6) * W * depth, rotationY: -k * turn,
-      autoAlpha: far < 1.7 ? 1 : 0, zIndex: 10 - Math.round(far),
-    });
+    const d = i - ring.pos - head, far = Math.abs(d), k = Math.min(far, 1.6) * Math.sign(d), r = ringSet[i];
+    const show = far < 1.7, zi = 10 - Math.round(far);
+    if (show !== r.shown) { r.shown = show; w.style.visibility = show ? '' : 'hidden'; w.style.opacity = show ? '' : '0'; }
+    if (zi !== r.zi) { r.zi = zi; w.style.zIndex = String(zi); }
+    if (!show) return;
+    r.x(d * W * gap); r.z(Math.min(far, 1.6) * W * depth); r.ry(-k * turn); r.rx(pov.y * -2.2);
   });
 }
 function goTo(i: number, instant = false) {
@@ -256,7 +271,7 @@ async function enterConsole() {
   busy = true;
   await flash(() => {
     show('console');
-    if (gl) gl.state.paused = true;
+    if (gl) glPause(true);
     goTo(cur, true);
     consoleIn();
   }, 0.05);
@@ -348,7 +363,7 @@ async function enterWorld(i: number, fromLoad = false) {
     mods.forEach((m, k) => m.classList.toggle('is-cur', k === i));
     if (gl) {
       gl.setModule(i);
-      gl.state.paused = false; gl.state.world = 0; gl.state.beam = -1; gl.state.beamAmt = 0;
+      glPause(false); gl.state.world = 0; gl.state.beam = -1; gl.state.beamAmt = 0;
     } else backdrop.innerHTML = landscape(i);
     setWorld('card');
     syncFound(i);
@@ -437,7 +452,7 @@ async function toConsole() {
   await flash(() => {
     show('console');
     scene('space');
-    if (gl) { gl.state.paused = true; gl.state.world = 0; }
+    if (gl) { glPause(true); gl.state.world = 0; }
     setWorld('card');
     goTo(next, true);
     if (!reduced) {
@@ -463,7 +478,7 @@ async function finish() {
     setWorld('card');
     if (gl) {
       placeRing();
-      gl.state.paused = false; gl.state.story = 0.9; gl.state.intro = 1; gl.state.light = 1; gl.state.lamp = 1;
+      glPause(false); gl.state.story = 0.9; gl.state.intro = 1; gl.state.light = 1; gl.state.lamp = 1;
       gsap.fromTo(gl.state, { outro: 0 }, { outro: 1, duration: 2.6, ease: INOUT });
     }
     if (!reduced) {
@@ -490,18 +505,29 @@ async function restart() {
 
 // ---------- POV inside the cockpit ----------
 // The pointer is the eye. At rest the view keeps a slow sway, so the cabin never freezes.
-const pov = { x: 0, y: 0, tx: 0, ty: 0, last: -1e9 };
 addEventListener('pointermove', (e) => {
   if (e.pointerType !== 'mouse') return;
   pov.tx = (e.clientX / innerWidth - 0.5) * 2; pov.ty = (e.clientY / innerHeight - 0.5) * 2; pov.last = performance.now();
 });
+const dash = $('.dx-dash'), roof = $('.dx-cabin__roof');
+const povSet = {
+  track: [gsap.quickSetter(track, 'x', 'px'), gsap.quickSetter(track, 'y', 'px')],
+  dash: [gsap.quickSetter(dash, 'x', 'px'), gsap.quickSetter(dash, 'y', 'px')],
+  roof: [gsap.quickSetter(roof, 'x', 'px'), gsap.quickSetter(roof, 'y', 'px')],
+};
+let povDrawn = { x: 9, y: 9 };
 function povFrame(dt: number) {
   const now = performance.now(), idle = now - pov.last > 2500, t = now / 1000;
   const tx = idle ? Math.sin(t * 0.35) * 0.22 : pov.tx, ty = idle ? Math.sin(t * 0.27 + 1) * 0.12 : pov.ty;
   pov.x += (tx - pov.x) * Math.min(1, dt * 2.6);
   pov.y += (ty - pov.y) * Math.min(1, dt * 2.6);
-  cabin.style.setProperty('--povx', pov.x.toFixed(4));
-  cabin.style.setProperty('--povy', pov.y.toFixed(4));
+  // only touch the DOM when the view has actually moved
+  if (Math.abs(pov.x - povDrawn.x) < 0.0015 && Math.abs(pov.y - povDrawn.y) < 0.0015) return;
+  povDrawn = { x: pov.x, y: pov.y };
+  povSet.track[0](pov.x * -54); povSet.track[1](pov.y * -22);
+  povSet.dash[0](pov.x * -100); povSet.dash[1](pov.y * -16);
+  povSet.roof[0](pov.x * -36); povSet.roof[1](pov.y * -12);
+  if (!gsap.isTweening(ring)) layoutRing();
 }
 
 // ---------- the clock ----------
