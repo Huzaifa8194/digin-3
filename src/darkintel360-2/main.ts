@@ -56,7 +56,19 @@ function flash(mid: () => void, hold = 0.12) {
 }
 
 // ---------- decorative fills ----------
-$$('[data-land]').forEach((el) => { el.innerHTML = landscape(+el.dataset.land!); });
+$$('[data-land]').forEach((el) => {
+  const i = +el.dataset.land!;
+  el.innerHTML = landscape(i);
+  el.insertAdjacentHTML('afterend', `<div class="dx-win__hud" aria-hidden="true"><span>${String(i + 1).padStart(2, '0')} / 07</span><span class="dx-win__live"><i></i>Live</span></div>`);
+});
+// the right-hand screen: listings scrolling past, the same feed the flight in began with
+{
+  const W = ['combo_list', 'stealer_log', 'db_dump', 'corp_vpn', 'admin_panel', 'payroll', 'hr_export', 'mail_access', 'crm_backup'];
+  const hex = (n: number) => Array.from({ length: n }, () => '0123456789abcdef'[(Math.random() * 16) | 0]).join('');
+  const lines = Array.from({ length: 9 }, (_, k) => (k % 3 === 0 ? `${W[k % W.length]}_${2019 + (k % 7)}.txt · ${(1 + k * 0.7).toFixed(1)}M rows · for sale`
+    : k % 3 === 1 ? `HOST-${hex(4).toUpperCase()} · passwords ${12 + k * 7} · cookies ${80 + k * 31}` : `[${hex(6)}] access offered · ${W[(k + 3) % W.length]}`));
+  $('[data-ticker]').innerHTML = [...lines, ...lines].map((l) => `<li>${l}</li>`).join('');
+}
 const ICONS = [
   '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="6"/><path d="M24 4v8M24 36v8M4 24h8M36 24h8"/></svg>',
   '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="9" y="6" width="26" height="34" rx="3"/><path d="M15 15h14M15 22h14M15 29h8"/><circle cx="35" cy="34" r="7" fill="#f3edff"/><path d="m40 39 4 4" stroke-linecap="round"/></svg>',
@@ -68,7 +80,28 @@ $$('.dx-brief').forEach((b, i) => {
 });
 
 // ---------- loader → hero ----------
-const heroSplit = SplitText.create('.dx-hero__title .dx-line', { type: 'lines', mask: 'lines' });
+const heroSplit = SplitText.create('.dx-hero__title', { type: 'lines', mask: 'lines' });
+const setDark = (v: number) => html.style.setProperty('--dark', v.toFixed(3));
+setDark(1);
+
+/** Type the film's line, letter by letter. */
+let typeTl: gsap.core.Tween | null = null;
+function typeLine(delay: number) {
+  const el = $('[data-typed]'), text = 'Time to turn on the light';
+  typeTl?.kill();
+  if (reduced) { el.textContent = text; return; }
+  el.textContent = '';
+  const o = { n: 0 };
+  typeTl = gsap.to(o, { n: text.length, duration: text.length * 0.055, ease: 'none', delay, onUpdate: () => { el.textContent = text.slice(0, Math.round(o.n)); } });
+}
+/** The probe's lamp flickers on, the way an old light catches. */
+function lampOn() {
+  if (!gl || gl.state.lamp > 0.9) return;
+  gsap.timeline()
+    .to(gl.state, { lamp: 1, duration: 0.06 }).to(gl.state, { lamp: 0.1, duration: 0.07 })
+    .to(gl.state, { lamp: 0.9, duration: 0.05 }).to(gl.state, { lamp: 0.3, duration: 0.1 })
+    .to(gl.state, { lamp: 1, duration: 0.5, ease: 'power2.out' });
+}
 async function load() {
   const bar = $('[data-load]');
   gsap.set(bar, { scaleX: 0 });
@@ -93,12 +126,16 @@ function heroIn(first = false) {
   if (gl) {
     gl.state.paused = false;
     gl.state.outro = 0; gl.state.story = 0; story.cur = story.target = 0;
+    gl.state.light = 0; gl.state.lamp = 0;
     gsap.fromTo(gl.state, { intro: first ? 0 : gl.state.intro }, { intro: 1, duration: 2.4, ease: EASE });
   }
-  gsap.set('.dx-hero__title, .dx-hero .dx-cta', { autoAlpha: 1, y: 0 });
+  setDark(1);
+  gsap.set('.dx-hero__title, .dx-hero .dx-cta, .dx-hero__kicker, .dx-typed', { autoAlpha: 1, y: 0 });
+  typeLine(first ? 1.3 : 0.8);
   if (!reduced) {
+    gsap.from('.dx-hero__kicker', { y: 16, autoAlpha: 0, duration: 1, ease: EASE, delay: first ? 0.2 : 0 });
     gsap.from(heroSplit.lines, { yPercent: 105, duration: 1.4, ease: EASE, stagger: 0.09, delay: first ? 0.3 : 0.1 });
-    gsap.from('.dx-hero .dx-cta', { y: 24, autoAlpha: 0, duration: 1.1, ease: EASE, delay: first ? 0.7 : 0.4 });
+    gsap.from('.dx-hero .dx-cta', { y: 24, autoAlpha: 0, duration: 1.1, ease: EASE, delay: first ? 0.9 : 0.5 });
   }
   if (!first) $('#hero-title').focus({ preventScroll: true });
 }
@@ -114,9 +151,11 @@ let hintGone = false;
 
 function begin() {
   if (state !== 'hero' || busy) return;
+  lampOn();
   show('story');
-  gsap.to('.dx-hero__title, .dx-hero .dx-cta', { autoAlpha: 0, y: -40, duration: 0.7, ease: 'power2.in', stagger: 0.05 });
+  gsap.to('.dx-hero__kicker, .dx-hero__title, .dx-typed, .dx-hero .dx-cta', { autoAlpha: 0, y: -40, duration: 0.7, ease: 'power2.in', stagger: 0.04 });
   if (reduced) {
+    setDark(0);
     beats.forEach((b) => { gsap.set(b.el, { autoAlpha: 1 }); b.words.forEach((w) => w.classList.add('is-lit')); });
     $('[data-skip]').textContent = 'Continue';
     $('#story-title').focus({ preventScroll: true });
@@ -138,7 +177,9 @@ function backToHero() {
   story.cur = story.target = 0;
   gsap.to('[data-hint]', { autoAlpha: 0, duration: 0.3 });
   show('hero');
-  gsap.fromTo('.dx-hero__title, .dx-hero .dx-cta', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 1, ease: EASE, stagger: 0.06 });
+  if (gl) gl.state.light = 0;
+  setDark(1);
+  gsap.fromTo('.dx-hero__kicker, .dx-hero__title, .dx-typed, .dx-hero .dx-cta', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 1, ease: EASE, stagger: 0.05 });
 }
 function skip() {
   if (state !== 'story' || busy) return;
@@ -156,6 +197,10 @@ function storyFrame(dt: number) {
   }
   const s = story.cur;
   if (gl) gl.state.story = s;
+  // the light comes on as DarkIntel360 is named
+  const L = (() => { const t = clamp((s - 0.56) / 0.22); return t * t * (3 - 2 * t); })();
+  if (gl) gl.state.light = L;
+  setDark(1 - L);
   if (!hintGone && s > 0.06) { hintGone = true; gsap.to('[data-hint]', { autoAlpha: 0, scale: 1.15, duration: 0.6, ease: 'power2.out', overwrite: true }); }
   ringArc.style.strokeDashoffset = String(100 - s * 100);
   for (const b of beats) {
@@ -221,6 +266,10 @@ async function enterConsole() {
 }
 function consoleIn() {
   if (reduced) return;
+  $$<HTMLElement>('[data-count]').forEach((b) => {
+    const to = +b.dataset.count!, k = b.hasAttribute('data-k'), o = { v: 0 };
+    gsap.to(o, { v: to, duration: 1.8, ease: 'expo.out', delay: 0.5, onUpdate: () => { b.textContent = k ? `${o.v.toFixed(1)}K` : String(Math.round(o.v)); } });
+  });
   gsap.fromTo(cabin, { scale: 1.18 }, { scale: 1, duration: 1.6, ease: EASE, transformOrigin: '50% 40%', clearProps: 'transform' });
 }
 
@@ -410,10 +459,11 @@ async function finish() {
   await flash(() => {
     show('outro');
     scene('space');
+    setDark(0);
     setWorld('card');
     if (gl) {
       placeRing();
-      gl.state.paused = false; gl.state.story = 0.9; gl.state.intro = 1;
+      gl.state.paused = false; gl.state.story = 0.9; gl.state.intro = 1; gl.state.light = 1; gl.state.lamp = 1;
       gsap.fromTo(gl.state, { outro: 0 }, { outro: 1, duration: 2.6, ease: INOUT });
     }
     if (!reduced) {
@@ -438,9 +488,26 @@ async function restart() {
   busy = false;
 }
 
+// ---------- POV inside the cockpit ----------
+// The pointer is the eye. At rest the view keeps a slow sway, so the cabin never freezes.
+const pov = { x: 0, y: 0, tx: 0, ty: 0, last: -1e9 };
+addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse') return;
+  pov.tx = (e.clientX / innerWidth - 0.5) * 2; pov.ty = (e.clientY / innerHeight - 0.5) * 2; pov.last = performance.now();
+});
+function povFrame(dt: number) {
+  const now = performance.now(), idle = now - pov.last > 2500, t = now / 1000;
+  const tx = idle ? Math.sin(t * 0.35) * 0.22 : pov.tx, ty = idle ? Math.sin(t * 0.27 + 1) * 0.12 : pov.ty;
+  pov.x += (tx - pov.x) * Math.min(1, dt * 2.6);
+  pov.y += (ty - pov.y) * Math.min(1, dt * 2.6);
+  cabin.style.setProperty('--povx', pov.x.toFixed(4));
+  cabin.style.setProperty('--povy', pov.y.toFixed(4));
+}
+
 // ---------- the clock ----------
 gsap.ticker.add((_t, dms) => {
   const dt = Math.min(dms / 1000, 0.05);
+  if (state === 'console' && !reduced) povFrame(dt);
   if (state === 'story' && !reduced) storyFrame(dt);
   if (state === 'world' && world === 'hunt') {
     const btns = $$<HTMLButtonElement>('[data-sig]', mods[cur]);
@@ -531,7 +598,7 @@ gsap.set('.dx-brief', { xPercent: -50, yPercent: -50 });
 gsap.set('.dx-find, .dx-done, [data-close-brief]', { xPercent: -50 });
 gsap.set('[data-hint]', { xPercent: -50, yPercent: -50 });
 gsap.set('[data-sig]', { xPercent: -50, yPercent: -100 });
-gsap.set('.dx-hero__title, .dx-hero .dx-cta', { autoAlpha: 0 });
+gsap.set('.dx-hero__title, .dx-hero .dx-cta, .dx-hero__kicker, .dx-typed', { autoAlpha: 0 });
 gsap.set('[data-hint], [data-find], .dx-done, [data-close-brief]', { autoAlpha: 0 });
 if (touch) html.classList.add('touch');
 load();

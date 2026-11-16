@@ -16,6 +16,8 @@ export type GLState = {
   beamAmt: number;
   paused: boolean; // a DOM scene covers the canvas
   ringX: number; ringY: number; ringW: number; // outro: where the wordmark sits, in px
+  light: number;   // 0 the dark web, 1 the light is on (space scene)
+  lamp: number;    // the probe's own light: windows and searchlight
 };
 
 const TAU = Math.PI * 2;
@@ -57,6 +59,7 @@ function makeProbe() {
   g.add(inked(new THREE.SphereGeometry(1, 48, 32), toon('#c7a2f5'), 0.04));
   const glass = new THREE.MeshBasicMaterial({ color: '#4a2a92' });
   const glare = new THREE.MeshBasicMaterial({ color: '#8f78ee' });
+  g.userData.glass = glass; g.userData.glare = glare;
   const ink = new THREE.MeshBasicMaterial({ color: INK });
   for (const side of [-1, 1]) {
     const pc = Math.PI / 2 + side * 0.4, pl = 0.62, tc = 1.12, tl = 0.62;
@@ -83,14 +86,64 @@ function makeProbe() {
   return g;
 }
 
-// ---------- debris ----------
-const KINDS = [
-  { geo: () => new THREE.IcosahedronGeometry(1, 0), color: '#3a1d5f', s: [0.35, 0.9] },          // dark rock
-  { geo: () => new THREE.DodecahedronGeometry(1, 0), color: '#2f1650', s: [0.3, 0.75] },         // dark rock
-  { geo: () => { const g = new THREE.OctahedronGeometry(1, 0); g.scale(0.55, 1.4, 0.55); return g; }, color: '#e68ff3', s: [0.18, 0.34] }, // pink crystal
-  { geo: () => new THREE.BoxGeometry(1, 1, 1), color: '#c6f36d', s: [0.14, 0.3] },               // lime cube
-  { geo: () => new THREE.BoxGeometry(1.8, 0.4, 0.4), color: '#d9a8ff', s: [0.15, 0.3] },          // lilac bar
+// ---------- debris: what leaks ----------
+// Illustrated objects from a breach: documents, folders, databases, broken padlocks, cards, envelopes.
+// A share of them carry a crimson tag that glows while the page is still in the dark.
+let leakMat: THREE.MeshToonMaterial;
+const part = (geo: THREE.BufferGeometry, color: string | THREE.Material, x = 0, y = 0, z = 0, w = 0.035) => {
+  const o = inked(geo, typeof color === 'string' ? toon(color) : color, w); o.position.set(x, y, z); return o;
+};
+const box = (x: number, y: number, z: number) => new THREE.BoxGeometry(x, y, z);
+const ARTIFACTS: { make: () => THREE.Group; s: [number, number]; tag?: [number, number, number] }[] = [
+  { // document
+    make: () => { const g = new THREE.Group(); g.add(part(box(0.8, 1.05, 0.05), '#f1e6ff')); for (let i = 0; i < 4; i++) g.add(part(box(i === 3 ? 0.3 : 0.52, 0.055, 0.02), '#7a59b0', i === 3 ? -0.11 : 0, 0.3 - i * 0.16, 0.04, 0.01)); return g; },
+    s: [0.42, 0.7], tag: [0.3, 0.42, 0.05],
+  },
+  { // folder
+    make: () => { const g = new THREE.Group(); g.add(part(box(1.05, 0.74, 0.1), '#e68ff3')); g.add(part(box(0.4, 0.14, 0.1), '#e68ff3', -0.32, 0.43, 0)); g.add(part(box(0.9, 0.5, 0.02), '#f6c4fb', 0, -0.06, 0.06, 0.01)); return g; },
+    s: [0.42, 0.66], tag: [0.42, 0.26, 0.08],
+  },
+  { // database
+    make: () => { const g = new THREE.Group(); for (let i = 0; i < 3; i++) { g.add(part(new THREE.CylinderGeometry(0.46, 0.46, 0.24, 24), '#5a3aa8', 0, (i - 1) * 0.3, 0)); g.add(part(new THREE.TorusGeometry(0.46, 0.025, 6, 32).rotateX(Math.PI / 2), '#c6f36d', 0, (i - 1) * 0.3 + 0.13, 0, 0.005)); } return g; },
+    s: [0.38, 0.6], tag: [0.46, 0.42, 0],
+  },
+  { // broken padlock
+    make: () => { const g = new THREE.Group(); g.add(part(box(0.72, 0.6, 0.3), '#c6f36d')); const sh = part(new THREE.TorusGeometry(0.24, 0.065, 8, 20, Math.PI), '#d9c6f2', -0.24, 0.42, 0); sh.rotation.z = 0.5; g.add(sh); g.add(part(box(0.1, 0.2, 0.05), '#2a1145', 0, -0.02, 0.16, 0.005)); return g; },
+    s: [0.34, 0.5],
+  },
+  { // card
+    make: () => { const g = new THREE.Group(); g.add(part(box(1.15, 0.72, 0.05), '#b9a0ff')); g.add(part(box(1.15, 0.13, 0.06), '#3b2170', 0, 0.16, 0, 0.005)); g.add(part(box(0.2, 0.15, 0.07), '#c6f36d', -0.34, -0.12, 0, 0.01)); return g; },
+    s: [0.38, 0.58], tag: [0.45, -0.25, 0.05],
+  },
+  { // envelope
+    make: () => { const g = new THREE.Group(); g.add(part(box(1.05, 0.68, 0.06), '#f6efe6')); const tri = new THREE.Shape(); tri.moveTo(-0.52, 0.34); tri.lineTo(0.52, 0.34); tri.lineTo(0, -0.06); tri.closePath(); g.add(part(new THREE.ExtrudeGeometry(tri, { depth: 0.02, bevelEnabled: false }), '#e7dcff', 0, 0, 0.03, 0.01)); return g; },
+    s: [0.4, 0.62], tag: [0.42, 0.24, 0.06],
+  },
+  { // dark rock, the rest of the dark web
+    make: () => { const g = new THREE.Group(); g.add(part(new THREE.IcosahedronGeometry(1, 0), '#4a2a78', 0, 0, 0, 0.07)); return g; },
+    s: [0.3, 0.85],
+  },
 ];
+
+function feedTexture() {
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 1024;
+  const x = c.getContext('2d')!;
+  x.font = '500 17px "Geist Mono", ui-monospace, Menlo, monospace';
+  const W = ['combo_list', 'stealer_log', 'db_dump', 'corp_vpn', 'admin_panel', 'payroll', 'hr_export', 'session_cookies', 'crm_backup', 'mail_access'];
+  const pick = <T,>(a: T[]) => a[(Math.random() * a.length) | 0];
+  const hex = (n: number) => Array.from({ length: n }, () => '0123456789abcdef'[(Math.random() * 16) | 0]).join('');
+  for (let row = 0; row < 40; row++) {
+    const r = Math.random();
+    const line = r < 0.35 ? `${pick(W)}_${2019 + ((Math.random() * 8) | 0)}.txt   ${(Math.random() * 9 + 0.3).toFixed(1)}M rows   for sale   ${hex(10)}`
+      : r < 0.65 ? `HOST-${hex(4).toUpperCase()}   passwords ${(Math.random() * 90 + 4) | 0}   cookies ${(Math.random() * 600 + 20) | 0}   ${pick(W)}`
+        : `[${hex(6)}]  access offered  ${pick(W)}  escrow ok  ${hex(16)}`;
+    x.fillStyle = Math.random() < 0.18 ? 'rgba(255, 70, 120, .95)' : 'rgba(255, 110, 150, .45)';
+    x.fillText(line, 20 + (Math.random() * 60), 26 + row * 25.4);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
 
 function glowTexture(inner: string) {
   const c = document.createElement('canvas'); c.width = c.height = 128;
@@ -104,7 +157,7 @@ type Pose = { s: number; x: number; y: number; z: number; ry: number; rx: number
 // Window A's centre in probe space, so the last key lands the camera inside it.
 const WIN = { x: -Math.cos(Math.PI / 2 - 0.4) * Math.sin(1.12), y: Math.cos(1.12), z: Math.sin(Math.PI / 2 - 0.4) * Math.sin(1.12) };
 const KEYS: Pose[] = [
-  { s: 0, x: 2.1, y: 1.55, z: 0, ry: -0.5, rx: 0.12, sc: 1.2 },
+  { s: 0, x: 2.45, y: 1.9, z: 0, ry: -0.5, rx: 0.12, sc: 1.15 },
   { s: 0.2, x: 2.3, y: 0.45, z: 0.6, ry: -0.35, rx: 0.05, sc: 1.4 },
   { s: 0.47, x: -2.3, y: 0.3, z: 1.4, ry: 0.55, rx: 0.08, sc: 1.4 },
   { s: 0.74, x: -2.0, y: 0.1, z: 2.8, ry: 0.4, rx: 0.02, sc: 1.5 },
@@ -121,30 +174,58 @@ export function createGL(canvas: HTMLCanvasElement) {
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-  const state: GLState = { scene: 'space', intro: 0, story: 0, outro: 0, world: 0, panX: 0, panY: 0, beam: -1, beamAmt: 0, paused: false, ringX: 0, ringY: 0, ringW: 0 };
+  const state: GLState = { scene: 'space', intro: 0, story: 0, outro: 0, world: 0, panX: 0, panY: 0, beam: -1, beamAmt: 0, paused: false, ringX: 0, ringY: 0, ringW: 0, light: 0, lamp: 0 };
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 400);
   const look = { x: 0, y: 0 }; // smoothed pan
 
   const light = (s: THREE.Scene) => {
     const d = new THREE.DirectionalLight('#ffffff', 2.6); d.position.set(-4, 7, 6);
-    s.add(d, new THREE.AmbientLight('#c9a8ff', 1.25));
+    const a = new THREE.AmbientLight('#c9a8ff', 1.25);
+    s.add(d, a);
+    return { d, a };
   };
 
   // ===== SPACE =====
-  const space = new THREE.Scene(); light(space);
+  const space = new THREE.Scene(); const spaceLight = light(space);
+  leakMat = new THREE.MeshToonMaterial({ color: '#ff4f86', gradientMap: gradient, emissive: new THREE.Color('#ff2a62'), emissiveIntensity: 0.8 });
+  const leakGlow = new THREE.SpriteMaterial({ map: glowTexture('#ff3d74'), blending: THREE.AdditiveBlending, depthWrite: false, transparent: true });
   const probe = makeProbe(); space.add(probe);
+  // the DarkIntel360 mark, worn by the probe: an orbit ring and its point of light
+  const halo = new THREE.Group(); probe.add(halo);
+  const haloRing = new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.012, 6, 160), new THREE.MeshBasicMaterial({ color: '#f1e2ff', transparent: true }));
+  halo.add(haloRing);
+  const haloDot = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture('#c6f36d'), blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+  haloDot.scale.setScalar(0.55); halo.add(haloDot);
+  halo.rotation.set(1.22, 0, 0.38);
+  // searchlight: the light DarkIntel360 shines on the dark web
+  const coneGeo = new THREE.ConeGeometry(1, 1, 40, 1, true); coneGeo.translate(0, -0.5, 0);
+  const fade = document.createElement('canvas'); fade.width = 4; fade.height = 128;
+  { const x = fade.getContext('2d')!, gr = x.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.55, '#5a4a6a'); gr.addColorStop(1, '#000000'); x.fillStyle = gr; x.fillRect(0, 0, 4, 128); }
+  const search = new THREE.Mesh(coneGeo, new THREE.MeshBasicMaterial({ color: '#f3e6ff', map: new THREE.CanvasTexture(fade), transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+  search.position.set(0, -0.85, 0); search.scale.set(2.6, 7, 2.6); search.rotation.x = 0.55;
+  probe.add(search);
+  // the feed behind it all: listings scrolling past, readable only in the dark
+  const feedTex = feedTexture();
+  const feed = new THREE.Mesh(new THREE.PlaneGeometry(64, 40), new THREE.MeshBasicMaterial({ map: feedTex, transparent: true, opacity: 0.5, depthWrite: false }));
+  feed.position.set(0, 0, -26); feedTex.repeat.set(2, 1.4); space.add(feed);
   const phone = () => innerWidth < 700;
-  const debris: { o: THREE.Group; base: THREE.Vector3; spin: THREE.Vector3; ph: number }[] = [];
-  const nDebris = phone() ? 26 : 46;
+  const debris: { o: THREE.Group; base: THREE.Vector3; spin: THREE.Vector3; ph: number; glow?: THREE.Sprite }[] = [];
+  const nDebris = phone() ? 24 : 42;
   for (let i = 0; i < nDebris; i++) {
-    const k = KINDS[i % KINDS.length];
-    const o = inked(k.geo(), toon(k.color), 0.07);
-    o.scale.setScalar(lerp(k.s[0], k.s[1], Math.random()) * (i % 7 === 0 ? 1.8 : 1));
+    const k = ARTIFACTS[i % ARTIFACTS.length];
+    const o = k.make();
+    o.scale.setScalar(lerp(k.s[0], k.s[1], Math.random()) * (i % 9 === 0 ? 1.6 : 1));
+    let glow: THREE.Sprite | undefined;
+    if (k.tag && i % 3 !== 2) {
+      const [tx, ty, tz] = k.tag;
+      o.add(part(box(0.18, 0.18, 0.08), leakMat, tx, ty, tz, 0.012));
+      glow = new THREE.Sprite(leakGlow); glow.position.set(tx, ty, tz + 0.05); glow.scale.setScalar(1.1); o.add(glow);
+    }
     const base = new THREE.Vector3((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 11, -22 + Math.random() * 30);
     if (Math.abs(base.x) < 3.6 && Math.abs(base.y) < 2.4) base.x += 4.5 * Math.sign(base.x || 1); // keep the headline clear
-    o.rotation.set(Math.random() * TAU, Math.random() * TAU, 0);
+    o.rotation.set((Math.random() - 0.5) * 1.6, Math.random() * TAU, (Math.random() - 0.5) * 1.2);
     space.add(o);
-    debris.push({ o, base, spin: new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(0.5), ph: Math.random() * TAU });
+    debris.push({ o, base, glow, spin: new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(0.45), ph: Math.random() * TAU });
   }
   // planet crust at the bottom of the frame, like standing on an asteroid field
   const crust = new THREE.Group(); space.add(crust);
@@ -303,6 +384,29 @@ export function createGL(canvas: HTMLCanvasElement) {
         b.o.rotation.x += b.spin.x * d; b.o.rotation.y += b.spin.y * d;
       }
       crust.position.y = -smooth(clamp(s / 0.5)) * 7 - o * 7;
+      // dark web → light
+      const L = clamp(state.light), lamp = clamp(state.lamp), dark = 1 - L;
+      spaceLight.d.intensity = lerp(0.55, 2.6, L) + lamp * 0.35 * dark;
+      spaceLight.a.intensity = lerp(0.45, 1.25, L);
+      spaceLight.a.color.setRGB(lerp(0.62, 0.79, L), lerp(0.36, 0.66, L), lerp(0.62, 1, L));
+      leakMat.emissiveIntensity = 0.15 + dark * 0.9;
+      leakGlow.opacity = dark * (0.55 + Math.sin(time * 2.2) * 0.15);
+      (feed.material as THREE.MeshBasicMaterial).opacity = dark * 0.2;
+      feed.visible = dark > 0.01;
+      feedTex.offset.y = (time * 0.012 + s * 0.4) % 1;
+      const glass = probe.userData.glass as THREE.MeshBasicMaterial, glare = probe.userData.glare as THREE.MeshBasicMaterial;
+      glass.color.setRGB(lerp(0.13, 0.62, lamp), lerp(0.08, 0.52, lamp), lerp(0.24, 0.98, lamp));
+      glare.color.setRGB(lerp(0.3, 0.92, lamp), lerp(0.25, 0.88, lamp), lerp(0.5, 1, lamp));
+      if (s > 0.9) glass.color.setRGB(0.29, 0.16, 0.57); // the dive: back to deep glass so the cut reads
+      const dive = 1 - smooth(clamp((s - 0.8) / 0.1));
+      (search.material as THREE.MeshBasicMaterial).opacity = lamp * (0.22 + dark * 0.2) * dive * (1 - o) * (0.85 + Math.sin(time * 3.1) * 0.08);
+      search.rotation.z = Math.sin(time * 0.6) * 0.35;
+      search.visible = (search.material as THREE.MeshBasicMaterial).opacity > 0.005;
+      (haloRing.material as THREE.MeshBasicMaterial).opacity = dive * (1 - o) * lerp(0.55, 0.9, lamp);
+      haloDot.material.opacity = dive * (1 - o);
+      halo.visible = dive * (1 - o) > 0.01;
+      const ha = time * 0.7;
+      haloDot.position.set(Math.cos(ha) * 1.7, Math.sin(ha) * 1.7, 0);
       lime.rotation.y += d * 0.4;
       // outro ring
       const ok = o, portraitK = portrait ? 0.48 : 1;

@@ -67,6 +67,15 @@ export function landscape(i: number) {
     const x = k ? 1150 + r() * 250 : 200 + r() * 250, y = 160 + r() * 200, w = 200 + r() * 160;
     clouds += `<g fill="${p.cloud}" opacity=".75"><ellipse cx="${x}" cy="${y}" rx="${w / 2}" ry="${w / 10}"/><ellipse cx="${x - w / 7}" cy="${y - w / 13}" rx="${w / 5}" ry="${w / 9}"/><ellipse cx="${x + w / 8}" cy="${y - w / 11}" rx="${w / 6}" ry="${w / 10}"/></g>`;
   }
+  // the DarkIntel360 orbit, drawn round the title the way the film rings the wordmark
+  const oa = -2.5 + r() * 0.6, ox = 800 + 540 * Math.cos(oa), oy = 190 + 78 * Math.sin(oa);
+  const orbit = `<g transform="rotate(-5 800 190)"><ellipse cx="800" cy="190" rx="540" ry="78" fill="none" stroke="#fff" stroke-opacity=".34" stroke-width="2.5"/><circle class="dx-orbit-dot" cx="${ox.toFixed(0)}" cy="${oy.toFixed(0)}" r="34" fill="url(#${id}l)"/><circle cx="${ox.toFixed(0)}" cy="${oy.toFixed(0)}" r="7" fill="#c6f36d"/></g>`;
+  // leaks: crimson glints scattered on the land, what DarkIntel360 is there to find
+  let glints = '';
+  for (let k = 0; k < 6; k++) {
+    const gx = 120 + r() * 1360, gy = k < 3 ? 560 + r() * 50 : 700 + r() * 150;
+    glints += `<g class="dx-glint" style="animation-delay:${(r() * 2.6).toFixed(2)}s"><circle cx="${gx.toFixed(0)}" cy="${gy.toFixed(0)}" r="26" fill="url(#${id}r)"/><circle cx="${gx.toFixed(0)}" cy="${gy.toFixed(0)}" r="5" fill="#ff6b9a"/></g>`;
+  }
   // cliffs: tall at the edges, falling toward a low horizon in the middle
   const lc = 180 + r() * 120, rc = 160 + r() * 140;
   const left = `M-20 920 L-20 ${lc} C 160 ${lc - 30} 260 ${lc + 120} 340 ${lc + 200} S 520 520 640 600 L 640 920 Z`;
@@ -79,6 +88,8 @@ export function landscape(i: number) {
 <linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.far}" stop-opacity=".75"/><stop offset=".7" stop-color="${p.far}"/></linearGradient>
 <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.mid}"/><stop offset="1" stop-color="${p.near}"/></linearGradient>
 <linearGradient id="${id}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.skyBot}" stop-opacity="0"/><stop offset="1" stop-color="${p.skyBot}" stop-opacity=".55"/></linearGradient>
+<radialGradient id="${id}r"><stop offset="0" stop-color="#ff4f86" stop-opacity=".95"/><stop offset=".3" stop-color="#ff2a62" stop-opacity=".45"/><stop offset="1" stop-color="#ff2a62" stop-opacity="0"/></radialGradient>
+<radialGradient id="${id}l"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#c6f36d" stop-opacity=".8"/><stop offset="1" stop-color="#c6f36d" stop-opacity="0"/></radialGradient>
 <radialGradient id="${id}s"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".25" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
 </defs>
 <rect width="1600" height="900" fill="url(#${id})"/>${stars}${sun}${clouds}
@@ -90,5 +101,6 @@ export function landscape(i: number) {
 <path d="M-20 626 C 400 612 1000 640 1620 618 L1620 920 L-20 920 Z" fill="${p.lake}" ${line}/>
 <path d="M-20 700 C 420 676 900 720 1620 690 L1620 920 L-20 920 Z" fill="url(#${id}g)" ${line}/>
 <g stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"><path d="M300 652h90M760 660h150M1180 646h80"/></g>
+${glints}${orbit}
 </svg>`;
 }

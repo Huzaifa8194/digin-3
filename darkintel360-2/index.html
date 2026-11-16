@@ -41,8 +41,10 @@
 
   <!-- 1. Hero -->
   <section class="dx-state dx-hero" data-state="hero" aria-labelledby="hero-title">
-    <h1 id="hero-title" class="dx-hero__title" tabindex="-1"><span class="dx-line">Your data is being traded in the dark.</span> <span class="dx-line">Time to turn on the light.</span></h1>
-    <button class="dx-cta" type="button" data-begin><span>Start the mission</span><i class="dx-cta__box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></i></button>
+    <p class="dx-hero__kicker"><i class="dx-live" aria-hidden="true"></i>DarkIntel360 · dark web intelligence</p>
+    <h1 id="hero-title" class="dx-hero__title" tabindex="-1">Your data <span class="dx-glitch" data-text="is being traded">is being traded</span> in the dark.</h1>
+    <p class="dx-typed" aria-hidden="true"><span data-typed>Time to turn on the light</span><i class="dx-caret"></i></p>
+    <button class="dx-cta" type="button" data-begin><span>Turn on the light</span><i class="dx-cta__box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 1.6v1.6M2.9 3.7l1.1 1.1M13.1 3.7 12 4.8M5.6 11.4a3.6 3.6 0 1 1 4.8 0c-.5.4-.7.9-.7 1.4v.6H6.3v-.6c0-.5-.2-1-.7-1.4ZM6.5 15h3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></i></button>
   </section>
 
   <!-- 2. Flight: three beats told on scroll -->
@@ -70,7 +72,7 @@
   <section class="dx-state dx-console" data-state="console" aria-labelledby="console-title">
     <h2 id="console-title" class="dx-sr" tabindex="-1">The console: seven modules</h2>
     <div class="dx-cabin" data-cabin>
-      <div class="dx-cabin__roof" aria-hidden="true"></div>
+      <div class="dx-cabin__roof" aria-hidden="true"><p class="dx-roof"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="6.2" fill="none" stroke="currentColor" stroke-width="2"/><ellipse cx="14" cy="14" rx="12.4" ry="4.6" transform="rotate(-24 14 14)" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="24.6" cy="9.6" r="2.3" fill="#ff4f86"/></svg>DarkIntel360 console<span>7 modules online</span></p></div>
       <div class="dx-track" data-track>
         <article class="dx-win" data-win="0" aria-labelledby="w0"><div class="dx-win__view" data-land="0"></div><div class="dx-win__text"><h3 id="w0">Live map</h3><p>Every exposure. One view.</p><button class="dx-pill dx-pill--dark" type="button" data-explore="0">Explore<span class="dx-sr"> the live map</span></button></div></article>
         <article class="dx-win" data-win="1" aria-labelledby="w1"><div class="dx-win__view" data-land="1"></div><div class="dx-win__text"><h3 id="w1">Forums</h3><p>Chatter, translated and scored.</p><button class="dx-pill dx-pill--dark" type="button" data-explore="1">Explore<span class="dx-sr"> forums</span></button></div></article>
@@ -81,18 +83,24 @@
         <article class="dx-win" data-win="6" aria-labelledby="w6"><div class="dx-win__view" data-land="6"></div><div class="dx-win__text"><h3 id="w6">Websites hacked</h3><p>Every defacement, mirrored.</p><button class="dx-pill dx-pill--dark" type="button" data-explore="6">Explore<span class="dx-sr"> websites hacked</span></button></div></article>
       </div>
       <div class="dx-dash">
-        <div class="dx-dash__panel dx-dash__panel--grid" aria-hidden="true"><div class="dx-dash__screen"><i></i></div></div>
+        <div class="dx-dash__panel dx-dash__panel--grid" aria-hidden="true"><div class="dx-dash__screen">
+          <i class="dx-map"><b style="left:18%;top:34%"></b><b style="left:31%;top:62%"></b><b class="is-ok" style="left:44%;top:28%"></b><b style="left:52%;top:50%"></b><b style="left:63%;top:36%"></b><b class="is-ok" style="left:71%;top:70%"></b><b style="left:82%;top:46%"></b><b style="left:38%;top:80%"></b></i>
+          <p class="dx-counters"><span><b data-count="100">100</b>countries</span><span><b data-count="6.2" data-k>6.2K</b>leaks</span><span><b data-count="13.2" data-k>13.2K</b>forum posts</span></p>
+          <p class="dx-screen-label">Live exposure · demo view</p>
+        </div></div>
         <div class="dx-dash__panel dx-dash__panel--mid">
           <div class="dx-dash__screen">
             <p class="dx-dash__hint"><span class="dx-touch-only">Swipe</span><span class="dx-mouse-only">Drag or use the arrows</span> to explore the modules</p>
             <div class="dx-dots" role="group" aria-label="Choose a module">
               <button type="button" data-dot="0" aria-label="Live map, module 1 of 7"></button><button type="button" data-dot="1" aria-label="Forums, module 2 of 7"></button><button type="button" data-dot="2" aria-label="Data leaks, module 3 of 7"></button><button type="button" data-dot="3" aria-label="Credentials, module 4 of 7"></button><button type="button" data-dot="4" aria-label="Botnet data, module 5 of 7"></button><button type="button" data-dot="5" aria-label="Phishing, module 6 of 7"></button><button type="button" data-dot="6" aria-label="Websites hacked, module 7 of 7"></button>
             </div>
-            <svg class="dx-hud" viewBox="0 0 600 200" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><path d="M110 120V40h70M490 120V40h-70"/><path d="M60 200V90M540 200V90M300 70V200"/><path class="dx-hud__arc" d="M150 200a150 150 0 0 1 300 0"/><path class="dx-hud__arc" d="M215 200a85 85 0 0 1 170 0"/><circle class="dx-radar__blip" cx="236" cy="196" r="11"/></svg>
+            <span class="dx-sweep" aria-hidden="true"></span>
+            <svg class="dx-hud" viewBox="0 0 600 200" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><circle class="dx-hud__leak" cx="352" cy="128" r="7"/><circle class="dx-hud__leak" cx="402" cy="176" r="6" style="animation-delay:.9s"/><circle class="dx-hud__leak" cx="268" cy="150" r="5" style="animation-delay:1.7s"/><path d="M110 120V40h70M490 120V40h-70"/><path d="M60 200V90M540 200V90M300 70V200"/><path class="dx-hud__arc" d="M150 200a150 150 0 0 1 300 0"/><path class="dx-hud__arc" d="M215 200a85 85 0 0 1 170 0"/><circle class="dx-radar__blip" cx="236" cy="196" r="11"/></svg>
           </div>
         </div>
         <div class="dx-dash__panel dx-dash__panel--side">
           <div class="dx-dash__screen">
+            <div class="dx-ticker" aria-hidden="true"><ul data-ticker></ul></div>
             <p class="dx-mono">Filter everything</p>
             <p class="dx-dash__chips"><span>Keyword</span><span>Date range</span><span>Country</span><span>Actor</span></p>
             <button class="dx-link-btn" type="button" data-finish>Finish the mission <span aria-hidden="true">→</span></button>
