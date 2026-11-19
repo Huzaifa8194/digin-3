@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>SysBastion V1.4 | Deny by default, reversible by design</title>
+<meta name="description" content="SysBastion closes the ways into a Windows PC and journals every change, so Restore all can put the exact original values back.">
+<link rel="canonical" href="https://digin-3.vercel.app/sysbastion-2/">
+<meta property="og:type" content="product"><meta property="og:site_name" content="Digiinn360">
+<meta property="og:title" content="SysBastion V1.4 | Deny by default, reversible by design">
+<meta property="og:description" content="A Windows hardening console that journals every change and puts the exact original back.">
+<meta property="og:url" content="https://digin-3.vercel.app/sysbastion-2/"><meta property="og:image" content="https://digin-3.vercel.app/sysbastion-2/window-uac.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="/brand/favicon.png">
+<link rel="preload" href="/fonts/sb2/sb-display-caps.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/sb2/sb-sans-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SysBastion","softwareVersion":"1.4","operatingSystem":"Windows 10","applicationCategory":"SecurityApplication","description":"Windows hardening console. Deny by default, reversible by design: every change is journaled and Restore all writes the original values back.","publisher":{"@type":"Organization","name":"Digiinn360","url":"https://digin-3.vercel.app/"}}</script>
+<script>document.documentElement.classList.add('js');if(/[?&]noloader=1/.test(location.search)||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('no-loader');</script>
+</head>
+<body class="sb2">
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Loader: the badge opens and its page becomes the window onto the site -->
+<div class="ld" data-loader role="status" aria-live="polite" aria-label="Loading">
+  <canvas class="ld__mask" data-mask aria-hidden="true"></canvas>
+  <div class="ld__stage" data-stage aria-hidden="true">
+    <div class="ld__group" data-group>
+      <div class="ld__cover" data-cover>
+        <div class="ld__art" data-art>
+          <div class="ld__frame"></div>
+          <div class="ld__corner" style="left:-61.84px;top:-61.84px"></div>
+          <div class="ld__corner" style="left:247.35px;top:-61.84px"></div>
+          <div class="ld__corner" style="left:-61.84px;top:355.16px"></div>
+          <div class="ld__corner" style="left:247.35px;top:355.16px"></div>
+          <span class="ld__mark" data-mark></span>
+          <span class="ld__txt ld__loading">Loading</span>
+          <span class="ld__txt ld__pct" data-pct>0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" data-page>
+  <!-- fixed layers, back to front -->
+  <canvas class="forge" data-forge aria-hidden="true"></canvas>
+  <canvas class="ink" data-ink aria-hidden="true"></canvas>
+  <div class="ink ink--still" aria-hidden="true"></div>
+  <div class="clock" aria-hidden="true"><span class="clock__num" data-clock></span></div>
+  <div class="device" data-device aria-hidden="true"></div>
+  <div class="scene" data-scene><canvas data-spiral aria-hidden="true"></canvas><img class="scene__still" src="/sysbastion-2/deck-hero.webp" alt="" aria-hidden="true" width="1440" height="770" decoding="async" loading="lazy"></div>
+
+  <header class="hero">
+    <div class="hero__scrim" aria-hidden="true"><i class="blur b1"></i><i class="blur b2"></i><i class="grad"></i></div>
+    <nav class="nav" aria-label="SysBastion">
+      <button class="nav__logo" type="button" data-top>
+        <span class="nav__mark" data-mark></span><span class="nav__word">SysBastion</span> <span class="nav__ver">V1.4</span><span class="sr-only">, back to top</span>
+      </button>
+      <p class="nav__tag">A Windows hardening console. Close the ways in, keep a journal, put every value back.</p>
+      <a class="nav__cta" href="#demo" data-to-end>Request a demo</a>
+    </nav>
+    <h1 class="headline" data-headline data-split="letters">Deny by default</h1>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- Chapter 01 -->
+    <section class="s2" data-s2 aria-labelledby="s2-title">
+      <div class="colontitle colontitle--dark" aria-hidden="true"><span>The problem</span><span>Chapter 01</span></div>
+      <h2 id="s2-title" class="sr-only">Every attack needs a way in. Windows ships with doors open.</h2>
+      <div class="s2__inner">
+        <div class="s2__head" aria-hidden="true">
+          <div class="s2__line" style="margin-left:42.4vw">Every attack</div>
+          <div class="s2__line" style="margin-left:25.1vw">needs a way in.</div>
+          <div class="s2__line" style="margin-left:17vw">Windows ships with</div>
+          <div class="s2__line" style="margin-left:42.4vw">doors open.</div>
+        </div>
+        <p class="s2__body">Scripts that run on a double-click. Macros that fire when a document opens. Tools like certutil and mshta that can reach the internet. None of it is a bug. It’s how Windows arrives, and it stays that way because changing it by hand is slow and hard to undo.</p>
+      </div>
+    </section>
+
+    <section class="s3" aria-hidden="true"></section>
+
+    <!-- Chapter 02, read by screen readers here; drawn by the fixed overlay below -->
+    <section class="s4" aria-labelledby="s4-title">
+      <div class="s4m">
+        <h2 class="s4m__head" id="s4-title">Setting changed.<br>Old value kept.</h2>
+        <img class="s4m__img" src="/sysbastion-2/ui/win-applied.webp" alt="SysBastion Harden page: eight System hardening controls applied, each one listed in the change journal with the value it replaced" width="1599" height="1074" loading="lazy" decoding="async">
+        <div class="s4m__body" data-applied-src><p class="s4m__lead">Every change is written to a journal first: the setting, the value it replaced, and the time to the second.</p><p>A ticked box is only an instruction. So after Apply, SysBastion reads the setting back from Windows and records what Windows actually accepted, not what the checkbox says.</p></div>
+      </div>
+    </section>
+    <div class="applied" aria-hidden="true">
+      <div class="colontitle colontitle--light applied__ct"><span>One click</span><span>Chapter 02</span></div>
+      <p class="applied__head" data-applied-head>
+        <span class="applied__line"><span class="w" style="--i:0">Setting</span> <span class="w" style="--i:1">changed.</span></span>
+        <span class="applied__line"><span class="w" style="--i:2">Old</span> <span class="w" style="--i:3">value</span> <span class="w" style="--i:4">kept.</span></span>
+      </p>
+      <div class="applied__reveal">
+        <div class="applied__body">
+          <p class="applied__lead" data-applied-lead></p>
+          <p class="applied__para" data-applied-para></p>
+        </div>
+      </div>
+      <div class="applied__divider"></div>
+    </div>
+
+    <!-- Chapter 03: the white sheet -->
+    <section class="s5" data-s5 aria-labelledby="s5-title">
+      <div class="colontitle colontitle--light s5__ct" aria-hidden="true"><span>Ways in</span><span>Chapter 03</span></div>
+      <div class="s5__inner">
+        <h2 id="s5-title" class="s5__head" data-s5-head>
+          <span class="s5__hl">It starts with one <span class="s5__quest"><span class="s5__crest" data-crests aria-hidden="true"></span>&nbsp;file.</span></span>
+          <span class="s5__hl">It rarely stays that small.</span>
+        </h2>
+        <p class="s5__sub">No promise that nothing gets through. Just the ways in V1.4 closes, and what we saw when we tested them.</p>
+        <ol class="s5__list" data-rows>
+          <li class="s5__row">
+            <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A script you double-click.</h3></div><p class="s5__num">01</p></div>
+            <img class="s5__photo" src="/sysbastion-2/ui/row-types.webp" alt="SysBastion Risky file types panel: fourteen extensions, from .vbs to .ps1, struck through and set to open in Notepad" width="826" height="420" loading="lazy" decoding="async">
+            <p class="s5__desc">Fourteen risky file types, from .vbs and .js to .hta and .scr, open as plain text in Notepad. Reading one is safe. Running it takes a deliberate choice.</p>
+          </li>
+          <li class="s5__row">
+            <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A batch file run anyway.</h3></div><p class="s5__num">02</p></div>
+            <img class="s5__photo" src="/sysbastion-2/film-2.webp" alt="A console where running test.bat returns: this program is blocked by group policy" width="720" height="480" loading="lazy" decoding="async">
+            <p class="s5__desc">Typing the path into a console still meets the policy. Windows answers: this program is blocked by group policy.</p>
+          </li>
+          <li class="s5__row">
+            <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A PowerShell script.</h3></div><p class="s5__num">03</p></div>
+            <img class="s5__photo" src="/sysbastion-2/ui/row-powershell.webp" alt="SysBastion PowerShell App Control panel with script file execution disabled machine-wide" width="826" height="420" loading="lazy" decoding="async">
+            <p class="s5__desc">Script files are refused at the machine level, for every account on the PC, not just the one that clicked.</p>
+          </li>
+          <li class="s5__row">
+            <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A connection out.</h3></div><p class="s5__num">04</p></div>
+            <img class="s5__photo" src="/sysbastion-2/ui/row-outbound.webp" alt="SysBastion Outbound firewall panel: block rules for certutil.exe, mshta.exe, powershell.exe and other executables" width="826" height="420" loading="lazy" decoding="async">
+            <p class="s5__desc">Thirty-five tools attackers lean on get outbound block rules in both Defender Firewall and the Filtering Platform. A blocked PowerShell connection stayed blocked after a restart.</p>
+          </li>
+          <li class="s5__row">
+            <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A connection in.</h3></div><p class="s5__num">05</p></div>
+            <img class="s5__photo" src="/sysbastion-2/ui/row-shields.webp" alt="SysBastion Inbound Shields-Up panel: unsolicited inbound connections blocked on every profile and kept after restarts" width="826" height="420" loading="lazy" decoding="async">
+            <p class="s5__desc">Shields-Up drops unsolicited inbound traffic. A connection that worked before Apply timed out after it, and again after Windows restarted.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Chapter 04: restore -->
+    <div class="peel">
+      <div class="peel__inner">
+        <section class="voice" aria-labelledby="voice-title">
+          <div class="colontitle colontitle--light voice__ct" aria-hidden="true"><span>Restore</span><span>Chapter 04</span></div>
+          <h2 id="voice-title" class="sr-only">Put it all back, exactly as it was.</h2>
+          <div class="voice__headrow" aria-hidden="true">
+            <div class="voice__col voice__col--l"><span>Put</span><span>it all</span><span>back</span></div>
+            <div class="voice__col voice__col--r"><span>Exactly</span><span>as it</span><span>was</span></div>
+          </div>
+          <div class="voice__stage">
+            <img class="voice__deviceM" src="/sysbastion-2/ui/win-restored.webp" alt="SysBastion Journal and restore page: eight changes restored to their original values" width="1599" height="1074" loading="lazy" decoding="async">
+          </div>
+          <div class="voice__bodyrow">
+            <p class="voice__body voice__body--l">Restore all applied walks the journal backwards and writes each original value back. If DCOM was enabled before, it’s enabled again. Not reset to a default, returned to what you had.</p>
+            <p class="voice__body voice__body--r">A Windows restore point is offered before rules apply, as a second net. It’s separate from the journal, so you can undo SysBastion’s changes without rolling back anything else on the machine.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Chapter 05: modules -->
+    <div class="totemWrap" data-totem-wrap>
+      <div class="totemPin">
+        <section class="totem" data-totem aria-labelledby="totem-title">
+          <div class="colontitle colontitle--dark totem__ct" aria-hidden="true"><span>Modules</span><span>Chapter 05</span></div>
+          <div class="totem__back" aria-hidden="true"><span data-name-back></span></div>
+          <canvas class="totem__stage" data-totem-stage aria-hidden="true"></canvas>
+          <img class="totem__ui" data-totem-ui alt="" aria-hidden="true" width="690" height="980" decoding="async">
+          <img class="totem__still" data-totem-still alt="" aria-hidden="true" width="600" height="630" hidden>
+          <div class="totem__scrim" aria-hidden="true"></div>
+          <p class="totem__front" aria-hidden="true"><span data-name-front></span></p>
+          <div class="totem__top">
+            <p class="totem__one" id="totem-panel" role="tabpanel" aria-live="polite" data-totem-desc></p>
+            <span class="totem__num" aria-hidden="true"><span class="paren" data-paren-l>(</span><span class="digit" data-digit>1</span><span class="paren" data-paren-r>)</span></span>
+          </div>
+          <div class="totem__divider" aria-hidden="true"></div>
+          <div class="totem__bottom" data-controls>
+            <h2 class="totem__title" id="totem-title"><span class="tl" data-rise>Six sections.</span><span class="tl" data-rise style="--d:.18s">One console.</span></h2>
+            <div class="totem__sel">
+              <p class="totem__pitch">Each section of the Harden menu owns one way in. Pick one to see what it locks, or take them all at once: Apply selected runs them together.</p>
+              <div class="totem__pills" role="tablist" aria-label="Harden sections" data-pills></div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="totemHold" aria-hidden="true"></div>
+    </div>
+
+    <!-- Chapter 06: evidence -->
+    <div class="statsWrap">
+      <div class="statsPin">
+        <section class="stats" data-stats aria-labelledby="stats-title">
+          <div class="colontitle colontitle--dark" aria-hidden="true"><span>Evidence</span><span>Chapter 06</span></div>
+          <canvas class="stats__goo" data-goo aria-hidden="true"></canvas>
+          <canvas class="stats__canvas" data-balls aria-hidden="true"></canvas>
+          <h2 class="stats__head" id="stats-title"><span class="mask"><span class="line">Every rule is</span></span><span class="mask"><span class="line">checked four ways.</span></span></h2>
+          <p class="stats__body">A policy value, a journal SysBastion owns, a readback of the effective policy, and a runtime test that tries the thing and gets refused. They’re different kinds of proof, and the engineering report keeps them apart. Drop a few in.</p>
+          <ul class="sr-only"><li>Policy value: the native setting SysBastion writes.</li><li>Journal: SysBastion's own record of what it changed and what was there before.</li><li>Readback: the effective policy Windows reports afterwards.</li><li>Runtime denial: a harmless test that tries the action and is refused.</li></ul>
+          <div class="stats__labels" aria-hidden="true" data-labels></div>
+          <div class="stats__grid" aria-hidden="true" data-grid></div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Chapter 07: system tools -->
+    <div class="guildsWrap" data-guilds-wrap>
+      <section class="guilds" data-guilds aria-labelledby="guilds-title">
+        <div class="guilds__top" aria-hidden="true"><span>System tools</span><span>Chapter 07</span></div>
+        <div class="guilds__wheel" data-wheel aria-hidden="true"></div>
+        <span class="guilds__name" data-wheel-label aria-hidden="true"></span>
+        <div class="guilds__shader" aria-hidden="true"><i class="sb sb1"></i><i class="sb sb2"></i><i class="sg"></i></div>
+        <div class="guilds__cover" aria-hidden="true"></div>
+        <p class="guilds__kicker">Sixteen tools. One tab.</p>
+        <div class="guilds__headwrap" data-guild-title>
+          <h2 class="guilds__head" id="guilds-title" data-split="morph">Admin tools|one tab|away.</h2>
+        </div>
+        <div class="guilds__lead">
+          <p class="guilds__leadtxt" data-split="lead">Check the change from the console you made it in.</p>
+          <p class="guilds__blurb">Services, Registry Editor, Event Viewer, Windows Firewall, Windows Features and eleven more sit in the System tools tab. Open the right one, confirm what SysBastion changed, and come back without hunting through Control Panel.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Chapter 08: demo -->
+    <div class="footWrap" data-foot-wrap>
+      <div class="footPin">
+        <footer class="foot" id="demo" data-foot aria-labelledby="foot-title">
+          <h2 class="sr-only" id="foot-title">Request a demo</h2>
+          <canvas class="foot__rays" data-rays aria-hidden="true"></canvas>
+          <div class="foot__top"><span data-words>Get a demo</span><span data-words>Chapter 08</span></div>
+          <div class="foot__tile" data-tile aria-hidden="true"><span class="foot__mark"></span></div>
+          <p class="foot__lead" data-words>Close the ways in. Keep the receipts.</p>
+          <p class="foot__pitch" data-words>SysBastion V1.4 is in engineering validation now. Leave a work email and we’ll set up a walkthrough on a test machine.</p>
+          <form class="foot__form" data-form novalidate>
+            <div class="foot__input" data-input-wrap>
+              <span class="foot__measure" data-measure aria-hidden="true"></span>
+              <label class="sr-only" for="demo-email">Your work email</label>
+              <input class="foot__email" id="demo-email" type="email" autocomplete="email" required data-email>
+              <span class="foot__ph" data-ph aria-hidden="true"></span>
+              <span class="foot__line" aria-hidden="true"></span>
+              <div class="foot__bubblewrap" data-bubblewrap aria-live="polite"></div>
+              <span class="foot__bmeasure" data-bmeasure aria-hidden="true"></span>
+            </div>
+            <p class="foot__cap" data-cap><span data-words>Demo on a test VM · No card, no spam</span></p>
+          </form>
+          <div class="foot__bottom">
+            <div class="foot__col">
+              <a class="foot__link foot__link--dim" href="/" data-hl>Made by DigiInn360</a>
+              <a class="foot__link" href="/sysbastion/" data-hl>SysBastion, first edition</a>
+            </div>
+            <div class="foot__col foot__col--c">
+              <button class="foot__word" type="button" data-top><span class="nav__mark" data-mark></span><span>SysBastion</span><span class="sr-only">, back to top</span></button>
+              <span data-words>Deny by default. Reversible by design.</span>
+            </div>
+            <div class="foot__col foot__col--r">
+              <a class="foot__link" href="mailto:info@digiinn360.com?subject=SysBastion%20V1.4" data-hl>info@digiinn360.com</a>
+              <a class="foot__link" href="/contact/" data-hl>Contact</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <a class="pill" href="#demo" data-pill data-to-end aria-label="Request a demo">
+    <span class="pill__mark" aria-hidden="true"></span><span class="pill__btn">Request a demo</span>
+  </a>
+</div>
+<div class="arrow" data-arrow aria-hidden="true"><svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="47" fill="#ffffff" fill-opacity=".12" stroke="#fff" stroke-opacity=".5"/><path d="M36 48h24m-9-10 10 10-10 10" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+<script type="module" src="/src/sysbastion-2/main.ts"></script>
+</body>
+</html>
