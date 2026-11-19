@@ -2,3 +2,5 @@ node_modules/
 dist/
 *.local
 .shots/
+.jury/
+_archive/

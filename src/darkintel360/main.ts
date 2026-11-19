@@ -1,371 +1,732 @@
-// /darkintel360: the page starts in the dark web and turns the light on.
-// Concept card
-//   Idea:       your data is traded in the dark; DarkIntel360 is the light. The film's own story, told by scroll.
-//   Signature:  one point of light. It sits in the dark feed, floods the page with light, then rides the
-//               orbit around the film through seven modules, circles the five sources and closes on the 360 ring.
-//   Motion verb: come into the light (blur resolves to sharp, the way the film cuts).
-// One clock (gsap.ticker); every page effect lives in onPage(); reduced motion gets a still, complete page.
-import './darkintel360.css';
+// /darkintel360: the mission briefing.
+// Flow (after the reference flight): loader → hero → scroll the flight in → inside the probe, a console
+// of seven windows → dive into a module's world → card → find three signals → briefing → back, or out.
+// One clock (gsap.ticker). main.ts owns state and DOM; gl.ts only reads the numbers it is given.
+import './style.css';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { boot, onPage, onScroll, prefersReducedMotion, scrollToTarget, isTouch } from '../engine';
+import { SplitText } from 'gsap/SplitText';
+import { createGL } from './gl';
+import { PALS, landscape } from './palettes';
+import { VIZ } from './viz';
+import './product/product.css';
+import { createProduct, type Guide } from './product/window';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(SplitText);
 
-const TAU = Math.PI * 2;
-const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
+type Name = 'loading' | 'hero' | 'story' | 'console' | 'world' | 'outro';
+const html = document.documentElement;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const touch = matchMedia('(hover: none), (pointer: coarse)').matches;
+const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s)!;
 const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => [...r.querySelectorAll<T>(s)];
-const phone = () => innerWidth <= 600;
+const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+const EASE = 'expo.out', INOUT = 'expo.inOut';
 
-/** A point on an SVG ellipse (viewBox units, rotated), mapped to px inside `host`. The SVG uses preserveAspectRatio="none". */
-type Ring = { vw: number; vh: number; cx: number; cy: number; rx: number; ry: number; rot: number };
-function ringMapper(svg: SVGSVGElement, host: HTMLElement, ring: Ring) {
-  let box = { x: 0, y: 0, w: 1, h: 1 };
-  const measure = () => {
-    const a = svg.getBoundingClientRect(), b = host.getBoundingClientRect();
-    box = { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height };
-  };
-  measure();
-  ScrollTrigger.addEventListener('refreshInit', measure);
-  addEventListener('resize', measure);
-  const c = Math.cos((ring.rot * Math.PI) / 180), s = Math.sin((ring.rot * Math.PI) / 180);
-  return (theta: number) => {
-    const ex = ring.rx * Math.cos(theta), ey = ring.ry * Math.sin(theta);
-    const x = ring.cx + ex * c - ey * s, y = ring.cy + ex * s + ey * c;
-    return { x: box.x + (x / ring.vw) * box.w, y: box.y + (y / ring.vh) * box.h };
-  };
+const gl = reduced ? null : createGL($<HTMLCanvasElement>('.dx-gl'));
+if (!gl) html.classList.add('no-gl');
+const glCanvas = $<HTMLCanvasElement>('.dx-gl');
+/** Pause the GL scene and take its canvas out of compositing while a DOM scene covers it. */
+const glPause = (v: boolean) => { if (!gl) return; gl.state.paused = v; glCanvas.style.visibility = v ? 'hidden' : ''; };
+
+const sections = Object.fromEntries($$('[data-state]').map((s) => [s.dataset.state!, s])) as Record<Name, HTMLElement>;
+const live = $('[data-live]');
+let state: Name = 'loading';
+let busy = false;
+
+function show(name: Name) {
+  state = name;
+  html.dataset.state = name;
+  (Object.keys(sections) as Name[]).forEach((k) => {
+    const on = k === name;
+    sections[k].classList.toggle('is-on', on);
+    sections[k].toggleAttribute('inert', !on);
+  });
 }
-
-/** Lazy video: attach the source shortly before it is needed. */
-function arm(video: HTMLVideoElement) {
-  if (!video.src && video.dataset.src) { video.src = video.dataset.src; video.load(); }
+function scene(s: 'space' | 'world') {
+  html.dataset.scene = s;
+  if (gl) gl.state.scene = s;
 }
+const say = (t: string) => { live.textContent = t; };
 
-// ---------- 1. The dark feed: leaked records scroll past; a torch (pointer, or the light) reads them ----------
-const WORDS = ['combo_list', 'stealer_log', 'db_dump', 'fullz', 'corp_vpn', 'admin_panel', 'payroll', 'hr_export', 'cookies', 'sessions', 'crm_backup', 'mail_access'];
-const TLD = ['.pk', '.com', '.ae', '.sa', '.co.uk', '.org', '.net'];
-const pick = <T,>(a: T[]) => a[(Math.random() * a.length) | 0];
-const hex = (n: number) => Array.from({ length: n }, () => '0123456789abcdef'[(Math.random() * 16) | 0]).join('');
-const mask = (n: number) => '*'.repeat(n);
-function leakLine() {
-  const r = Math.random();
-  if (r < 0.3) return `${pick(WORDS)}_${2020 + ((Math.random() * 7) | 0)}.txt   ${(Math.random() * 9 + 0.4).toFixed(1)}M rows   sold   ${hex(8)}`;
-  if (r < 0.6) return `${String.fromCharCode(97 + ((Math.random() * 26) | 0))}${mask(4)}.${mask(5)}@${mask(6)}${pick(TLD)}  :  ${mask(10)}  :  https://portal.${mask(6)}${pick(TLD)}/login`;
-  if (r < 0.8) return `HOST-${hex(4).toUpperCase()}  ${pick(['PK', 'AE', 'SA', 'GB', 'US', 'TR'])}  passwords ${(Math.random() * 90 + 4) | 0}  cookies ${(Math.random() * 600 + 20) | 0}  ${pick(WORDS)}`;
-  return `[${hex(6)}] selling access ${pick(TLD).slice(1).toUpperCase()} gov ${pick(WORDS)}  escrow ok  ${hex(12)}`;
-}
-
-function startFeed() {
-  onPage(() => {
-    const night = $('[data-night]'), canvas = $<HTMLCanvasElement>('[data-feed]'), orb = $('[data-orb]');
-    if (!night || !canvas) return;
-    const ctx = canvas.getContext('2d')!;
-    const reduced = prefersReducedMotion();
-    let w = 0, h = 0, dpr = 1, lh = 18, rows: { text: string; hot: number; x: number }[] = [], offset = 0;
-    const torch = { x: 0, y: 0, tx: 0, ty: 0, r: 220, user: false };
-    const size = () => {
-      dpr = Math.min(devicePixelRatio || 1, phone() ? 1.5 : 2);
-      w = night.clientWidth; h = night.clientHeight;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      lh = phone() ? 15 : 18;
-      const n = Math.ceil(h / lh) + 2;
-      while (rows.length < n) rows.push({ text: leakLine() + '    ' + leakLine(), hot: Math.random() < 0.12 ? 1 : 0, x: -Math.random() * 300 });
-      torch.r = phone() ? 140 : 230;
-      const o = orb?.getBoundingClientRect(), b = night.getBoundingClientRect();
-      if (o && !torch.user) { torch.tx = torch.x = o.left - b.left + o.width / 2; torch.ty = torch.y = o.top - b.top + o.height / 2; }
-    };
-    size();
-    addEventListener('resize', size);
-    night.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      const b = night.getBoundingClientRect();
-      torch.user = true; torch.tx = e.clientX - b.left; torch.ty = e.clientY - b.top;
-    });
-    night.addEventListener('pointerleave', () => { torch.user = false; size(); });
-
-    const draw = (t: number) => {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, w, h);
-      ctx.font = `${phone() ? 10 : 12}px "JetBrains Mono", Consolas, monospace`;
-      ctx.textBaseline = 'top';
-      if (!torch.user && !reduced) { torch.tx += Math.sin(t * 0.6) * 0.6; torch.ty += Math.cos(t * 0.45) * 0.4; }
-      torch.x += (torch.tx - torch.x) * 0.12; torch.y += (torch.ty - torch.y) * 0.12;
-      const pass = (lit: boolean) => {
-        for (let i = 0; i < rows.length; i++) {
-          const y = i * lh - offset;
-          const row = rows[i];
-          ctx.fillStyle = row.hot ? (lit ? 'rgba(255,90,120,0.95)' : 'rgba(255,51,85,0.28)') : (lit ? 'rgba(246,241,251,0.85)' : 'rgba(246,241,251,0.075)');
-          ctx.fillText(row.text, row.x, y);
-        }
-      };
-      pass(false);
-      ctx.save();
-      ctx.beginPath(); ctx.arc(torch.x, torch.y, torch.r, 0, TAU); ctx.clip();
-      const g = ctx.createRadialGradient(torch.x, torch.y, 0, torch.x, torch.y, torch.r);
-      g.addColorStop(0, 'rgba(155,140,255,0.16)'); g.addColorStop(1, 'rgba(155,140,255,0)');
-      ctx.fillStyle = g; ctx.fillRect(torch.x - torch.r, torch.y - torch.r, torch.r * 2, torch.r * 2);
-      pass(true);
-      ctx.restore();
-    };
-
-    if (reduced) { draw(0); return; }
-    let on = true, last = 0, frame = 0;
-    ScrollTrigger.create({ trigger: night, start: 'top bottom', end: 'bottom top', onToggle: (s) => { on = s.isActive; } });
-    const tick = (t: number) => {
-      if (!on || document.hidden) return;
-      if (phone() && (frame++ & 1)) return; // half rate on phones
-      const dt = Math.min(0.05, t - (last || t)); last = t;
-      offset += dt * 14;
-      if (offset >= lh) { offset -= lh; const r = rows.shift()!; r.text = leakLine() + '    ' + leakLine(); r.hot = Math.random() < 0.12 ? 1 : 0; r.x = -Math.random() * 300; rows.push(r); }
-      draw(t);
-    };
-    gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
+/** Cover a scene swap with a flash of light (the reference's cut through the glass). */
+function flash(mid: () => void, hold = 0.12) {
+  const f = $('.dx-flash');
+  return new Promise<void>((res) => {
+    if (reduced) { gsap.timeline({ onComplete: res }).to(f, { opacity: 1, duration: 0.18 }).add(mid).to(f, { opacity: 0, duration: 0.25 }); return; }
+    gsap.timeline({ onComplete: res })
+      .to(f, { opacity: 1, duration: 0.4, ease: 'power2.in' })
+      .add(mid)
+      .to(f, { opacity: 0, duration: 0.9, ease: 'power2.out', delay: hold });
   });
 }
 
-// ---------- 1b. Typing line, then the light comes on (pinned, scrubbed) ----------
-function startLight() {
-  onPage(({ intro }) => {
-    const night = $('[data-night]'), copy = $('[data-night-copy]'), flood = $('[data-flood]'), orb = $('[data-orb]');
-    const mark = $('[data-mark]'), ring = $<SVGEllipseElement>('[data-mark-ring]'), type = $('[data-type]');
-    const root = document.documentElement;
-    if (!night || !copy || !flood || !mark) return;
+// ---------- decorative fills ----------
+$$('[data-land]').forEach((el) => {
+  const i = +el.dataset.land!;
+  el.innerHTML = landscape(i);
+  el.parentElement!.querySelector('.dx-win__text p')!.insertAdjacentHTML('afterend', '<p class="dx-win__inside"><span>▶ Product tour</span><span>◎ 3 signals to find</span></p>');
+  el.insertAdjacentHTML('afterend', `<div class="dx-win__hud" aria-hidden="true"><span>${String(i + 1).padStart(2, '0')} / 07</span><span class="dx-win__live"><i></i>Live</span></div>`);
+});
+// the right-hand screen: listings scrolling past, the same feed the flight in began with
+{
+  const W = ['combo_list', 'stealer_log', 'db_dump', 'corp_vpn', 'admin_panel', 'payroll', 'hr_export', 'mail_access', 'crm_backup'];
+  const hex = (n: number) => Array.from({ length: n }, () => '0123456789abcdef'[(Math.random() * 16) | 0]).join('');
+  const lines = Array.from({ length: 9 }, (_, k) => (k % 3 === 0 ? `${W[k % W.length]}_${2019 + (k % 7)}.txt · ${(1 + k * 0.7).toFixed(1)}M rows · for sale`
+    : k % 3 === 1 ? `HOST-${hex(4).toUpperCase()} · passwords ${12 + k * 7} · cookies ${80 + k * 31}` : `[${hex(6)}] access offered · ${W[(k + 3) % W.length]}`));
+  $('[data-ticker]').innerHTML = [...lines, ...lines].map((l) => `<li>${l}</li>`).join('');
+  // the cockpit walls: the dark web feed from the flight in, still running behind the glass
+  const wall = Array.from({ length: 48 }, (_, k) => `${'    '.repeat(k % 3)}${lines[k % lines.length]}    ${hex(12)}    ${lines[(k + 4) % lines.length]}`).join(String.fromCharCode(10));
+  $('.dx-cabin__feed').textContent = wall;
+}
+// Each briefing opens on a piece of the product: counters, scores, masked rows, host tabs, the hosting trail.
+$$('[data-mod]').forEach((m, mi) => $$('.dx-brief', m).forEach((b, k) => {
+  b.setAttribute('tabindex', '-1');
+  b.insertAdjacentHTML('afterbegin', `<div class="dx-brief__viz" aria-hidden="true">${VIZ[mi][k]}</div>`);
+}));
 
-    // typed line
-    if (type && !prefersReducedMotion()) {
-      const full = type.textContent || '';
-      type.textContent = '';
-      const o = { n: 0 };
-      intro.add(gsap.to(o, { n: full.length, duration: full.length * 0.055, delay: 0.6, ease: 'none', onUpdate: () => { type.textContent = full.slice(0, Math.round(o.n)); } }), 0);
-      intro.from(copy.children, { autoAlpha: 0, filter: 'blur(14px)', y: 24, duration: 1.4, stagger: 0.12, ease: 'expo.out', clearProps: 'filter' }, 0);
-      intro.from(orb, { scale: 0, duration: 1.6, ease: 'expo.out' }, 0.5);
-    }
+// ---------- loader → hero ----------
+const heroSplit = SplitText.create('.dx-hero__title', { type: 'lines', mask: 'lines' });
+const setDark = (v: number) => html.style.setProperty('--dark', v.toFixed(3));
+setDark(1);
 
-    const setScene = (day: boolean) => {
-      root.dataset.scene = day ? 'day' : 'night';
-      const meta = $<HTMLMetaElement>('meta[name="theme-color"]');
-      if (meta) meta.content = day ? '#f1eff9' : '#0b0710';
-    };
+/** Type the film's line, letter by letter. */
+let typeTl: gsap.core.Tween | null = null;
+function typeLine(delay: number) {
+  const el = $('[data-typed]'), text = 'Time to turn on the light';
+  typeTl?.kill();
+  if (reduced) { el.textContent = text; return; }
+  el.textContent = '';
+  const o = { n: 0 };
+  typeTl = gsap.to(o, { n: text.length, duration: text.length * 0.055, ease: 'none', delay, onUpdate: () => { el.textContent = text.slice(0, Math.round(o.n)); } });
+}
+/** The probe's lamp flickers on, the way an old light catches. */
+function lampOn() {
+  if (!gl || gl.state.lamp > 0.9) return;
+  gsap.timeline()
+    .to(gl.state, { lamp: 1, duration: 0.06 }).to(gl.state, { lamp: 0.1, duration: 0.07 })
+    .to(gl.state, { lamp: 0.9, duration: 0.05 }).to(gl.state, { lamp: 0.3, duration: 0.1 })
+    .to(gl.state, { lamp: 1, duration: 0.5, ease: 'power2.out' });
+}
+async function load() {
+  const bar = $('[data-load]');
+  gsap.set(bar, { scaleX: 0 });
+  const decode = (src: string) => { const i = new Image(); i.src = src; return i.decode().catch(() => {}); };
+  const tasks: Promise<unknown>[] = [document.fonts.ready, decode('/media/darkintel360/lm.jpg'), new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))];
+  let done = 0;
+  tasks.forEach((p) => p.then(() => gsap.to(bar, { scaleX: ++done / tasks.length, duration: 0.5, ease: 'power2.out' })));
+  await Promise.race([Promise.all([...tasks, wait(reduced ? 0 : 900)]), wait(2300)]);
+  gsap.to(bar, { scaleX: 1, duration: 0.25 });
+  await wait(250);
 
-    if (prefersReducedMotion()) {
-      ScrollTrigger.create({ trigger: copy, start: 'top top', end: 'bottom top+=60', onToggle: (s) => setScene(!s.isActive && s.progress > 0.5), onLeave: () => setScene(true), onEnterBack: () => setScene(false) });
+  const hash = location.hash.slice(1), jump = $$('.dx-mod').findIndex((m) => m.id === hash);
+  gsap.to('.dx-loader', { autoAlpha: 0, duration: 0.6, ease: 'power2.out' });
+  gsap.to('.dx-loader__brand', { y: -24, filter: 'blur(8px)', duration: 0.6, ease: 'power2.in' });
+  if (jump >= 0) { gl && (gl.state.intro = 1); enterWorld(jump, true); return; }
+  heroIn(true);
+}
+
+function heroIn(first = false) {
+  show('hero');
+  scene('space');
+  if (gl) {
+    glPause(false);
+    gl.state.outro = 0; gl.state.story = 0; story.cur = story.target = 0;
+    gl.state.light = 0; gl.state.lamp = 0;
+    gsap.fromTo(gl.state, { intro: first ? 0 : gl.state.intro }, { intro: 1, duration: 2.4, ease: EASE });
+  }
+  setDark(1);
+  gsap.set('.dx-hero__title, .dx-hero .dx-cta, .dx-hero__kicker, .dx-typed', { autoAlpha: 1, y: 0 });
+  typeLine(first ? 1.3 : 0.8);
+  if (!reduced) {
+    gsap.from('.dx-hero__kicker', { y: 16, autoAlpha: 0, duration: 1, ease: EASE, delay: first ? 0.2 : 0 });
+    gsap.from(heroSplit.lines, { yPercent: 105, duration: 1.4, ease: EASE, stagger: 0.09, delay: first ? 0.3 : 0.1 });
+    gsap.from('.dx-hero .dx-cta', { y: 24, autoAlpha: 0, duration: 1.1, ease: EASE, delay: first ? 0.9 : 0.5 });
+  }
+  if (!first) $('#hero-title').focus({ preventScroll: true });
+}
+
+// ---------- the flight in ----------
+const story = { cur: 0, target: 0 };
+const beats = $$('[data-beat]').map((el) => {
+  const [a, b] = el.dataset.beat!.split(' ').map(Number);
+  const words = $$('[data-words]', el).flatMap((p) => SplitText.create(p, { type: 'words', wordsClass: 'dx-w' }).words as HTMLElement[]);
+  return { el, a, b, words, lit: -1 };
+});
+let hintGone = false;
+
+function begin() {
+  if (state !== 'hero' || busy) return;
+  lampOn();
+  show('story');
+  gsap.to('.dx-hero__kicker, .dx-hero__title, .dx-typed, .dx-hero .dx-cta', { autoAlpha: 0, y: -40, duration: 0.7, ease: 'power2.in', stagger: 0.04 });
+  if (reduced) {
+    setDark(0);
+    beats.forEach((b) => { gsap.set(b.el, { autoAlpha: 1 }); b.words.forEach((w) => w.classList.add('is-lit')); });
+    $('[data-skip]').textContent = 'Continue';
+    $('#story-title').focus({ preventScroll: true });
+    return;
+  }
+  hintGone = false;
+  gsap.fromTo('[data-hint]', { autoAlpha: 0, scale: 0.8 }, { autoAlpha: 1, scale: 1, duration: 1, ease: EASE, delay: 0.3 });
+  story.target = Math.max(story.target, 0.035);
+  $('#story-title').focus({ preventScroll: true });
+  say('The flight in. Scroll, swipe or use the arrow keys to fly. Skip is at the bottom of the screen.');
+}
+function nudge(dp: number) {
+  if (state === 'hero') { if (dp > 0) begin(); return; }
+  if (state !== 'story' || busy || reduced || skipping) return;
+  if (dp < 0 && story.cur < 0.012) { backToHero(); return; }
+  story.target = clamp(story.target + dp, 0, 1);
+}
+function backToHero() {
+  story.cur = story.target = 0;
+  gsap.to('[data-hint]', { autoAlpha: 0, duration: 0.3 });
+  show('hero');
+  if (gl) gl.state.light = 0;
+  setDark(1);
+  gsap.fromTo('.dx-hero__kicker, .dx-hero__title, .dx-typed, .dx-hero .dx-cta', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 1, ease: EASE, stagger: 0.05 });
+}
+function skip() {
+  if (state !== 'story' || busy) return;
+  if (reduced) { enterConsole(); return; }
+  hintGone = true; gsap.to('[data-hint]', { autoAlpha: 0, duration: 0.4, overwrite: true });
+  skipping = true;
+  gsap.to(story, { cur: 1, target: 1, duration: 3.4 * (1 - story.cur) + 0.6, ease: 'power2.inOut', onComplete: () => { skipping = false; } });
+}
+let skipping = false;
+const ringArc = $<SVGCircleElement>('.dx-ring__arc');
+function storyFrame(dt: number) {
+  if (!skipping) {
+    story.cur += (story.target - story.cur) * Math.min(1, dt * 3.4);
+    if (Math.abs(story.target - story.cur) < 0.0004) story.cur = story.target;
+  }
+  const s = story.cur;
+  if (gl) gl.state.story = s;
+  // the light comes on as DarkIntel360 is named
+  const L = (() => { const t = clamp((s - 0.56) / 0.22); return t * t * (3 - 2 * t); })();
+  if (gl) gl.state.light = L;
+  setDark(1 - L);
+  if (!hintGone && s > 0.06) { hintGone = true; gsap.to('[data-hint]', { autoAlpha: 0, scale: 1.15, duration: 0.6, ease: 'power2.out', overwrite: true }); }
+  ringArc.style.strokeDashoffset = String(100 - s * 100);
+  for (const b of beats) {
+    const l = (s - b.a) / (b.b - b.a);
+    const alpha = clamp(l / 0.14) * clamp((1 - l) / 0.14);
+    gsap.set(b.el, { autoAlpha: alpha, y: (1 - alpha) * (l < 0.5 ? 34 : -34) });
+    const lit = Math.floor(clamp((l - 0.06) / 0.5) * b.words.length);
+    if (lit !== b.lit) { b.words.forEach((w, i) => w.classList.toggle('is-lit', i < lit)); b.lit = lit; }
+  }
+  if (s > 0.996 && !busy) enterConsole();
+}
+
+// ---------- the console ----------
+const cabin = $('[data-cabin]'), track = $('[data-track]');
+const wins = $$('[data-win]'), dots = $$<HTMLButtonElement>('[data-dot]');
+let cur = 0;
+const visited = new Set<number>();
+const pov = { x: 0, y: 0, tx: 0, ty: 0, last: -1e9 };
+// The windows sit on the inside of a cylinder, like the cockpit glass: side windows wrap toward you.
+const ring = { pos: 0 };
+function ringGeo() {
+  const W = wins[0].offsetWidth, phone = innerWidth < 761;
+  return { W, gap: phone ? 0.98 : 0.86, turn: phone ? 50 : 58, depth: phone ? 0.12 : 0.2 };
+}
+// Cached setters: the ring is laid out every frame while the eye moves, so skip gsap.set's parsing.
+const ringSet = wins.map((w) => ({
+  x: gsap.quickSetter(w, 'x', 'px'), z: gsap.quickSetter(w, 'z', 'px'),
+  ry: gsap.quickSetter(w, 'rotationY', 'deg'), rx: gsap.quickSetter(w, 'rotationX', 'deg'),
+  shown: null as boolean | null, zi: -1,
+}));
+function layoutRing() {
+  const { W, gap, turn, depth } = ringGeo();
+  const head = pov.x * 0.05; // turning your head swings the curved wall a little
+  wins.forEach((w, i) => {
+    const d = i - ring.pos - head, far = Math.abs(d), k = Math.min(far, 1.6) * Math.sign(d), r = ringSet[i];
+    const show = far < 1.7, zi = 10 - Math.round(far);
+    if (show !== r.shown) { r.shown = show; w.style.visibility = show ? '' : 'hidden'; w.style.opacity = show ? '' : '0'; }
+    if (zi !== r.zi) { r.zi = zi; w.style.zIndex = String(zi); }
+    if (!show) return;
+    r.x(d * W * gap); r.z(Math.min(far, 1.6) * W * depth); r.ry(-k * turn); r.rx(pov.y * -2.2);
+  });
+}
+function goTo(i: number, instant = false) {
+  cur = clamp(i, 0, wins.length - 1);
+  gsap.to(ring, { pos: cur, duration: instant ? 0 : 1.15, ease: EASE, overwrite: true, onUpdate: layoutRing });
+  if (instant) { ring.pos = cur; layoutRing(); }
+  wins.forEach((w, k) => {
+    w.classList.toggle('is-cur', k === cur);
+    $<HTMLButtonElement>('[data-explore]', w).tabIndex = k === cur ? 0 : -1;
+    w.setAttribute('aria-hidden', String(k !== cur));
+  });
+  dots.forEach((d, k) => (k === cur ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
+  $<HTMLButtonElement>('[data-step="-1"]').disabled = cur === 0;
+  $<HTMLButtonElement>('[data-step="1"]').disabled = cur === wins.length - 1;
+  if (state === 'console' && !instant) say(`${$('h3', wins[cur]).textContent}, module ${cur + 1} of 7.`);
+}
+goTo(0, true);
+addEventListener('resize', () => goTo(cur, true));
+
+async function enterConsole() {
+  if (busy) return;
+  busy = true;
+  await flash(() => {
+    show('console');
+    if (gl) glPause(true);
+    goTo(cur, true);
+    consoleIn();
+  }, 0.05);
+  busy = false;
+  $('#console-title').focus({ preventScroll: true });
+  say(`Inside the console. ${$('h3', wins[cur]).textContent}, module ${cur + 1} of 7. Use the arrows to choose a module.`);
+}
+function consoleIn() {
+  if (reduced) return;
+  $$<HTMLElement>('[data-count]').forEach((b) => {
+    const to = +b.dataset.count!, k = b.hasAttribute('data-k'), o = { v: 0 };
+    gsap.to(o, { v: to, duration: 1.8, ease: 'expo.out', delay: 0.5, onUpdate: () => { b.textContent = k ? `${o.v.toFixed(1)}K` : String(Math.round(o.v)); } });
+  });
+  gsap.fromTo(cabin, { scale: 1.18 }, { scale: 1, duration: 1.6, ease: EASE, transformOrigin: '50% 40%', clearProps: 'transform' });
+}
+
+// drag / swipe the track
+{
+  let down = false, sx = 0, sy = 0, base = 0, dx = 0, moved = false, t0 = 0;
+  track.addEventListener('pointerdown', (e) => {
+    if (busy || state !== 'console') return;
+    down = true; moved = false; sx = e.clientX; sy = e.clientY; dx = 0; t0 = performance.now();
+    base = ring.pos;
+    gsap.killTweensOf(ring);
+  });
+  addEventListener('pointermove', (e) => {
+    if (!down) return;
+    dx = e.clientX - sx;
+    if (!moved && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(e.clientY - sy)) { moved = true; track.classList.add('is-drag'); track.setPointerCapture?.(e.pointerId); }
+    if (!moved) return;
+    const edge = (cur === 0 && dx > 0) || (cur === wins.length - 1 && dx < 0) ? 0.3 : 1;
+    ring.pos = base - (dx * edge) / (ringGeo().W * 0.8);
+    layoutRing();
+  });
+  const up = (e: PointerEvent) => {
+    if (!down) return;
+    down = false; track.classList.remove('is-drag');
+    if (!moved) {
+      const w = (e.target as HTMLElement).closest<HTMLElement>('[data-win]');
+      if (w && +w.dataset.win! !== cur) goTo(+w.dataset.win!);
+      else if (w && !(e.target as HTMLElement).closest('button')) goTo(cur);
       return;
     }
+    const v = dx / Math.max(1, performance.now() - t0);
+    const step = Math.abs(dx) > innerWidth * 0.12 || Math.abs(v) > 0.5 ? -Math.sign(dx) : 0;
+    goTo(cur + step);
+  };
+  addEventListener('pointerup', up);
+  addEventListener('pointercancel', up);
+}
+$$<HTMLButtonElement>('[data-step]').forEach((b) => b.addEventListener('click', () => goTo(cur + +b.dataset.step!)));
+dots.forEach((d) => d.addEventListener('click', () => goTo(+d.dataset.dot!)));
+$$<HTMLButtonElement>('[data-explore]').forEach((b) => b.addEventListener('click', () => { if (+b.dataset.explore! === cur) dive(cur); }));
 
-    const at = phone() ? '78% 22%' : '72% 42%';
-    gsap.set(flood, { clipPath: `circle(0% at ${at})` });
-    if (ring) gsap.set(ring, { strokeDashoffset: 1 });
-    const tl = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: {
-        trigger: night, start: 'top top', end: '+=170%', pin: true, scrub: 0.7, invalidateOnRefresh: true,
-        onUpdate: (s) => setScene(s.progress > 0.42),
-      },
-    });
-    tl.to(copy, { autoAlpha: 0, filter: 'blur(16px)', y: -60, duration: 0.3 }, 0)
-      .to('.di-night__hint', { autoAlpha: 0, duration: 0.1 }, 0)
-      .to(orb, { scale: 4, duration: 0.3, ease: 'power2.in' }, 0.05)
-      .to(flood, { clipPath: `circle(150% at ${at})`, duration: 0.42, ease: 'power2.in' }, 0.22)
-      .to(orb, { autoAlpha: 0, duration: 0.08 }, 0.5)
-      .from('[data-mark] .di-word', { autoAlpha: 0, filter: 'blur(18px)', scale: 0.92, duration: 0.28 }, 0.5)
-      .to(ring, { strokeDashoffset: 0, duration: 0.3, ease: 'power1.inOut' }, 0.58)
-      .from(['.di-mark__line', '.di-mark__lede'], { autoAlpha: 0, filter: 'blur(10px)', y: 30, stagger: 0.06, duration: 0.2 }, 0.68)
-      .to({}, { duration: 0.12 });
-
-    $('[data-lighton]')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      const st = tl.scrollTrigger!;
-      scrollToTarget(st.start + (st.end - st.start) * 0.9);
-    });
-  });
+/** Push the camera through the current window, then cut into its world. */
+async function dive(i: number) {
+  if (busy) return;
+  busy = true;
+  const r = wins[i].getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const s = Math.max(innerWidth / r.width, innerHeight / r.height) * 1.25;
+  if (!reduced) {
+    gsap.set(cabin, { transformOrigin: `${cx}px ${cy}px` });
+    gsap.to(cabin, { x: innerWidth / 2 - cx, y: innerHeight / 2 - cy, scale: s, duration: 1.35, ease: 'power3.in' });
+    await wait(900);
+  }
+  enterWorld(i);
 }
 
-// ---------- 2. The reel: seven modules, each one a cut of the film ----------
-function startReel() {
-  onPage(() => {
-    const reel = $('[data-reel]'), video = $<HTMLVideoElement>('[data-reel-video]');
-    const chapters = $$('[data-ch]'), rail = $$<HTMLAnchorElement>('[data-rail]'), count = $('[data-count]');
-    const tilt = $('[data-tilt]'), orb = $('[data-reel-orb]'), figure = $('.di-screen');
-    const ringSvg = $<SVGSVGElement>('.di-screen__ring');
-    if (!reel || !chapters.length) return;
-    const reduced = prefersReducedMotion();
-    let idx = -1;
-
-    const cue = (i: number) => {
-      if (!video) return;
-      const t0 = parseFloat(chapters[i].dataset.t0 || '0');
-      if (video.readyState >= 1) video.currentTime = t0 + 0.05;
-      else video.addEventListener('loadedmetadata', () => { video.currentTime = t0 + 0.05; }, { once: true });
-      video.play().catch(() => {});
-    };
-
-    const show = (i: number, instant = false) => {
-      if (i === idx) return;
-      const prev = idx; idx = i;
-      rail.forEach((a, k) => (k === i ? a.setAttribute('aria-current', 'step') : a.removeAttribute('aria-current')));
-      if (count) count.textContent = String(i + 1).padStart(2, '0');
-      if (reduced) return;
-      const next = chapters[i];
-      if (prev >= 0) {
-        const old = chapters[prev];
-        gsap.to(old.children, { autoAlpha: 0, filter: 'blur(10px)', y: i > prev ? -24 : 24, duration: 0.35, stagger: 0.03, ease: 'power2.in', overwrite: true, onComplete: () => old.classList.remove('is-on') });
-      }
-      next.classList.add('is-on');
-      gsap.fromTo(next.children, { autoAlpha: 0, filter: 'blur(12px)', y: i >= prev ? 30 : -30 },
-        { autoAlpha: 1, filter: 'blur(0px)', y: 0, duration: instant ? 0 : 0.9, delay: instant ? 0 : 0.2, stagger: 0.06, ease: 'expo.out', overwrite: true });
-      // the film itself jumps too: a quick blur over the cut
-      if (video && !instant) gsap.fromTo(video, { filter: 'blur(8px) brightness(1.15)' }, { filter: 'blur(0px) brightness(1)', duration: 0.6, ease: 'power2.out' });
-      cue(i);
-    };
-
-    if (reduced) { chapters.forEach((c) => c.classList.add('is-on')); return; }
-
-    const place = ringSvg && figure ? ringMapper(ringSvg, figure, { vw: 1000, vh: 600, cx: 500, cy: 300, rx: 490, ry: 250, rot: -6 }) : null;
-    let p = 0, active = false;
-
-    const st = ScrollTrigger.create({
-      trigger: reel, start: 'top top', end: () => '+=' + innerHeight * 5.6, pin: true, scrub: true, invalidateOnRefresh: true,
-      onUpdate: (s) => { p = s.progress; show(Math.min(chapters.length - 1, Math.floor(p * chapters.length))); },
-      onToggle: (s) => { active = s.isActive; if (!active) video?.pause(); else video?.play().catch(() => {}); },
-    });
-    ScrollTrigger.create({ trigger: reel, start: 'top bottom+=100%', once: true, onEnter: () => video && arm(video) });
-    show(0, true);
-
-    rail.forEach((a, i) => a.addEventListener('click', (e) => {
-      e.preventDefault();
-      scrollToTarget(st.start + ((i + 0.5) / chapters.length) * (st.end - st.start));
-    }));
-
-    const tick = (t: number) => {
-      if (!active && !ScrollTrigger.isInViewport(reel)) return;
-      const n = chapters.length, local = p * n - Math.min(n - 1, Math.floor(p * n));
-      // the screen swings like the film's dashboards: tilted at each cut, square to you mid-chapter
-      const swing = Math.cos(local * TAU);
-      if (tilt) gsap.set(tilt, { rotationY: -9 - 6 * swing + Math.sin(t * 0.5) * 0.6, rotationX: 5 + 2.5 * swing, scale: 0.97 - 0.03 * swing });
-      if (place && orb) {
-        const pt = place(-Math.PI / 2 + p * TAU + Math.sin(t * 0.8) * 0.015);
-        gsap.set(orb, { x: pt.x, y: pt.y });
-      }
-      if (video && idx >= 0 && !video.paused) {
-        const t1 = parseFloat(chapters[idx].dataset.t1 || '0');
-        if (video.currentTime >= t1 - 0.05) video.currentTime = parseFloat(chapters[idx].dataset.t0 || '0') + 0.05;
-      }
-    };
-    gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
-  });
+// ---------- the product: a working DarkIntel360 screen per module ----------
+const sigPoint = (k: number) => {
+  const b = $$<HTMLElement>('[data-sig]', mods[cur])[k]?.getBoundingClientRect();
+  return b ? { x: b.left + b.width / 2, y: b.bottom } : { x: innerWidth / 2, y: innerHeight * 0.6 };
+};
+const product = createProduct(sections.world, {
+  reduced,
+  say,
+  onClose: () => { if (world === 'card') hunt(); else closeBrief(); },
+  onHunt: () => hunt(),
+  onNav: (i) => { void navTo(i); },
+});
+function overviewGuide(i: number): Guide {
+  const m = mods[i];
+  return {
+    kind: 'overview',
+    kicker: `${String(i + 1).padStart(2, '0')} / 07 · ${$('h3', wins[i]).textContent}`,
+    title: $('.dx-card__title', m).textContent || '',
+    body: $('.dx-card > p', m).textContent || '',
+    facts: $$('.dx-card__facts li', m).map((li) => li.textContent || ''),
+    found: found[i].filter(Boolean).length,
+  };
 }
 
-// ---------- 3. Scoring: the film's filter cut on loop; the two scores count up ----------
-function startScored() {
-  onPage(() => {
-    const clip = $<HTMLVideoElement>('[data-clip]');
-    const reduced = prefersReducedMotion();
-    if (clip) {
-      const t0 = parseFloat(clip.dataset.t0 || '0'), t1 = parseFloat(clip.dataset.t1 || '0');
-      clip.loop = false;
-      const seek = () => { if (clip.currentTime < t0 || clip.currentTime >= t1) clip.currentTime = t0; };
-      clip.addEventListener('timeupdate', () => { if (clip.currentTime >= t1) clip.currentTime = t0; });
-      ScrollTrigger.create({
-        trigger: clip, start: 'top bottom+=50%', end: 'bottom top',
-        onToggle: (s) => {
-          if (s.isActive) { arm(clip); if (clip.readyState >= 1) seek(); else clip.addEventListener('loadedmetadata', seek, { once: true }); if (!reduced) clip.play().catch(() => {}); }
-          else clip.pause();
-        },
-      });
-      if (reduced) { clip.controls = true; clip.removeAttribute('aria-label'); }
+// ---------- worlds ----------
+const mods = $$('[data-mod]');
+const found = mods.map(() => [false, false, false]);
+const backdrop = $('.dx-backdrop');
+let world: 'card' | 'hunt' = 'card';
+let briefOpen = -1;
+const FALLBACK_POS = [[0.24, 0.6], [0.74, 0.64], [0.5, 0.5]];
+
+/** Put module i's world behind the product: sky, landscape, signals, progress. */
+function stageWorld(i: number) {
+  cur = i; visited.add(i);
+  goTo(i, true);
+  const p = PALS[i];
+  html.style.setProperty('--sky-top', p.skyTop);
+  html.style.setProperty('--sky-bot', p.skyBot);
+  mods.forEach((m, k) => m.classList.toggle('is-cur', k === i));
+  $('[data-find-title]').textContent = mods[i].dataset.huntTitle || 'Find the signals';
+  $('[data-find-sub]').textContent = mods[i].dataset.huntSub || '';
+  if (gl) {
+    gl.setModule(i);
+    glPause(false); gl.state.world = 0; gl.state.beam = -1; gl.state.beamAmt = 0;
+  } else backdrop.innerHTML = landscape(i);
+  briefOpen = -1;
+  setWorld('card');
+  syncFound(i);
+}
+async function enterWorld(i: number, fromLoad = false) {
+  busy = true;
+  await flash(() => {
+    show('world');
+    scene('world');
+    gsap.set(cabin, { clearProps: 'transform' });
+    stageWorld(i);
+    // the module's own product screen is the first thing you see in its world
+    void product.open(i, overviewGuide(i), { x: innerWidth / 2, y: innerHeight });
+  }, fromLoad ? 0 : 0.15);
+  busy = false;
+}
+/** The product's own sidebar: switch module in place. No flash, no close; the screen fades across. */
+async function navTo(i: number) {
+  if (busy || state !== 'world' || i === cur) return;
+  busy = true;
+  stageWorld(i);
+  await product.swap(i, overviewGuide(i));
+  busy = false;
+  say(`${$('h3', wins[i]).textContent}. Module ${i + 1} of 7.`);
+}
+// ---------- the debrief: how DarkIntel360 helps, once all three signals are found ----------
+const debriefed = new Set<number>();
+let debriefOpen = false;
+function openDebrief() {
+  const d = $('.dx-debrief', mods[cur]);
+  debriefOpen = true; debriefed.add(cur);
+  d.classList.add('is-open');
+  gsap.set('.dx-done', { autoAlpha: 0 });
+  gsap.fromTo(d, { autoAlpha: 0, y: 40, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: reduced ? 0 : 1, ease: EASE, delay: reduced ? 0 : 0.35 });
+  gsap.fromTo($$('.dx-debrief__pts li, .dx-debrief__flow li', d), { autoAlpha: 0, x: -12 }, { autoAlpha: 1, x: 0, duration: reduced ? 0 : 0.7, ease: EASE, stagger: 0.07, delay: reduced ? 0 : 0.7 });
+  if (gl) gsap.to(gl.state, { world: 0.55, duration: reduced ? 0 : 2, ease: INOUT });
+  setTimeout(() => d.focus({ preventScroll: true }), reduced ? 0 : 400);
+  say(`Mission debrief. ${$('h3', d).textContent}.`);
+}
+function closeDebrief(showDone = true) {
+  if (!debriefOpen) return;
+  debriefOpen = false;
+  const d = $('.dx-debrief', mods[cur]);
+  gsap.to(d, { autoAlpha: 0, y: 30, duration: reduced || !showDone ? 0 : 0.45, ease: 'power2.in', onComplete: () => d.classList.remove('is-open') });
+  if (gl && showDone) gsap.to(gl.state, { world: 1, duration: reduced ? 0 : 1.6, ease: INOUT });
+  if (showDone) {
+    gsap.fromTo('.dx-done', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: EASE, delay: 0.3 });
+    setTimeout(() => $('.dx-done .dx-pill').focus({ preventScroll: true }), 350);
+  }
+}
+function setWorld(w: 'card' | 'hunt') {
+  closeDebrief(false);
+  world = w;
+  html.dataset.world = w;
+  const all = found[cur].every(Boolean);
+  html.dataset.done = all && w === 'hunt' ? '1' : '';
+  gsap.set('.dx-done', { autoAlpha: all && w === 'hunt' ? 1 : 0 });
+}
+/** The landscape's mission bar: how many signals are left, and exactly what to do next. */
+const missionEl = $('[data-mission]');
+function syncMission() {
+  const n = found[cur].filter(Boolean).length, tap = touch ? 'Tap' : 'Click';
+  $('.dx-mission__k').textContent = `Find the signals · ${n} of 3`;
+  $('[data-mission-text]').textContent = n < 3 ? `${tap} a glowing label in the landscape.` : 'All 3 found. Your debrief is ready.';
+  $$('li', missionEl).forEach((li, k) => li.classList.toggle('is-found', found[cur][k]));
+}
+function missionFrame() {
+  const show = state === 'world' && world === 'hunt' && !product.isOpen() && !debriefOpen && briefOpen < 0 && !busy;
+  if (show === !missionEl.hidden) return;
+  missionEl.hidden = !show;
+  if (show) { syncMission(); if (!reduced) gsap.fromTo(missionEl, { autoAlpha: 0, y: -12 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE }); }
+}
+function syncFound(i: number) {
+  $$('[data-sig]', mods[i]).forEach((b, k) => b.classList.toggle('is-found', found[i][k]));
+  $$('[data-pg]').forEach((li, k) => li.classList.toggle('is-found', found[i][k]));
+}
+
+async function hunt() {
+  if (busy || world !== 'card') return;
+  busy = true;
+  const m = mods[cur];
+  if (product.isOpen()) await product.close({ x: innerWidth / 2, y: innerHeight * 0.45 });
+  gsap.to($('.dx-card', m), { y: 50, autoAlpha: 0, duration: 0.6, ease: 'power2.in' });
+  setWorld('hunt');
+  const labels = $$('[data-sig]', m);
+  gsap.set(labels, { autoAlpha: 0 });
+  if (gl) await new Promise<void>((r) => gsap.to(gl.state, { world: 1, duration: reduced ? 0 : 2.6, ease: INOUT, onComplete: r }));
+  else { gsap.fromTo(backdrop, { scale: 1.08 }, { scale: 1, duration: reduced ? 0 : 1.2, ease: EASE }); }
+  gsap.to(labels, { autoAlpha: 1, duration: 0.6, stagger: 0.12, ease: 'power2.out' });
+  if (!found[cur].some(Boolean)) {
+    gsap.timeline()
+      .fromTo('[data-find]', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 1, ease: EASE })
+      .to('[data-find]', { autoAlpha: 0, y: -16, duration: 0.7, ease: 'power2.in' }, '+=2.6');
+  }
+  busy = false;
+  labels.find((l, k) => !found[cur][k])?.focus({ preventScroll: true });
+  say('Find the signals. Three signals are hidden in this landscape; each one opens a briefing.');
+}
+
+async function openBrief(k: number) {
+  if (busy || briefOpen >= 0) return;
+  busy = true; briefOpen = k;
+  const m = mods[cur], brief = $$('.dx-brief', m)[k];
+  const from = sigPoint(k);
+  gsap.to('[data-find]', { autoAlpha: 0, duration: 0.3, overwrite: true });
+  gsap.to($$('[data-sig]', m), { autoAlpha: 0, duration: 0.35 });
+  if (gl) { gl.state.beam = k; gsap.to(gl.state, { beamAmt: 1, duration: 0.9, delay: 0.5, ease: 'power2.out' }); }
+  await wait(reduced ? 0 : gl ? 1100 : 200);
+  found[cur][k] = true;
+  syncFound(cur);
+  // the beam opens the product at the feature this signal is about
+  void product.open(cur, {
+    kind: 'stop', k,
+    kicker: `Signal found · ${$('h3', wins[cur]).textContent}`,
+    title: $('h4', brief).textContent || '',
+    stat: $('.dx-brief__stat', brief).textContent || '',
+    text: $$(':scope > p', brief).filter((p) => !p.classList.contains('dx-brief__stat')).map((p) => p.textContent).join(' '),
+    found: found[cur].filter(Boolean).length,
+  }, from);
+  busy = false;
+}
+function closeBrief(quiet = false) {
+  if (briefOpen < 0) { if (quiet) void product.close(); return; }
+  const k = briefOpen, m = mods[cur];
+  briefOpen = -1;
+  void product.close(sigPoint(k));
+  if (quiet) return;
+  if (gl) gsap.to(gl.state, { beamAmt: 0, duration: 0.6, onComplete: () => { if (briefOpen < 0) gl.state.beam = -1; } });
+  gsap.to($$('[data-sig]', m), { autoAlpha: 1, duration: 0.5, delay: 0.3 });
+  const all = found[cur].every(Boolean);
+  if (all) {
+    html.dataset.done = '1';
+    if (!debriefed.has(cur)) { openDebrief(); return; }
+    gsap.fromTo('.dx-done', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.9, ease: EASE, delay: 0.4 });
+    setTimeout(() => $('.dx-done .dx-pill').focus({ preventScroll: true }), 420);
+    say('All three signals found. Explore other modules, or finish the mission.');
+  } else {
+    const next = $$<HTMLButtonElement>('[data-sig]', m).find((_, i) => !found[cur][i]) || $$<HTMLButtonElement>('[data-sig]', m)[k];
+    next.focus({ preventScroll: true });
+  }
+}
+
+async function toConsole() {
+  if (busy || state !== 'world') return;
+  closeBrief(true); closeDebrief(false); void product.close();
+  busy = true;
+  const next = found[cur].every(Boolean) ? (cur + 1) % wins.length : cur;
+  await flash(() => {
+    show('console');
+    scene('space');
+    if (gl) { glPause(true); gl.state.world = 0; }
+    setWorld('card');
+    goTo(next, true);
+    if (!reduced) {
+      const r = wins[next].getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const s = Math.max(innerWidth / r.width, innerHeight / r.height) * 1.2;
+      gsap.fromTo(cabin, { transformOrigin: `${cx}px ${cy}px`, x: innerWidth / 2 - cx, y: innerHeight / 2 - cy, scale: s }, { x: 0, y: 0, scale: 1, duration: 1.6, ease: EASE, clearProps: 'transform' });
     }
-    if (reduced) return;
-    $$('[data-score]').forEach((card) => {
-      const n = parseInt(card.dataset.score || '0', 10), arc = $<SVGCircleElement>('.di-score__arc', card), out = $('[data-score-n]', card);
-      const o = { v: 0 };
-      gsap.set(arc, { strokeDasharray: '0 100' });
-      if (out) out.textContent = '0';
-      gsap.to(o, {
-        v: n, duration: 1.8, ease: 'expo.out', delay: 0.3,
-        scrollTrigger: { trigger: card, start: 'top 85%', once: true },
-        onUpdate: () => { gsap.set(arc, { strokeDasharray: `${o.v.toFixed(1)} 100` }); if (out) out.textContent = String(Math.round(o.v)); },
+  }, 0.05);
+  busy = false;
+  $<HTMLButtonElement>('[data-explore]', wins[next]).focus({ preventScroll: true });
+  say(`Back in the console. ${$('h3', wins[next]).textContent}, module ${next + 1} of 7.`);
+}
+
+// ---------- outro ----------
+async function finish() {
+  if (busy) return;
+  closeBrief(true); closeDebrief(false); void product.close();
+  busy = true;
+  await flash(() => {
+    show('outro');
+    scene('space');
+    setDark(0);
+    setWorld('card');
+    if (gl) {
+      placeRing();
+      glPause(false); gl.state.story = 0.9; gl.state.intro = 1; gl.state.light = 1; gl.state.lamp = 1;
+      gsap.fromTo(gl.state, { outro: 0 }, { outro: 1, duration: 2.6, ease: INOUT });
+    }
+    if (!reduced) {
+      gsap.fromTo('.dx-word', { autoAlpha: 0, scale: 0.92, filter: 'blur(16px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 1.8, ease: EASE, delay: 0.9 });
+      gsap.fromTo('.dx-outro > :not(.dx-word)', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 1.2, ease: EASE, stagger: 0.08, delay: 1.3 });
+    }
+  });
+  busy = false;
+  $('#outro-title').focus({ preventScroll: true });
+}
+/** Centre the GL orbit on the DOM wordmark. */
+function placeRing() {
+  if (!gl) return;
+  const r = $('.dx-word').getBoundingClientRect();
+  gl.state.ringX = r.left + r.width / 2; gl.state.ringY = r.top + r.height * 0.5; gl.state.ringW = r.width / 2;
+}
+addEventListener('resize', () => { if (state === 'outro') placeRing(); });
+async function restart() {
+  if (busy) return;
+  busy = true;
+  await flash(() => { if (gl) gl.state.intro = 0; heroIn(false); });
+  busy = false;
+}
+
+// ---------- POV inside the cockpit ----------
+// The pointer is the eye. At rest the view keeps a slow sway, so the cabin never freezes.
+addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse') return;
+  pov.tx = (e.clientX / innerWidth - 0.5) * 2; pov.ty = (e.clientY / innerHeight - 0.5) * 2; pov.last = performance.now();
+});
+const dash = $('.dx-dash'), roof = $('.dx-cabin__roof');
+const povSet = {
+  track: [gsap.quickSetter(track, 'x', 'px'), gsap.quickSetter(track, 'y', 'px')],
+  dash: [gsap.quickSetter(dash, 'x', 'px'), gsap.quickSetter(dash, 'y', 'px')],
+  roof: [gsap.quickSetter(roof, 'x', 'px'), gsap.quickSetter(roof, 'y', 'px')],
+};
+let povDrawn = { x: 9, y: 9 };
+function povFrame(dt: number) {
+  const now = performance.now(), idle = now - pov.last > 2500, t = now / 1000;
+  const tx = idle ? Math.sin(t * 0.35) * 0.22 : pov.tx, ty = idle ? Math.sin(t * 0.27 + 1) * 0.12 : pov.ty;
+  pov.x += (tx - pov.x) * Math.min(1, dt * 2.6);
+  pov.y += (ty - pov.y) * Math.min(1, dt * 2.6);
+  // only touch the DOM when the view has actually moved
+  if (Math.abs(pov.x - povDrawn.x) < 0.0015 && Math.abs(pov.y - povDrawn.y) < 0.0015) return;
+  povDrawn = { x: pov.x, y: pov.y };
+  povSet.track[0](pov.x * -54); povSet.track[1](pov.y * -22);
+  povSet.dash[0](pov.x * -100); povSet.dash[1](pov.y * -16);
+  povSet.roof[0](pov.x * -36); povSet.roof[1](pov.y * -12);
+  if (!gsap.isTweening(ring)) layoutRing();
+}
+
+// ---------- the clock ----------
+gsap.ticker.add((_t, dms) => {
+  const dt = Math.min(dms / 1000, 0.05);
+  if (state === 'console' && !reduced) povFrame(dt);
+  missionFrame();
+  if (state === 'story' && !reduced) storyFrame(dt);
+  if (state === 'world' && world === 'hunt') {
+    const btns = $$<HTMLButtonElement>('[data-sig]', mods[cur]);
+    if (gl) {
+      gl.signalScreen().forEach((p, k) => {
+        const b = btns[k], half = (b.offsetWidth || 160) / 2;
+        // keep every label fully on screen, even when its signal sits near the edge
+        gsap.set(b, { x: Math.max(half + 8, Math.min(innerWidth - half - 8, p.x)), y: p.y });
+        if (b.hidden === p.vis) b.hidden = !p.vis;
       });
-    });
-  });
+    } else {
+      btns.forEach((b, k) => gsap.set(b, { x: FALLBACK_POS[k][0] * innerWidth, y: FALLBACK_POS[k][1] * innerHeight }));
+    }
+  }
+});
+
+// ---------- input ----------
+addEventListener('wheel', (e) => {
+  // The wheel only drives the flight in and the cockpit carousel. Inside a world (the product, its drawers,
+  // tables and lists, the debrief) it must scroll natively, so leave it alone there.
+  if (state === 'world' || (e.target as Element).closest?.('.px, .dx-debrief, .pq-modal')) return;
+  e.preventDefault();
+  const d = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY;
+  if (state === 'hero' || state === 'story') nudge(d * 0.00042);
+  else if (state === 'console' && !busy) consoleWheel(Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY);
+}, { passive: false });
+let wheelAcc = 0, wheelLock = 0;
+function consoleWheel(d: number) {
+  const now = performance.now();
+  if (now < wheelLock) return;
+  wheelAcc += d;
+  if (Math.abs(wheelAcc) > 70) { goTo(cur + Math.sign(wheelAcc)); wheelAcc = 0; wheelLock = now + 650; }
 }
 
-// ---------- 4. Sources: the light circles the orbit; each source lights as it passes ----------
-function startOrbit() {
-  onPage(() => {
-    const host = $('[data-orbit]'), svg = $<SVGSVGElement>('.di-orbit__ring'), orb = $('[data-orbit-orb]');
-    const items = $$('[data-node]');
-    if (!host || !svg || !orb || prefersReducedMotion()) return;
-    const place = ringMapper(svg, host, { vw: 800, vh: 520, cx: 400, cy: 260, rx: 370, ry: 190, rot: -10 });
-    let on = false, phase = 0, last = 0;
-    ScrollTrigger.create({ trigger: host, start: 'top bottom', end: 'bottom top', onToggle: (s) => { on = s.isActive; } });
-    const tick = (t: number) => {
-      if (!on) { last = t; return; }
-      phase = (phase + Math.min(0.05, t - (last || t)) / 14) % 1; last = t;
-      const pt = place(phase * TAU - Math.PI / 2);
-      gsap.set(orb, { x: pt.x, y: pt.y });
-      items.forEach((li) => {
-        const d = Math.abs(((phase - parseFloat(li.dataset.node || '0') + 1.5) % 1) - 0.5);
-        li.classList.toggle('is-lit', d < 0.09);
-      });
-    };
-    gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
+// touch / pen drag: fly the story, look around a world
+{
+  let y0 = 0, x0 = 0, pan0 = 0, active = false;
+  addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse') return;
+    active = true; y0 = e.clientY; x0 = e.clientX; pan0 = gl?.state.panX ?? 0;
   });
-}
-
-// ---------- 5. End: the ring draws, the light settles into orbit around the 360 ----------
-function startEnd() {
-  onPage(() => {
-    const host = $('.di-end__mark'), svg = $<SVGSVGElement>('.di-end__ring'), ring = $<SVGEllipseElement>('[data-end-ring]'), orb = $('[data-end-orb]');
-    if (!host || !svg || !orb || prefersReducedMotion()) return;
-    gsap.fromTo(ring, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.8, ease: 'expo.inOut', scrollTrigger: { trigger: host, start: 'top 80%', once: true } });
-    gsap.from('[data-endword]', { autoAlpha: 0, filter: 'blur(18px)', scale: 0.94, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: host, start: 'top 80%', once: true } });
-    const place = ringMapper(svg, host, { vw: 1000, vh: 300, cx: 500, cy: 150, rx: 480, ry: 110, rot: -5 });
-    let on = false;
-    ScrollTrigger.create({ trigger: host, start: 'top bottom', end: 'bottom top', onToggle: (s) => { on = s.isActive; } });
-    const tick = (t: number) => {
-      if (!on) return;
-      const pt = place(t * 0.35 - Math.PI * 0.6);
-      gsap.set(orb, { x: pt.x, y: pt.y, autoAlpha: Math.sin(t * 0.35 - Math.PI * 0.6) > 0.55 ? 0.35 : 1 }); // passes behind the word
-    };
-    gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
+  addEventListener('pointermove', (e) => {
+    if (!active) return;
+    if (state === 'hero' && y0 - e.clientY > 40) { active = false; begin(); return; }
+    if (state === 'story') { nudge((y0 - e.clientY) * 0.0018); y0 = e.clientY; }
+    if (state === 'world' && gl) gl.state.panX = clamp(pan0 - ((e.clientX - x0) / innerWidth) * 2.2, -1, 1);
   });
+  addEventListener('pointerup', () => { active = false; });
+  addEventListener('pointercancel', () => { active = false; });
 }
+// mouse look-around
+addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse' || !gl) return;
+  const nx = (e.clientX / innerWidth - 0.5) * 2, ny = (e.clientY / innerHeight - 0.5) * 2;
+  const k = state === 'world' ? (world === 'hunt' ? 1 : 0.25) : 0.6;
+  gl.state.panX = nx * k; gl.state.panY = ny * k;
+});
 
-// ---------- Chrome: header state, current section, the film ----------
-function startChrome() {
-  onPage(() => {
-    const top = $('.di-top');
-    onScroll((s) => top?.classList.toggle('is-scrolled', s.y > 30));
-    const links = $$<HTMLAnchorElement>('.di-top__nav a[href^="#"]');
-    links.forEach((a) => {
-      const sec = $(a.hash);
-      if (!sec) return;
-      ScrollTrigger.create({ trigger: sec, start: 'top 50%', end: 'bottom 50%', onToggle: (s) => (s.isActive ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')) });
-    });
+addEventListener('keydown', (e) => {
+  const k = e.key;
+  if (k === 'Escape') {
+    if (product.isOpen()) { if (!product.escape()) (world === 'card' ? hunt() : closeBrief()); return; }
+    if (debriefOpen) closeDebrief();
+    else if (briefOpen >= 0) closeBrief();
+    else if (state === 'world') toConsole();
+    return;
+  }
+  const inControl = (e.target as HTMLElement).closest?.('button, a, input');
+  if (state === 'hero' && (k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !inControl))) { e.preventDefault(); begin(); }
+  else if (state === 'story') {
+    const step = { ArrowDown: 0.07, PageDown: 0.12, ' ': 0.12, ArrowUp: -0.07, PageUp: -0.12, End: 1, Home: -1 }[k as 'ArrowDown'];
+    if (step !== undefined && !(k === ' ' && inControl)) { e.preventDefault(); nudge(step); }
+  } else if (state === 'console' && !busy) {
+    if (k === 'ArrowRight') { e.preventDefault(); goTo(cur + 1); }
+    if (k === 'ArrowLeft') { e.preventDefault(); goTo(cur - 1); }
+  }
+});
 
-    const dialog = $<HTMLDialogElement>('[data-dialog]'), film = $<HTMLVideoElement>('.di-dialog__video');
-    if (!dialog || !film) return;
-    $$('[data-film]').forEach((b) => b.addEventListener('click', () => {
-      arm(film);
-      dialog.showModal();
-      film.currentTime = 0;
-      film.play().catch(() => {});
-    }));
-    dialog.addEventListener('close', () => film.pause());
-    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
-    if (isTouch()) film.setAttribute('playsinline', '');
-  });
-}
+// ---------- buttons ----------
+$('[data-begin]').addEventListener('click', begin);
+$('[data-skip]').addEventListener('click', skip);
+$$('[data-hunt]').forEach((b) => b.addEventListener('click', hunt));
+$$('[data-sig]').forEach((b) => b.addEventListener('click', () => openBrief(+b.dataset.sig!)));
+$('[data-close-brief]').addEventListener('click', () => closeBrief());
+// from the landscape, the tour is one click away: reopen this module's screen and start it
+$('[data-mission-tour]').addEventListener('click', async () => {
+  if (busy || state !== 'world') return;
+  closeDebrief(false);
+  setWorld('card');
+  if (gl) gsap.to(gl.state, { world: 0, duration: reduced ? 0 : 1.2, ease: INOUT });
+  await product.open(cur, overviewGuide(cur), { x: innerWidth / 2, y: 140 });
+  setTimeout(() => product.tour(), reduced ? 0 : 1200);
+});
+$$('[data-close-debrief]').forEach((b) => b.addEventListener('click', () => closeDebrief()));
+$$('[data-to-console]').forEach((b) => b.addEventListener('click', toConsole));
+$$('[data-finish]').forEach((b) => b.addEventListener('click', finish));
+$('[data-restart]').addEventListener('click', restart);
+$$<HTMLAnchorElement>('[data-jump]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); if (!busy) enterWorld(+a.dataset.jump!); }));
 
-startFeed();
-startLight();
-startReel();
-startScored();
-startOrbit();
-startEnd();
-startChrome();
-boot();
+show('loading');
+// GSAP owns these transforms (centring included), so CSS never sets translate on them
+gsap.set('.dx-card', { xPercent: -50, yPercent: -50 });
+gsap.set('.dx-brief, .dx-debrief', { xPercent: -50, yPercent: -50 });
+gsap.set('.dx-find, .dx-done, [data-close-brief]', { xPercent: -50 });
+gsap.set('[data-hint]', { xPercent: -50, yPercent: -50 });
+gsap.set('[data-sig]', { xPercent: -50, yPercent: -100 });
+gsap.set('.dx-hero__title, .dx-hero .dx-cta, .dx-hero__kicker, .dx-typed', { autoAlpha: 0 });
+gsap.set('[data-hint], [data-find], .dx-done, [data-close-brief]', { autoAlpha: 0 });
+if (touch) html.classList.add('touch');
+load();
