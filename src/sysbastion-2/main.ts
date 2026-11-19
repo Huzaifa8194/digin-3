@@ -7,7 +7,7 @@ import { gsap } from 'gsap';
 import { addTick } from './clock';
 import { evidence, footer as F, modules, tools } from './content';
 import { dialogHTML, icon, setApplyState, setRestoreState, windowHTML } from './ui';
-import { toolsList } from './ui-data';
+import { toolsList, type PageId } from './ui-data';
 import { clamp01, coarse, isMobile, lvh, onViewport, reduced, smooth, softwareGL } from './device';
 import { LOADER, runLoader, task } from './loader';
 import { crestURL, markSVG, patternCanvas } from './patterns';
@@ -136,6 +136,17 @@ if (!coarse() && !RM) {
     });
   });
 }
+
+// ---------- Chapter 03: each way in opens the interactive window on its own page ----------
+$$<HTMLButtonElement>('.s5__open').forEach((b) => {
+  const warm = () => { void import('./demo'); };
+  b.addEventListener('pointerenter', warm, { once: true });
+  b.addEventListener('focus', warm, { once: true });
+  b.addEventListener('click', () => {
+    const img = b.closest('.s5__row')!.querySelector<HTMLElement>('.s5__photo')!;
+    import('./demo').then(({ openDemo }) => openDemo({ from: img, page: b.dataset.page as PageId, focus: b.dataset.focus, lenis, reduced: RM }));
+  });
+});
 
 // ---------- the SysBastion window: Chapters 02 and 04 happen inside it ----------
 // Chapter 02 is the Harden page with the System hardening card in its slot and the change journal

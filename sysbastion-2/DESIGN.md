@@ -88,3 +88,18 @@ inside tall wrappers with negative margins so chapters overlap.
 - Regenerate tiles after UI edits: run the dev server, then capture `.sbw-card` from
   `/sysbastion-2/ui-lab/?tile=<id>` at 2x (and `?win=apply&active=hardening&sel=8&done=8`,
   `?win=journal&restored=8&dlg=0` at 1.5x for the phone stills).
+
+## Pass 3: try the product (Chapter 03)
+
+- Each "way in" row is a button. Its panel grows (FLIP, 900 ms) into the full SysBastion window on
+  the page for that way in, with the matching control highlighted and explained.
+  `src/sysbastion-2/demo.ts` + `demo.css` load only on first open (31 KB + 7 KB).
+- Everything is clickable, with no backend: sidebar pages, toggles (selections), radios, Select all,
+  Apply selected (optional restore point step, journal written per change, "Applied" badges),
+  Journal & restore (session entries, Restore all, newest first), Audit log, PowerShell App
+  Control actions, System tools buttons. State lasts for the visit.
+- Every control has a tooltip (`demo-tips.ts`): what it does and, where the engineering report
+  tested it, what it found (passed, partly, still being tested, configured only, unsupported).
+- "?" runs a 5-step tour. Esc or the backdrop closes it, the window shrinks back into its row,
+  and focus returns to the row. Phones get a fluid window (sidebar as tabs, tooltips on tap);
+  reduced motion gets a fade. The demo lifts the app's faintest greys so its text passes AA.

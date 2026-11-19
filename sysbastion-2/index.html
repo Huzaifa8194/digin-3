@@ -112,32 +112,37 @@
           <span class="s5__hl">It starts with one <span class="s5__quest"><span class="s5__crest" data-crests aria-hidden="true"></span>&nbsp;file.</span></span>
           <span class="s5__hl">It rarely stays that small.</span>
         </h2>
-        <p class="s5__sub">No promise that nothing gets through. Just the ways in V1.4 closes, and what we saw when we tested them.</p>
+        <p class="s5__sub">No promise that nothing gets through. Just the ways in V1.4 closes, and what we saw when we tested them. Open any of them to try the control yourself.</p>
         <ol class="s5__list" data-rows>
           <li class="s5__row">
             <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A script you double-click.</h3></div><p class="s5__num">01</p></div>
             <img class="s5__photo" src="/sysbastion-2/ui/row-types.webp" alt="SysBastion Risky file types panel: fourteen extensions, from .vbs to .ps1, struck through and set to open in Notepad" width="826" height="420" loading="lazy" decoding="async">
             <p class="s5__desc">Fourteen risky file types, from .vbs and .js to .hta and .scr, open as plain text in Notepad. Reading one is safe. Running it takes a deliberate choice.</p>
+            <button class="s5__open" type="button" data-page="scripts" data-focus="types:0" aria-label="Try it in SysBastion: A script you double-click"><span class="s5__try" aria-hidden="true">Try it in the app<i>→</i></span></button>
           </li>
           <li class="s5__row">
             <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A batch file run anyway.</h3></div><p class="s5__num">02</p></div>
             <img class="s5__photo" src="/sysbastion-2/film-2.webp" alt="A console where running test.bat returns: this program is blocked by group policy" width="720" height="480" loading="lazy" decoding="async">
             <p class="s5__desc">Typing the path into a console still meets the policy. Windows answers: this program is blocked by group policy.</p>
+            <button class="s5__open" type="button" data-page="scripts" data-focus="scripts:2" aria-label="Try it in SysBastion: A batch file run anyway"><span class="s5__try" aria-hidden="true">Try it in the app<i>→</i></span></button>
           </li>
           <li class="s5__row">
             <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A PowerShell script.</h3></div><p class="s5__num">03</p></div>
             <img class="s5__photo" src="/sysbastion-2/ui/row-powershell.webp" alt="SysBastion PowerShell App Control panel with script file execution disabled machine-wide" width="826" height="420" loading="lazy" decoding="async">
             <p class="s5__desc">Script files are refused at the machine level, for every account on the PC, not just the one that clicked.</p>
+            <button class="s5__open" type="button" data-page="powershell" data-focus="powershell:0" aria-label="Try it in SysBastion: A PowerShell script"><span class="s5__try" aria-hidden="true">Try it in the app<i>→</i></span></button>
           </li>
           <li class="s5__row">
             <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A connection out.</h3></div><p class="s5__num">04</p></div>
             <img class="s5__photo" src="/sysbastion-2/ui/row-outbound.webp" alt="SysBastion Outbound firewall panel: block rules for certutil.exe, mshta.exe, powershell.exe and other executables" width="826" height="420" loading="lazy" decoding="async">
             <p class="s5__desc">Thirty-five tools attackers lean on get outbound block rules in both Defender Firewall and the Filtering Platform. A blocked PowerShell connection stayed blocked after a restart.</p>
+            <button class="s5__open" type="button" data-page="network" data-focus="outbound:7" aria-label="Try it in SysBastion: A connection out"><span class="s5__try" aria-hidden="true">Try it in the app<i>→</i></span></button>
           </li>
           <li class="s5__row">
             <div class="s5__left"><div><p class="s5__label">A way in</p><h3 class="s5__way">A connection in.</h3></div><p class="s5__num">05</p></div>
             <img class="s5__photo" src="/sysbastion-2/ui/row-shields.webp" alt="SysBastion Inbound Shields-Up panel: unsolicited inbound connections blocked on every profile and kept after restarts" width="826" height="420" loading="lazy" decoding="async">
             <p class="s5__desc">Shields-Up drops unsolicited inbound traffic. A connection that worked before Apply timed out after it, and again after Windows restarted.</p>
+            <button class="s5__open" type="button" data-page="network" data-focus="shields:0" aria-label="Try it in SysBastion: A connection in"><span class="s5__try" aria-hidden="true">Try it in the app<i>→</i></span></button>
           </li>
         </ol>
       </div>

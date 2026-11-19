@@ -32,20 +32,20 @@ export function cardHTML(id: keyof typeof cards | 'types' | 'journal' | 'audit' 
   switch (id) {
     case 'uacAdmin': case 'uacStd': case 'psPolicy': {
       const c = cards[id];
-      return `<section class="sbw-card${n}">${cardHead(undefined, c.title)}${c.radios.map((r) => `<div class="sbw-radio"><span class="sbw-rd${r.on ? ' on' : ''}"></span><b>${esc(r.t)}</b>${badge(r)}</div>`).join('')}</section>`;
+      return `<section class="sbw-card${n}" data-card="${id}">${cardHead(undefined, c.title)}${c.radios.map((r) => `<div class="sbw-radio"><span class="sbw-rd${r.on ? ' on' : ''}"></span><b>${esc(r.t)}</b>${badge(r)}</div>`).join('')}</section>`;
     }
     case 'types':
-      return `<section class="sbw-card${n}">${cardHead('file', 'Risky file types', '14 extensions')}<p class="sbw-note">Double-click opens these in Notepad. Reading is safe; running takes a deliberate choice.</p><div class="sbw-chips">${cards.types.map((t) => `<span class="sbw-chip"><s>${t}</s></span>`).join('')}</div><div class="sbw-row"><div class="sbw-row__txt"><b>Open in Notepad</b><small>Instead of the script host</small></div>${toggle(true)}</div></section>`;
+      return `<section class="sbw-card${n}" data-card="types">${cardHead('file', 'Risky file types', '14 extensions')}<p class="sbw-note">Double-click opens these in Notepad. Reading is safe; running takes a deliberate choice.</p><div class="sbw-chips">${cards.types.map((t) => `<span class="sbw-chip"><s>${t}</s></span>`).join('')}</div><div class="sbw-row"><div class="sbw-row__txt"><b>Open in Notepad</b><small>Instead of the script host</small></div>${toggle(true)}</div></section>`;
     case 'powershell': {
       const c = cards.powershell;
-      return `<section class="sbw-card${n}">${cardHead(c.icon, c.title, c.meta)}<div class="sbw-actions">${c.actions.map((a, i) => `<span class="sbw-btn sm${i === 2 ? ' pri' : ''}">${a}</span>`).join('')}</div>${rowsHTML(c.rows)}</section>`;
+      return `<section class="sbw-card${n}" data-card="powershell">${cardHead(c.icon, c.title, c.meta)}<div class="sbw-actions">${c.actions.map((a, i) => `<span class="sbw-btn sm${i === 2 ? ' pri' : ''}">${a}</span>`).join('')}</div>${rowsHTML(c.rows)}</section>`;
     }
     case 'journal':
-      return `<section class="sbw-card sbw-journal${n}">${cardHead('history', 'Change journal', `${journal.length} changes`)}<div class="sbw-th"><span>Setting</span><span>Original</span><span>Current</span></div>${journal.map((r) => `<div class="sbw-tr"><b>${esc(r.s)}</b><span>${r.o}</span><span class="sbw-cur"><em>${r.c}</em></span></div>`).join('')}<div class="sbw-card__foot"><span class="sbw-btn pri">${icon('history')}Restore all</span></div></section>`;
+      return `<section class="sbw-card sbw-journal${n}" data-card="journal">${cardHead('history', 'Change journal', `${journal.length} changes`)}<div class="sbw-th"><span>Setting</span><span>Original</span><span>Current</span></div>${journal.map((r) => `<div class="sbw-tr"><b>${esc(r.s)}</b><span>${r.o}</span><span class="sbw-cur"><em>${r.c}</em></span></div>`).join('')}<div class="sbw-card__foot"><span class="sbw-btn pri">${icon('history')}Restore all</span></div></section>`;
     case 'audit':
-      return `<section class="sbw-card${n}">${cardHead('list', 'Execution log', 'What · when · who')}${audit.map((r, i) => `<div class="sbw-tr sbw-tr--log"><span class="sbw-time">12:${String(40 + i).padStart(2, '0')}</span><b>${esc(r.c)}</b><span class="sbw-act">${r.a}</span></div>`).join('')}</section>`;
+      return `<section class="sbw-card${n}" data-card="audit">${cardHead('list', 'Execution log', 'What · when · who')}${audit.map((r, i) => `<div class="sbw-tr sbw-tr--log"><span class="sbw-time">12:${String(40 + i).padStart(2, '0')}</span><b>${esc(r.c)}</b><span class="sbw-act">${r.a}</span></div>`).join('')}</section>`;
     case 'tools':
-      return `<section class="sbw-card${n}">${cardHead('wrench', 'System tools', '16 tools')}<div class="sbw-tools">${toolsList.map((t) => `<span class="sbw-tool">${esc(t)}</span>`).join('')}</div></section>`;
+      return `<section class="sbw-card${n}" data-card="tools">${cardHead('wrench', 'System tools', '16 tools')}<div class="sbw-tools">${toolsList.map((t) => `<span class="sbw-tool">${esc(t)}</span>`).join('')}</div></section>`;
     case 'restore':
       return `<section class="sbw-card${n}"><div class="sbw-row"><div class="sbw-row__txt"><b>${cards.restore.title}</b><small>${cards.restore.d}</small></div>${toggle(true)}</div></section>`;
     default: {
@@ -76,6 +76,8 @@ function mainHTML(page: PageId | 'apply'): string {
       return `${head('Document readers', 'Hardened before they’re installed, through official machine policy.')}<div class="sbw-three">${cardHTML('adobe')}${cardHTML('office')}${cardHTML('foxit')}</div>`;
     case 'journal':
       return `${head('Journal & restore', 'Every change SysBastion owns, with the value it replaced.')}<div class="sbw-jpage" data-jpage>${cardHTML('journal')}${cardHTML('audit')}</div>`;
+    case 'assoc':
+      return `${head('File associations', 'Risky types open as text, not as programs.')}<div class="sbw-two">${cardHTML('types')}${cardHTML('scripts')}</div>`;
     case 'audit':
       return `${head('Audit log', 'What changed, when, and who ran it.')}${cardHTML('audit')}`;
     case 'tools':
@@ -89,7 +91,7 @@ function mainHTML(page: PageId | 'apply'): string {
 export function windowHTML(active: PageId, page: PageId | 'apply' = active, status = 'Selections cleared. Previously applied Windows settings remain unchanged until Restore.', count = 0): string {
   const item = (n: { id: PageId; label: string; icon: string }) => `<span class="sbw-nav${n.id === active ? ' on' : ''}" data-nav="${n.id}">${icon(n.icon)}${esc(n.label)}</span>`;
   return `<div class="sbw" data-page="${page}">
-  <div class="sbw-title">${mark}<b>SysBastion</b><span class="sbw-ver">V1.4</span><nav><span>File</span><span>Tweaks</span><span>Tools</span><span>Help</span></nav><span class="sbw-who">DigiInn360</span><span class="sbw-ctl"><i>–</i><i>▢</i><i>✕</i></span></div>
+  <div class="sbw-title">${mark}<b>SysBastion</b><span class="sbw-ver">V1.4</span><nav><span>File</span><span>Tweaks</span><span>Tools</span><span>Help</span></nav><span class="sbw-who">DigiInn360</span><span class="sbw-ctl"><i>–</i><i>▢</i><i data-x>✕</i></span></div>
   <aside class="sbw-side"><p>Harden</p>${nav.harden.map(item).join('')}<p>Manage</p>${nav.manage.map(item).join('')}<div class="sbw-rp"><div><b>System restore point</b><small>Offered before rules apply</small></div>${toggle(true)}</div></aside>
   <main class="sbw-main" data-main>${mainHTML(page)}</main>
   <footer class="sbw-bar"><span class="sbw-status" data-status>${esc(status)}</span><span class="sbw-btn sq">?</span><span class="sbw-btn">Select all</span><span class="sbw-btn">${icon('history')}Restore all applied</span><span class="sbw-btn pri" data-apply>Apply selected <i data-apply-n>${count}</i></span></footer>
