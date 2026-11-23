@@ -1,7 +1,7 @@
 // The forge: a slow domain-warped haze over near black with a warm torch that follows the
 // cursor. Backdrop for Chapters 05 and 06 (the reference's totem backdrop).
 import { addTick } from './clock';
-import { dpr, onViewport } from './device';
+import { dpr, onQuality, onViewport, qualityTier, tierScale } from './device';
 import { fullscreen } from './gl';
 
 const FRAG = /* glsl */ `
@@ -38,18 +38,23 @@ export function mountForge(canvas: HTMLCanvasElement, isActive: () => boolean) {
   const target = { x: 0.5, y: 0.5 }, m = { x: 0.5, y: 0.5 };
   const move = (e: MouseEvent) => { target.x = e.clientX / innerWidth; target.y = e.clientY / innerHeight; };
   addEventListener('mousemove', move, { passive: true });
-  const resize = () => { const r = dpr(1.5, 1); canvas.width = Math.floor(canvas.clientWidth * r); canvas.height = Math.floor(canvas.clientHeight * r); };
+  // a soft glow: on slower machines it renders at a lower internal resolution, the browser scales it up
+  const resize = () => { const r = dpr(1.5, 1) * tierScale([1, 0.66, 0.5]); canvas.width = Math.floor(canvas.clientWidth * r); canvas.height = Math.floor(canvas.clientHeight * r); };
   resize();
   const offView = onViewport(resize);
-  let time = 0;
+  const offQ = onQuality(resize);
+  let time = 0, odd = false;
   const off = addTick((_, dt) => {
     if (!isActive()) return;
     time += dt;
     m.x += (target.x - m.x) * Math.min(1, dt * 3); m.y += (target.y - m.y) * Math.min(1, dt * 3);
+    // lowest tier: the slow embers redraw every other frame
+    odd = !odd;
+    if (odd && qualityTier() >= 2) return;
     q.gl.uniform2f(q.u('uRes'), canvas.width, canvas.height);
     q.gl.uniform1f(q.u('uTime'), time);
     q.gl.uniform2f(q.u('uMouse'), m.x, m.y);
     q.draw();
   });
-  return () => { off(); offView(); removeEventListener('mousemove', move); q.dispose(); };
+  return () => { off(); offView(); offQ(); removeEventListener('mousemove', move); q.dispose(); };
 }

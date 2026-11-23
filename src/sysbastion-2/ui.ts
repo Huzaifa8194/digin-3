@@ -107,7 +107,8 @@ export function setApplyState(win: HTMLElement, sel: number, done: number, press
   rows.forEach((r, i) => r.querySelector('.sbw-tg')!.classList.toggle('on', i < sel));
   const n = rows.length;
   const badge = win.querySelector<HTMLElement>('[data-apply-n]');
-  if (badge) badge.textContent = String(Math.max(0, sel - done) || (done ? 0 : sel));
+  const bn = String(Math.max(0, sel - done) || (done ? 0 : sel));
+  if (badge && badge.textContent !== bn) badge.textContent = bn;
   win.querySelector('[data-apply]')?.classList.toggle('press', pressed);
   const live = win.querySelector<HTMLElement>('[data-live-rows]');
   if (live && live.childElementCount !== done) {
@@ -119,7 +120,8 @@ export function setApplyState(win: HTMLElement, sel: number, done: number, press
   }
   win.querySelector<HTMLElement>('[data-live-empty]')?.toggleAttribute('hidden', done > 0);
   const count = win.querySelector<HTMLElement>('[data-live-count]');
-  if (count) count.textContent = done ? `${done} of ${n} written` : sel ? 'Waiting for Apply' : 'Empty';
+  const cn = done ? `${done} of ${n} written` : sel ? 'Waiting for Apply' : 'Empty';
+  if (count && count.textContent !== cn) count.textContent = cn;
   const status = win.querySelector<HTMLElement>('[data-status]')!;
   const msg = done >= n ? `${n} changes applied. The readback from Windows matches the journal.`
     : done ? `Applying ${done} of ${n}. Each change is journaled before it is made.`
@@ -131,7 +133,8 @@ export function setApplyState(win: HTMLElement, sel: number, done: number, press
 
 /** Chapter 04. `dlg` 1 = confirm dialog showing, 0 = gone; `restored` rows written back (0..8). */
 export function setRestoreState(win: HTMLElement, dlg: number, restored: number, pressed = false) {
-  win.style.setProperty('--dlg', dlg.toFixed(3));
+  const d = dlg.toFixed(3);
+  if (win.style.getPropertyValue('--dlg') !== d) win.style.setProperty('--dlg', d);
   const rows = win.querySelectorAll<HTMLElement>('.sbw-journal .sbw-tr');
   rows.forEach((r, i) => {
     const done = i < restored;

@@ -103,3 +103,70 @@ inside tall wrappers with negative margins so chapters overlap.
 - "?" runs a 5-step tour. Esc or the backdrop closes it, the window shrinks back into its row,
   and focus returns to the row. Phones get a fluid window (sidebar as tabs, tooltips on tap);
   reduced motion gets a fade. The demo lifts the app's faintest greys so its text passes AA.
+
+## Pass 4: audited against Impeccable and taste-skill
+
+Both skills were run as an audit, not a redesign: the Grail scroll world stays. Impeccable's
+critique ran as two isolated reviews (a design review, 25/36 on Nielsen's heuristics, and a
+detector plus browser evidence pass); taste-skill's `copy-lint` and `consistency.mjs` ran on the
+live page at 1440 and 390.
+
+- **Hero:** the h1 now names the category, platform and buyer ("Windows 10 hardening for IT and
+  security teams"); "Deny by default" stays as the big brand line (a `<p>`). A fact line (14 file
+  types, 35 outbound tools, Office macros, journaled Restore all) and a second button, **Try the
+  console**, sit bottom left; the button opens the working console on System hardening.
+- **Headings:** the paired-fragment headings ("Setting changed. Old value kept.", "It starts with
+  one file. It rarely stays that small.", "Six sections. One console.", "Close the ways in. Keep
+  the receipts.") became plain claims with a noun. Row titles are a verb and an object. The
+  eyebrow labels ("A way in", the tools kicker) are gone.
+- **Ways in:** "Try it in the app" shows at rest under each title, not only on hover; 44 px on
+  phones, where it no longer cuts the title.
+- **The console:** Restore asks first ("Restore all applied?", like the app and Chapter 04), and
+  both restore buttons carry the same label. **Book a walkthrough** in the top bar closes the
+  console, scrolls to the email field and focuses it; the first Restore suggests it once.
+- **Modules:** the module's own name is the big line ("UAC"); the fantasy epithets are gone. The
+  gold object steps left and down in size so the name and the app panel both read.
+- **Evidence:** the counters that climbed with every dropped ball are replaced by figures from the
+  engineering report: 30/30 Acrobat and Office policy values, 8/8 journals, 2/2 firewall
+  journals still Applied after reboot, 6 harmless test runs refused or blocked.
+- **System tools:** every tool on the wheel opens the System tools tab in the console.
+- **Demo request:** visible "Work email" label, the field in the sans face (the caps-only display
+  face could not show what was typed), an always-present **Request a demo** button, and an honest
+  result: the page says a draft should have opened and gives the address with a copy button in
+  case nothing did. Footer legal row is "© 2026 DigiInn360"; brand spelling fixed in meta.
+- **Pill:** pinned bottom right (no more sliding across content); on phones it waits until after
+  the hero and steps aside while you scroll down.
+- **Palette:** the card-back patterns moved from Grail's red, mustard, lilac and green to the
+  product's ink, ice blue, steel and gold; `deck-hero.webp` was re-rendered from the scene.
+
+**Kept on purpose (skill rules waived for the Grail world):** scroll-linked motion, pinned
+stretches, overlapping chapters and the reveal-on-scroll lines (taste: scroll-reveal, pinned,
+section-height, one-section, flush); the rotated white sheets and the tilted window (taste: tilt);
+the corner running heads ("The problem / Chapter 01"), which are colontitles, not eyebrows over a
+heading; the tools title morph, which shows broken letters mid-transition by design. Checker
+contrast fails left on the page were verified as mid-animation states or as text over the fixed
+ink layer that hit-testing cannot see (real ratios 6.2:1 to 9.1:1). The detector's
+`flat-type-hierarchy` is a static-scan artefact: the page's CSS loads through JS.
+
+## Pass 5: smoother on slower machines (nothing removed)
+
+Measured by scrolling the page under 4x CPU throttling with a CPU profile and timeline traces,
+then comparing against the previous commit section by section.
+
+- **Every frame reads, then writes.** The clock now runs a read phase (`addRead`) before the
+  ticks. The scroll driver measures everything before its first style write; the row lean, the
+  tools wheel, the spiral's dock target and the footer rays measure in the read phase. Reading
+  layout after a write had forced two or three full restyles and layouts per frame.
+- **`window.scrollY` is read in the read phase too.** Chrome restyles and lays out the page to
+  answer it; the wheel read it every frame, on every chapter.
+- **Scroll variables live where they are used.** Each `--var` is written only on the elements whose
+  CSS reads it (`VAR_HOME` in `main.ts`), not on `.page`, and only when its value changes. Before,
+  one scroll frame restyled 660 to 860 elements; now 3 to 50.
+- **Quality tier for weak hardware.** Machines with 4 cores or 4 GB or less start at tier 1, and
+  the clock steps down a tier (at most twice) if frames average under about 38 fps for two seconds.
+  Tiers only lower the internal resolution of the soft WebGL scenes (forge glow, ink, the gold
+  module object, footer rays); at tier 2 the forge redraws every other frame. Text, UI cards, the
+  spiral and the physics balls keep full resolution. `?tier=0|1|2` forces a tier.
+- Result in traces (same machine, both builds interleaved): main-thread work per scroll frame
+  fell from 60 to 15 ms in the hero, 84 to 32 ms in Chapter 02 and 146 to 40 ms in Modules.
+  Chapter 07 stays GPU-bound (the wheel under the shader band's backdrop blur, and the forge).

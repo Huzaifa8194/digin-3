@@ -131,12 +131,12 @@ export const evidence = {
   label: 'Evidence',
   chapter: 'Chapter 06',
   head: ['Every rule is', 'checked four ways.'],
-  body: 'A policy value, a journal SysBastion owns, a readback of the effective policy, and a runtime test that tries the thing and gets refused. They’re different kinds of proof, and the engineering report keeps them apart. Drop a few in.',
+  body: 'A policy value, a journal SysBastion owns, a readback of the effective policy, and a runtime test that tries the thing and gets refused. They’re different kinds of proof, and the engineering report keeps them apart. Click to drop a few in.',
   cols: [
-    { key: 'POL', label: 'Policy value', group: 'readers' as GroupId, start: 20 },
-    { key: 'JRN', label: 'Journal', group: 'hardening' as GroupId, start: 28 },
-    { key: 'RBK', label: 'Readback', group: 'network' as GroupId, start: 24 },
-    { key: 'RUN', label: 'Runtime denial', group: 'uac' as GroupId, start: 16 },
+    { key: 'POL', label: 'Policy value', group: 'readers' as GroupId, start: 20, fig: '30 / 30', note: 'Acrobat and Office values read back as set' },
+    { key: 'JRN', label: 'Journal', group: 'hardening' as GroupId, start: 28, fig: '8 / 8', note: 'Acrobat and Office journals written' },
+    { key: 'RBK', label: 'Readback', group: 'network' as GroupId, start: 24, fig: '2 / 2', note: 'Firewall journals still Applied after reboot' },
+    { key: 'RUN', label: 'Runtime denial', group: 'uac' as GroupId, start: 16, fig: '6', note: 'Harmless test runs refused or blocked' },
   ],
 };
 
@@ -159,7 +159,7 @@ export const footer = {
   chapter: 'Chapter 08',
   lead: 'Deny by default. Reversible by design.',
   pitch: 'SysBastion V1.4 is in engineering validation now. Leave a work email and we’ll set up a walkthrough on a test machine.',
-  placeholder: 'Your email',
+  placeholder: 'name@company.com',
   caption: 'Demo on a test VM · No card, no spam',
   made: 'Made by DigiInn360',
   tagline: 'Deny by default. Reversible by design.',

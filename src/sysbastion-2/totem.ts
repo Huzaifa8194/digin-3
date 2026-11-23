@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { addTick } from './clock';
 import type { ModuleShape } from './content';
-import { dpr, onViewport, reduced, richGL } from './device';
+import { dpr, onQuality, onViewport, reduced, richGL, tierScale } from './device';
 
 const GOLD = new THREE.Color('#c79650');
 const SIZE = 2.6, ASPECT = 1440 / 900;
@@ -112,7 +112,8 @@ type Item = { group: THREE.Group; mode: 'enter' | 'exit' | 'idle'; t: number; di
 export function mountTotem(canvas: HTMLCanvasElement, isActive: () => boolean) {
   if (!richGL()) return { show: () => {}, dispose: () => {} };
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(dpr(2, 1.5));
+  const ratio = () => dpr(2, 1.5) * tierScale([1, 0.8, 0.66]);
+  renderer.setPixelRatio(ratio());
   renderer.setClearColor(0, 0);
   renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.toneMappingExposure = 0.95;
@@ -136,11 +137,13 @@ export function mountTotem(canvas: HTMLCanvasElement, isActive: () => boolean) {
   const resize = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     if (!w || !h) return;
+    renderer.setPixelRatio(ratio());
     renderer.setSize(w, h, false);
     cam.aspect = w / h; cam.zoom = Math.min(1, w / h / ASPECT); cam.updateProjectionMatrix();
   };
   resize();
   const offView = onViewport(resize);
+  onQuality(resize);
   const still = reduced();
   let tx = 0, ty = 0;
 

@@ -1,8 +1,8 @@
 // Footer light: the tile is a lamp, the shield mark on it an occluder. Each pixel marches toward
 // the light and counts how much lit tile it crosses, so the mark throws a real shadow shaft. The
 // light sits up-left on the tile and leans toward the cursor on a damped spring.
-import { addTick } from './clock';
-import { coarse, dpr, isMobile, softwareGL } from './device';
+import { addRead, addTick } from './clock';
+import { coarse, dpr, isMobile, onQuality, softwareGL, tierScale } from './device';
 import { fullscreen } from './gl';
 import { markCanvas } from './patterns';
 
@@ -58,17 +58,19 @@ export function mountRays(canvas: HTMLCanvasElement, tile: HTMLElement, live: ()
   const mouse = { x: NaN, y: NaN };
   const L = { x: 0, y: 0, vx: 0, vy: 0, init: false };
   let lastTile = { cx: 0, cy: 0, w: 0 };
-  const resize = () => { scale = Math.min(1, dpr(1, 0.75) * 0.6); canvas.width = Math.max(1, Math.floor(canvas.clientWidth * scale)); canvas.height = Math.max(1, Math.floor(canvas.clientHeight * scale)); dirty = true; };
+  const resize = () => { scale = Math.min(1, dpr(1, 0.75) * 0.6) * tierScale([1, 0.8, 0.66]); canvas.width = Math.max(1, Math.floor(canvas.clientWidth * scale)); canvas.height = Math.max(1, Math.floor(canvas.clientHeight * scale)); dirty = true; };
   resize();
   addEventListener('resize', resize);
+  onQuality(resize);
   const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) dirty = true; }, { threshold: 0 });
   io.observe(canvas);
   const mv = (e: PointerEvent) => { mouse.x = e.clientX; mouse.y = e.clientY; };
   if (!touch) addEventListener('pointermove', mv, { passive: true });
 
+  let cr: DOMRect | null = null, tr: DOMRect | null = null;
+  addRead(() => { if (inView && live()) { cr = canvas.getBoundingClientRect(); tr = tile.getBoundingClientRect(); } });
   const off = addTick((_, dt) => {
-    if (!inView || !live()) return;
-    const cr = canvas.getBoundingClientRect(), tr = tile.getBoundingClientRect();
+    if (!inView || !live() || !cr || !tr) return;
     if (!tr.width) return;
     const cx = tr.left - cr.left + tr.width / 2, cy = tr.top - cr.top + tr.height / 2, hw = tr.width / 2, hh = tr.height / 2;
     if (cx !== lastTile.cx || cy !== lastTile.cy || tr.width !== lastTile.w) { dirty = true; lastTile = { cx, cy, w: tr.width }; }

@@ -6,13 +6,13 @@ import type { GroupId } from './content';
 type Painter = (c: CanvasRenderingContext2D, s: number) => void;
 
 export const palette: Record<GroupId, { bg: string; fg: string; glow: string }> = {
-  uac: { bg: '#f2b705', fg: '#6b5636', glow: 'rgba(160,128,40,0.32)' },
-  hardening: { bg: '#f4c21b', fg: '#e8432c', glow: 'rgba(220,90,40,0.3)' },
-  scripts: { bg: '#e6c0f2', fg: '#5e4a3a', glow: 'rgba(160,110,170,0.3)' },
+  uac: { bg: '#c79650', fg: '#3b2a12', glow: 'rgba(160,120,60,0.32)' },
+  hardening: { bg: '#1d3461', fg: '#8fb6ff', glow: 'rgba(40,70,140,0.32)' },
+  scripts: { bg: '#dfe8f7', fg: '#1d3461', glow: 'rgba(90,120,180,0.28)' },
   powershell: { bg: '#8fb6ff', fg: '#1c2a57', glow: 'rgba(60,90,170,0.3)' },
   network: { bg: '#bfe0ff', fg: '#2a63e6', glow: 'rgba(60,110,220,0.3)' },
-  readers: { bg: '#f0452f', fg: '#1a1a1a', glow: 'rgba(200,60,40,0.3)' },
-  tools: { bg: '#86d7a4', fg: '#14532d', glow: 'rgba(40,120,70,0.3)' },
+  readers: { bg: '#2a2f3a', fg: '#c79650', glow: 'rgba(120,100,60,0.3)' },
+  tools: { bg: '#e9d3a6', fg: '#5a4320', glow: 'rgba(160,130,70,0.3)' },
 };
 
 const painters: Record<GroupId, Painter> = {

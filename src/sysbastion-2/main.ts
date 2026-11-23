@@ -4,7 +4,7 @@ import './style.css';
 import './ui.css';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
-import { addTick } from './clock';
+import { addRead, addTick } from './clock';
 import { evidence, footer as F, modules, tools } from './content';
 import { dialogHTML, icon, setApplyState, setRestoreState, windowHTML } from './ui';
 import { toolsList, type PageId } from './ui-data';
@@ -23,7 +23,27 @@ const MOBILE = isMobile();
 const GL = !softwareGL() && !RM && !/[?&]nogl=1/.test(location.search);
 const RICH = GL && !MOBILE;
 if (!GL) root.classList.add('no-gl');
-const setVar = (k: string, v: number) => page.style.setProperty(k, v.toFixed(4));
+// Scroll values go only on the elements whose CSS reads them (a value on .page would restyle all
+// ~800 elements under it every frame), and only when they change.
+const VAR_HOME: Record<string, string> = {
+  '--afade': '.applied, .clock', '--ink': '.applied, .clock, .ink--still', '--hl': '.applied', '--dgrow': '.applied',
+  '--deckout': '.scene', '--gldock': '.scene', '--vcard': '.scene',
+  '--docked': '.device', '--dshrink': '.device', '--phone': '.device',
+  '--dreveal': '.totem', '--treveal': '.totem, .voice', '--totemlag': '.totemPin', '--totemscale': '.totemPin',
+  '--forge': '.forge, .voice', '--vout': '.voice', '--vreveal': '.s5, .voice', '--inkfill': '.ink--still',
+  '--s5off': '.s5', '--s5rot': '.s5',
+  '--g8off': '.guildsWrap, .footPin', '--g8rot': '.guildsWrap', '--g8hl': '.guilds', '--g8morph': '.guilds', '--g8par': '.guilds',
+};
+const varEls = new Map<string, HTMLElement[]>();
+const varCache = new Map<string, string>();
+const setVar = (k: string, v: number) => {
+  const s = v.toFixed(4);
+  if (varCache.get(k) === s) return;
+  varCache.set(k, s);
+  let els = varEls.get(k);
+  if (!els) { els = VAR_HOME[k] ? [...document.querySelectorAll<HTMLElement>(VAR_HOME[k])] : [page]; if (!els.length) els = [page]; varEls.set(k, els); }
+  for (const el of els) el.style.setProperty(k, s);
+};
 if (MOBILE) S.spMax = 1.85;
 
 // ---------- static decoration ----------
@@ -33,9 +53,8 @@ $$('[data-mark]').forEach((el) => (el.innerHTML = markSVG));
 const headline = $('[data-headline]');
 {
   const text = headline.textContent!.trim();
-  headline.setAttribute('aria-label', text);
   let i = 0;
-  headline.innerHTML = text.split(' ').map((w) => `<span class="wd" aria-hidden="true">${[...w].map((c) => `<span class="lt" style="animation-delay:${(i++ * 0.045).toFixed(3)}s">${c}</span>`).join('')}</span>`).join('<span class="sp" aria-hidden="true"></span>');
+  headline.innerHTML = `<span class="sr-only">${text}</span>` + text.split(' ').map((w) => `<span class="wd" aria-hidden="true">${[...w].map((c) => `<span class="lt" style="animation-delay:${(i++ * 0.045).toFixed(3)}s">${c}</span>`).join('')}</span>`).join('<span class="sp" aria-hidden="true"></span>');
 }
 // tools title (rows of letters that fade in, then morph out) and its replacement lead
 {
@@ -120,14 +139,23 @@ const rowsEl = $('[data-rows]');
 const rows = $$('.s5__row', rowsEl);
 if (!coarse() && !RM) {
   const lean = rows.map(() => 0);
-  addTick(() => {
+  const imgs = rows.map((row) => row.children[1] as HTMLElement);
+  let near = false;
+  const centres = rows.map(() => ({ x: 0, y: 0 }));
+  addRead(() => {
     const r = rowsEl.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > innerHeight) return;
+    near = !(r.bottom < 0 || r.top > innerHeight);
+    if (!near || S.mx < 0) return;
+    // the lean itself is a translateX, so the centre is measured without it
+    imgs.forEach((img, i) => { const b = img.getBoundingClientRect(); centres[i].x = b.left + b.width / 2 - lean[i]; centres[i].y = b.top + b.height / 2; });
+  });
+  addTick(() => {
+    if (!near) return;
     rows.forEach((row, i) => {
-      const img = row.children[1] as HTMLElement;
+      const img = imgs[i];
       let want = 0;
       if (S.mx >= 0) {
-        const b = img.getBoundingClientRect(), cx = b.left + b.width / 2, cy = b.top + b.height / 2;
+        const cx = centres[i].x, cy = centres[i].y;
         const fall = 1 / (1 + ((S.my - cy) / 140) ** 2);
         want = Math.max(-60, Math.min(60, (S.mx - cx) * 0.16)) * fall;
       }
@@ -138,13 +166,23 @@ if (!coarse() && !RM) {
 }
 
 // ---------- Chapter 03: each way in opens the interactive window on its own page ----------
+// the working console: rows, the hero button and the tools wheel all open it
+const toDemoField = () => {
+  const end = document.documentElement.scrollHeight;
+  const field = () => $<HTMLInputElement>('[data-email]').focus({ preventScroll: true });
+  if (lenis) lenis.scrollTo(end, { duration: 1.6, onComplete: field }); else { scrollTo({ top: end }); field(); }
+};
+function openTry(from: HTMLElement, page: PageId, focus?: string) {
+  import('./demo').then(({ openDemo }) => openDemo({ from, page, focus, lenis, reduced: RM, onBook: toDemoField }));
+}
+$('[data-try-hero]').addEventListener('click', (e) => openTry(e.currentTarget as HTMLElement, 'hardening'));
 $$<HTMLButtonElement>('.s5__open').forEach((b) => {
   const warm = () => { void import('./demo'); };
   b.addEventListener('pointerenter', warm, { once: true });
   b.addEventListener('focus', warm, { once: true });
   b.addEventListener('click', () => {
     const img = b.closest('.s5__row')!.querySelector<HTMLElement>('.s5__photo')!;
-    import('./demo').then(({ openDemo }) => openDemo({ from: img, page: b.dataset.page as PageId, focus: b.dataset.focus, lenis, reduced: RM }));
+    openTry(img, b.dataset.page as PageId, b.dataset.focus);
   });
 });
 
@@ -194,8 +232,8 @@ addEventListener('resize', fitNames);
 document.fonts?.ready.then(fitNames);
 const renderTotem = (i: number, dir: number, first = false) => {
   const m = modules.list[i];
-  nameBack.innerHTML = words(m.name);
-  nameFront.innerHTML = words(m.epithet, 0.14);
+  nameBack.innerHTML = '';
+  nameFront.innerHTML = words(m.name, 0.08);
   desc.textContent = m.desc;
   desc.setAttribute('aria-labelledby', `totem-tab-${i}`);
   desc.style.animation = 'none'; void desc.offsetWidth; desc.style.animation = '';
@@ -249,24 +287,22 @@ renderTotem(0, 1, true);
 
 // ---------- Chapter 06 labels ----------
 const labelsBox = $('[data-labels]');
-labelsBox.innerHTML = evidence.cols.map((c, i) => `<div class="sl" style="left:calc(${i * 25}% + 32px)"><span class="sl__name">${c.label}</span><span class="sl__count">0</span></div>`).join('');
-const counts = $$('.sl__count', labelsBox);
+labelsBox.innerHTML = evidence.cols.map((c, i) => `<div class="sl" style="left:calc(${i * 25}% + 32px)"><span class="sl__name">${c.label}</span><span class="sl__count">${c.fig}</span><span class="sl__note">${c.note}</span></div>`).join('');
+// the physics still keeps score per column; nothing on screen shows it
+const counts = evidence.cols.map(() => document.createElement('span'));
 // phones: tiles instead of physics
 const SMALL = MOBILE || innerWidth <= 768;
 {
   const grid = $('[data-grid]');
   const target = [24, 32, 28, 20];
-  grid.innerHTML = evidence.cols.map((c, i) => `<div class="st"><div class="st__fill" style="background-image:url(${patternCanvas(c.group, 512).toDataURL('image/png')});--target:${Math.round((target[i] / 40) * 100)}%"></div><div class="st__label"><span class="sl__name">${c.label}</span><span class="sl__count">0</span></div></div>`).join('');
+  grid.innerHTML = evidence.cols.map((c, i) => `<div class="st"><div class="st__fill" style="background-image:url(${patternCanvas(c.group, 512).toDataURL('image/png')});--target:${Math.round((target[i] / 40) * 100)}%"></div><div class="st__label"><span class="sl__name">${c.label}</span><span class="sl__count">${c.fig}</span><span class="sl__note">${c.note}</span></div></div>`).join('');
   if (SMALL) {
-    const tc = $$('.sl__count', grid);
     const stats = $('[data-stats]');
     let done = false;
     new IntersectionObserver(([e]) => {
       if (e.intersectionRatio < 0.35 || done) return;
       done = true;
       stats.classList.add('in');
-      const t0 = performance.now();
-      const off = addTick(() => { const k = Math.min(1, (performance.now() - t0) / 1200), e2 = 1 - (1 - k) ** 3; tc.forEach((el, i) => (el.textContent = String(Math.round(target[i] * (RM ? 1 : e2))))); if (k >= 1) off(); });
     }, { threshold: [0, 0.35] }).observe(stats);
   }
 }
@@ -278,6 +314,10 @@ const toolIcons = ['history', 'sliders', 'list', 'user', 'wrench', 'shield', 'li
 const SPOKES = toolsList.length;
 wheelEl.innerHTML = toolsList.map((t, i) => `<div class="spoke" style="transform:rotate(${(i * 360) / SPOKES + 15}deg)"><span class="crest crest--tool">${icon(toolIcons[i])}<b>${t}</b></span></div>`).join('');
 const crestEls = $$('.crest', wheelEl);
+wheelEl.addEventListener('click', (e) => {
+  const c = (e.target as HTMLElement).closest<HTMLElement>('.crest--tool');
+  if (c) openTry(c, 'tools');
+});
 
 // ---------- scenes ----------
 const loaderOn = !root.classList.contains('no-loader');
@@ -336,24 +376,28 @@ const absTop = (el: HTMLElement) => { let t = 0, n: HTMLElement | null = el; whi
 let geo = { s5Top: 0, s5H: 0, totemTop: 0, g8Top: 0, g8H: 0, footTop: 0 };
 const measure = () => { geo = { s5Top: absTop(s5), s5H: s5.offsetHeight, totemTop: absTop(totemWrap), g8Top: absTop(guildsWrap), g8H: guildsWrap.offsetHeight, footTop: absTop(footWrap) }; };
 measure();
-let pillTheme = '';
+let pillTheme = '', pillY = 0, headT = '';
+const rpCache: string[] = [];
 const drive = () => {
   const H = lvh(), ih = innerHeight;
   const y = scrollY0();
   const a = H > 0 ? y / H : 0;
   S.p = a;
+  // all layout reads first: a read after a style write forces a full restyle and layout
   const g8 = guildsWrap.getBoundingClientRect();
   const s5r = s5.getBoundingClientRect();
   const tr = totemWrap.getBoundingClientRect();
+  const rowTops = rows.map((row) => row.getBoundingClientRect().top);
+  const gTitleTop = guildTitle.getBoundingClientRect().top;
   const atGuilds = g8.bottom < ih * 0.6;
-  pill.classList.toggle('on', (MOBILE ? true : y > H * 0.15) && !atGuilds);
-  setVar('--pillx', clamp01(y / Math.max(1, geo.footTop - H)));
+  pill.classList.toggle('on', y > H * (MOBILE ? 0.7 : 0.15) && !atGuilds);
+  // phones: the pill steps out of the way while you read down, and comes back when you scroll up
+  if (MOBILE) { const dy = y - pillY; if (Math.abs(dy) > 6) { pill.classList.toggle('away', dy > 0 && y > H * 0.5); pillY = y; } }
   // b: progress through the restore chapter, from the sheet's bottom to the modules
   const b = MOBILE ? smooth(geo.totemTop - H * 0.42, geo.totemTop - H * 0.06, y) : smooth(geo.s5Top + geo.s5H + H * 0.25, geo.totemTop - H * 0.1, y);
   const vcard = smooth(0.46, 0.74, b);
   const O = MOBILE ? smooth(geo.totemTop - H * 0.86, geo.totemTop - H * 0.15, y) : smooth(0.52, 0.82, b);
   S.collapse = O;
-  setVar('--vsheet', smooth(0, 0.35, b));
   if (MOBILE) setVar('--vout', smooth(0.15, 0.75, O));
   const forge = MOBILE ? smooth(geo.totemTop - H * 0.95, geo.totemTop - H * 0.32, y) : O;
   setVar('--forge', forge);
@@ -392,7 +436,7 @@ const drive = () => {
     const restored = Math.min(8, Math.floor(clamp01((y - y0 - H * 0.12) / (H * 0.55)) * 8.999));
     setRestoreState(win, 1 - smooth(y0 - H * 0.05, y0 + H * 0.2, y), restored, y > y0 - H * 0.05 && y < y0 + H * 0.06);
   }
-  for (const row of rows) { const t = row.getBoundingClientRect().top; row.style.setProperty('--rp', clamp01((ih * 0.9 - t) / (ih * 0.45)).toFixed(3)); }
+  rows.forEach((row, i) => { const v = clamp01((ih * 0.9 - rowTops[i]) / (ih * 0.45)).toFixed(3); if (rpCache[i] !== v) { rpCache[i] = v; row.style.setProperty('--rp', v); } });
   {
     const n = geo.s5Top - y, i = geo.s5Top + geo.s5H - y;
     const vr = clamp01((H - i) / H), s = clamp01((H - n) / H);
@@ -410,7 +454,7 @@ const drive = () => {
     if (i > 0.995 && !footLive) { footLive = true; foot.classList.add('live'); }
     setVar('--g8off', 1 - i);
     setVar('--g8rot', 1 - i);
-    const tt = guildTitle.getBoundingClientRect().top / (ih || H);
+    const tt = gTitleTop / (ih || H);
     setVar('--g8hl', smooth(1.05, 0.6, tt));
     setVar('--g8morph', smooth(0.52, 0.12, tt));
     setVar('--g8par', clamp01((y + H - geo.g8Top) / (H + geo.g8H)));
@@ -432,8 +476,9 @@ const drive = () => {
   // hero headline shrinks back and fades as you leave the top
   if (!MOBILE) {
     const L = Math.min(1, y / (H * 0.33));
-    headline.style.transform = `translate3d(0, ${(-y * 0.18).toFixed(1)}px, 0) scale(${(1 - 0.62 * L).toFixed(4)})`;
-    headline.style.opacity = String(1 - L);
+    // once it has faded out there is nothing left to move
+    const ht = L >= 1 ? 'gone' : `translate3d(0, ${(-y * 0.18).toFixed(1)}px, 0) scale(${(1 - 0.62 * L).toFixed(4)})`;
+    if (ht !== headT) { headT = ht; if (L < 1) headline.style.transform = ht; headline.style.opacity = String(1 - L); }
   }
 };
 if (lenis) lenis.on('scroll', drive); else addEventListener('scroll', drive, { passive: true });

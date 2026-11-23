@@ -8,7 +8,7 @@ import { cards, journal as hardeningJournal, nav, type PageId } from './ui-data'
 import { outboundTip, tips, toolTip, typeTip, type Tip } from './demo-tips';
 
 type Entry = { key: string; s: string; o: string; c: string; t: string; restored: boolean };
-type Opts = { from: HTMLElement; page: PageId; focus?: string; lenis?: { stop(): void; start(): void } | null; reduced: boolean };
+type Opts = { from: HTMLElement; page: PageId; focus?: string; lenis?: { stop(): void; start(): void } | null; reduced: boolean; onBook?: () => void };
 
 const BASE_W = 1066, BASE_H = 716;
 const EASE = 'cubic-bezier(0.76, 0, 0.24, 1)';
@@ -22,6 +22,7 @@ const st = {
   audit: [] as { t: string; c: string; a: string }[],
   rp: true,
   busy: false,
+  booked: false,
 };
 // defaults for the radio groups, from the app's own screens
 for (const id of ['uacAdmin', 'uacStd', 'psPolicy'] as const) {
@@ -70,7 +71,7 @@ function renderLog(win: HTMLElement, page: 'journal' | 'audit') {
   const rows = st.journal.length
     ? st.journal.map((e) => `<div class="sbw-tr${e.restored ? ' restored' : ''}"><b>${esc(e.s)}</b><span>${esc(e.o)}</span><span class="sbw-cur"><em>${esc(e.restored ? e.o : e.c)}</em></span><span class="sbw-time">${e.t}</span></div>`).join('')
     : `<p class="demo-empty">Nothing applied yet. Tick a control on any Harden page, then press Apply selected.</p>`;
-  const journalCard = `<section class="sbw-card sbw-journal" data-card="journal"><div class="sbw-card__head">${icon('history')}<b>Change journal</b><span>${st.journal.length} change${st.journal.length === 1 ? '' : 's'}</span></div><div class="sbw-th sbw-th--4"><span>Setting</span><span>Original</span><span>Current</span><span>Time</span></div><div class="demo-rows">${rows}</div><div class="sbw-card__foot"><span class="sbw-btn pri" data-act="restore" data-tip="btn:restore">${icon('history')}Restore all</span></div></section>`;
+  const journalCard = `<section class="sbw-card sbw-journal" data-card="journal"><div class="sbw-card__head">${icon('history')}<b>Change journal</b><span>${st.journal.length} change${st.journal.length === 1 ? '' : 's'}</span></div><div class="sbw-th sbw-th--4"><span>Setting</span><span>Original</span><span>Current</span><span>Time</span></div><div class="demo-rows">${rows}</div><div class="sbw-card__foot"><span class="sbw-btn pri" data-act="restore" data-tip="btn:restore">${icon('history')}Restore all applied</span></div></section>`;
   const log = st.audit.length
     ? st.audit.map((r) => `<div class="sbw-tr sbw-tr--log"><span class="sbw-time">${r.t}</span><b>${esc(r.c)}</b><span class="sbw-act">${esc(r.a)}</span></div>`).join('')
     : `<p class="demo-empty">No actions yet. Every Apply and Restore you make lands here.</p>`;
@@ -259,8 +260,29 @@ async function apply() {
   st.busy = false;
 }
 
+function askRestore() {
+  if (st.busy) return;
+  const list = st.journal.filter((e) => !e.restored);
+  if (!list.length) { setStatus('Nothing to restore yet. Apply something first.'); return; }
+  const win = winBox.querySelector<HTMLElement>('.sbw');
+  if (!win || win.querySelector('.sbw-dialog')) return;
+  hideTip();
+  win.insertAdjacentHTML('beforeend', `<div class="sbw-dim" data-dlg></div><div class="sbw-dialog" role="alertdialog" aria-modal="true" aria-labelledby="demo-dlg-t" aria-describedby="demo-dlg-d" data-dlg><h5 id="demo-dlg-t">${icon('history')}Restore all applied?</h5><p id="demo-dlg-d">${list.length} change${list.length > 1 ? 's' : ''} will be written back to the values SysBastion recorded before it changed them. Settings it never touched stay as they are.</p><div class="row"><span class="sbw-btn" role="button" tabindex="0" data-act="restore-no">Cancel</span><span class="sbw-btn pri" role="button" tabindex="0" data-act="restore-go">Restore all</span></div></div>`);
+  const d = win.querySelector<HTMLElement>('.sbw-dialog')!;
+  if (!opts.reduced) d.animate([{ opacity: 0, translate: '0 18px' }, { opacity: 1, translate: '0 0' }], { duration: 320, easing: EASE });
+  d.querySelector<HTMLElement>('[data-act="restore-go"]')!.focus();
+}
+function closeAsk(refocus = true) {
+  const els = winBox.querySelectorAll('[data-dlg]');
+  if (!els.length) return false;
+  els.forEach((el) => el.remove());
+  if (refocus) winBox.querySelector<HTMLElement>('[data-act="restore"]')?.focus();
+  return true;
+}
+
 async function restoreAll() {
   if (st.busy) return;
+  closeAsk(false);
   const list = st.journal.filter((e) => !e.restored);
   if (!list.length) { setStatus('Nothing to restore yet. Apply something first.'); return; }
   st.busy = true;
@@ -281,6 +303,7 @@ async function restoreAll() {
   st.busy = false;
   render();
   setStatus(`${list.length} value${list.length > 1 ? 's' : ''} restored. Exact originals, not Windows defaults.`, true);
+  if (opts.onBook && !st.booked) { st.booked = true; toast('That was the whole loop: apply, journal, restore. Book a walkthrough to see it on a real machine.'); }
 }
 
 const psSays: Record<string, string> = {
@@ -293,7 +316,9 @@ const psSays: Record<string, string> = {
 
 function act(a: string) {
   if (a === 'apply') return void apply();
-  if (a === 'restore') return void restoreAll();
+  if (a === 'restore') return askRestore();
+  if (a === 'restore-go') return void restoreAll();
+  if (a === 'restore-no') { closeAsk(); return; }
   if (a === 'select') return selectAll();
   if (a === 'tour') return startTour();
   if (a.startsWith('ps:')) { const k = a.slice(3); setStatus(psSays[k] ?? k); toast(`${k} (simulated)`); return; }
@@ -382,7 +407,7 @@ export function openDemo(o: Opts) {
   root.setAttribute('aria-label', 'SysBastion interactive demo');
   root.setAttribute('data-lenis-prevent', '');
   root.innerHTML = `<div class="demo__bg" data-close></div>
-  <div class="demo__top"><p><b>Try SysBastion</b><span>No backend. Nothing on your computer changes.</span></p><button class="demo__close" type="button" data-close>Close <kbd>Esc</kbd></button></div>
+  <div class="demo__top"><p><b>Try SysBastion</b><span>No backend. Nothing on your computer changes.</span></p><div class="demo__acts">${o.onBook ? '<button class="demo__book" type="button" data-book>Book a walkthrough</button>' : ''}<button class="demo__close" type="button" data-close>Close <kbd>Esc</kbd></button></div></div>
   <div class="demo__win" data-winbox></div>
   <p class="demo__hint">Hover or focus anything to see what it does. Tick a control, then <b>Apply selected</b>. The <b>?</b> starts a tour.</p>
   <div class="demo__ring" hidden></div>
@@ -421,7 +446,7 @@ export function openDemo(o: Opts) {
   setTimeout(done, 900);
 }
 
-export function closeDemo() {
+export function closeDemo(then?: () => void) {
   if (!root) return;
   const r = root, o = opts;
   endTour(); tipEl.hidden = true;
@@ -431,7 +456,9 @@ export function closeDemo() {
     o.from.style.visibility = '';
     document.documentElement.classList.remove('demo-open');
     o.lenis?.start();
-    o.from.closest<HTMLElement>('.s5__row')?.querySelector<HTMLElement>('.s5__open')?.focus({ preventScroll: true });
+    if (then) { then(); return; }
+    const back = o.from.closest<HTMLElement>('.s5__row')?.querySelector<HTMLElement>('.s5__open') ?? o.from.closest<HTMLElement>('button, a') ?? o.from;
+    back.focus({ preventScroll: true });
   };
   if (o.reduced) { r.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140 }).finished.then(finish); return; }
   const f = fromFrame();
@@ -449,6 +476,7 @@ function onClick(e: MouseEvent) {
   const t = e.target as HTMLElement;
   const tourBtn = t.closest<HTMLElement>('[data-tour]');
   if (tourBtn) { if (tourBtn.dataset.tour === 'back') tour = Math.max(0, tour - 1); else tour++; if (tour >= steps.length) endTour(); else showStep(); return; }
+  if (t.closest('[data-book]')) { const go = opts.onBook; closeDemo(go); return; }
   if (t.closest('[data-close], [data-x]')) { closeDemo(); return; }
   if (tour >= 0) endTour();
   const nav = t.closest<HTMLElement>('[data-nav]');
@@ -464,7 +492,7 @@ function onClick(e: MouseEvent) {
   if (key) { toggle(key); if ((e as PointerEvent).pointerType === 'touch' || matchMedia('(pointer: coarse)').matches) showTip(row!, row!.dataset.tip); }
 }
 function onKey(e: KeyboardEvent) {
-  if (e.key === 'Escape') { e.preventDefault(); if (tour >= 0) endTour(); else closeDemo(); return; }
+  if (e.key === 'Escape') { e.preventDefault(); if (closeAsk()) return; if (tour >= 0) endTour(); else closeDemo(); return; }
   const t = e.target as HTMLElement;
   if ((e.key === 'Enter' || e.key === ' ') && t.matches('[role="button"], [role="switch"], [role="radio"]')) {
     e.preventDefault();

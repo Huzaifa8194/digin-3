@@ -3,7 +3,7 @@
 // -> a row-staggered 360 flip (1.95..2.55) -> docks into its own slot in the app window (2.15..2.65).
 // The tiles are real panels of the V1.4 window; the last one is always System hardening.
 import * as THREE from 'three';
-import { addTick, now } from './clock';
+import { addRead, addTick, now } from './clock';
 import { tiles } from './content';
 import { dpr, isMobile, onViewport, smooth, mix } from './device';
 import { patternCanvas } from './patterns';
@@ -201,9 +201,10 @@ export function mountSpiral(canvas: HTMLCanvasElement) {
     const base = (frozen ?? Math.round(pos)) - MID;
     // dock target: the slot's rect in the window, turned into world units at z = 0
     let dX = 0, dY = 0, dS = CFG.cardScale * 1.35;
+    lastLand = land;
     if (land > 0 && S.dock) {
-      const r = S.dock(), cr = canvas.getBoundingClientRect();
-      if (r && r.width > 0 && cr.height > 0) {
+      const r = dockRect, cr = canvasRect;
+      if (r && cr && r.width > 0 && cr.height > 0) {
         const ppw = cr.height / (2 * Math.tan((38 * Math.PI) / 360) * camera.position.z);
         dX = (r.left + r.width / 2 - cr.left - cr.width / 2) / ppw;
         dY = -(r.top + r.height / 2 - cr.top - cr.height / 2) / ppw;
@@ -238,6 +239,9 @@ export function mountSpiral(canvas: HTMLCanvasElement) {
     if (t <= keepAlive) renderer.render(scene, camera);
   };
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // the dock target is measured in the clock's read phase, before this frame's style writes
+  let lastLand = 0, dockRect: DOMRect | null = null, canvasRect: DOMRect | null = null;
+  const offRead = addRead(() => { if (lastLand > 0 && S.dock) { dockRect = S.dock(); canvasRect = canvas.getBoundingClientRect(); } });
   const off = addTick(tick);
 
   // pointer: tilt + magnet, drag to turn the spiral
@@ -255,6 +259,6 @@ export function mountSpiral(canvas: HTMLCanvasElement) {
   canvas.addEventListener('pointerup', up);
   canvas.addEventListener('pointerleave', up);
 
-  return () => { off(); offView(); io.disconnect(); geo.dispose(); meshes.forEach((m) => m.material.dispose()); fTex.forEach((t) => t.dispose()); bTex.forEach((t) => t.dispose()); renderer.dispose(); };
+  return () => { off(); offRead(); offView(); io.disconnect(); geo.dispose(); meshes.forEach((m) => m.material.dispose()); fTex.forEach((t) => t.dispose()); bTex.forEach((t) => t.dispose()); renderer.dispose(); };
 }
 

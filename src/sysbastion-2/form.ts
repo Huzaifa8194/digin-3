@@ -132,14 +132,19 @@ export function mountForm(foot: HTMLElement) {
     const email = input.value.trim();
     const v = judge(email);
     if (v.kind !== 'quip' && v.kind !== 'enter') {
-      if (v.kind === 'pool') set({ mode: 'text', text: POOLS[v.pool][0], side: side(email) });
+      if (v.kind === 'hidden') set({ mode: 'text', text: 'your work email first.', side: 'center' });
+      else if (v.kind === 'pool') set({ mode: 'text', text: POOLS[v.pool][0], side: side(email) });
       else if (v.kind === 'line') set({ mode: 'text', text: v.text, side: side(email) });
       input.focus();
       return;
     }
-    const body = `Hello DigiInn360,\n\nI'd like a SysBastion V1.4 walkthrough on a test machine.\n`;
-    location.href = `mailto:info@digiinn360.com?subject=${encodeURIComponent('SysBastion V1.4 demo request')}&body=${encodeURIComponent(body)}`;
-    form.innerHTML = `<p class="big-done">Draft ready.</p><p class="foot__cap">Your mail app has the request. Send it from this address and we’ll reply there.</p>`;
+    const to = 'info@digiinn360.com';
+    const body = `Hello DigiInn360,\n\nI'd like a SysBastion V1.4 walkthrough on a test machine.\nWork email: ${email}\n`;
+    location.href = `mailto:${to}?subject=${encodeURIComponent('SysBastion V1.4 demo request')}&body=${encodeURIComponent(body)}`;
+    // a mailto link can open nothing (webmail, no mail app), so the page says what to do if it didn't
+    form.innerHTML = `<p class="big-done">Check your mail app</p><p class="foot__cap" role="status">A drafted request to ${to} should have opened. Send it and we reply to ${esc(email)}.</p><p class="foot__cap">Nothing opened? Write to ${to} <button class="foot__copy" type="button" data-copy>Copy address</button></p>`;
+    const copy = form.querySelector<HTMLButtonElement>('[data-copy]')!;
+    copy.addEventListener('click', () => { navigator.clipboard?.writeText(to).then(() => { copy.textContent = 'Copied'; }, () => { copy.textContent = to; }); });
   });
   cap.hidden = false;
 }

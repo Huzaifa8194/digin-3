@@ -92,3 +92,11 @@ html.demo-open, html.demo-open body { overflow: hidden; }
 .sbw.fluid .sbw-chips { grid-template-columns: repeat(4, 1fr); }
 .sbw.fluid .sbw-row__txt b { font-size: 13px; } .sbw.fluid .sbw-row__txt small { font-size: 11.5px; }
 @media (prefers-reduced-motion: reduce) { .demo * { animation: none !important; transition: none !important; } }
+.demo__acts { display: flex; align-items: center; gap: 8px; }
+.demo__book { height: 36px; padding: 0 16px; border-radius: 99px; background: var(--accent, #cfe0ff); color: #0e1a36; font-size: 14px; font-weight: 600; transition: background .2s, transform .3s cubic-bezier(.22,1,.36,1); }
+.demo__book:hover, .demo__book:focus-visible { background: #e8f0ff; transform: translateY(-1px); }
+.demo__book:active { transform: scale(.97); }
+.demo__book:focus-visible, .demo__close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.demo .sbw-dialog { z-index: 5; } .demo .sbw-dim { z-index: 4; pointer-events: auto; }
+.demo .sbw-dialog .sbw-btn { cursor: pointer; }
+.demo--fluid .sbw-dialog { width: calc(100% - 32px); }

@@ -1,6 +1,6 @@
 // Chapter 07: a wheel of crests turns slowly, faster with scroll speed. Crests swell toward the
 // cursor along their spoke, and the one nearest the top names its tool underneath.
-import { addTick } from './clock';
+import { addRead, addTick } from './clock';
 import { isMobile, reduced } from './device';
 
 const SPIN = 4, VEL_K = 0.05, VEL_MAX = 110, FALLOFF = 26, LABEL_FADE = 16;
@@ -17,16 +17,25 @@ export function mountWheel(section: HTMLElement, wheel: HTMLElement, label: HTML
   document.addEventListener('pointerleave', leave);
   const io = new IntersectionObserver(([e]) => { on = e.isIntersecting; section.classList.toggle('in', on); }, { threshold: 0.12 });
   io.observe(section);
+  // layout reads happen in the clock's read phase, before anything on the page writes this frame
+  let r: DOMRect | null = null, sr: DOMRect | null = null, half = 0, k = 1, lh = 0;
+  // window.scrollY forces a full style and layout when read after this frame's writes, so it is
+  // read here too, every frame, while that is free
+  let sy = scrollY;
+  const offRead = addRead(() => {
+    sy = scrollY;
+    if (!on) return;
+    r = wheel.getBoundingClientRect(); sr = section.getBoundingClientRect();
+    half = wheel.offsetWidth / 2; k = sr.width / section.offsetWidth || 1;
+    lh = (crests[0]?.offsetHeight ?? 0) / 2;
+  });
   const off = addTick((_, dt) => {
-    if (!on) { lastY = scrollY; return; }
-    const y = scrollY, v = dt > 0 ? (y - lastY) / dt : 0;
+    if (!on || !r || !sr) { lastY = sy; return; }
+    const y = sy, v = dt > 0 ? (y - lastY) / dt : 0;
     lastY = y; vel += (v - vel) * Math.min(1, dt * 6);
     const boost = Math.max(-VEL_MAX, Math.min(VEL_MAX, vel * VEL_K));
     if (!still) rot += (SPIN + boost) * dt;
-    const r = wheel.getBoundingClientRect();
-    const cx = r.left + r.width / 2, cy = r.top + r.height / 2, half = wheel.offsetWidth / 2;
-    const sr = section.getBoundingClientRect(), k = sr.width / section.offsetWidth || 1;
-    const lh = (crests[0]?.offsetHeight ?? 0) / 2;
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     wheel.style.transform = `rotate(${rot}deg)`;
     const dx = ptr.x - cx, dy = ptr.y - cy, dist = Math.hypot(dx, dy);
     const ang = (Math.atan2(dx, -dy) * 180) / Math.PI;
@@ -56,5 +65,5 @@ export function mountWheel(section: HTMLElement, wheel: HTMLElement, label: HTML
     if (label.textContent !== name) label.textContent = name;
     label.style.opacity = vis.toFixed(2);
   });
-  return () => { off(); io.disconnect(); removeEventListener('pointermove', move); document.removeEventListener('pointerleave', leave); };
+  return () => { off(); offRead(); io.disconnect(); removeEventListener('pointermove', move); document.removeEventListener('pointerleave', leave); };
 }

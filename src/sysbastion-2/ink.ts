@@ -1,7 +1,7 @@
 // The ink that floods the screen when the rule is applied (p 1.9..2.6) and retreats into a dot
 // before the forge (collapse). Domain-warped fbm edge, ported from the reference's warp fill.
 import { addTick, now } from './clock';
-import { dpr, onViewport, smooth } from './device';
+import { dpr, onQuality, onViewport, smooth, tierScale } from './device';
 import { fullscreen, hex, mix3 } from './gl';
 import { S } from './state';
 
@@ -72,12 +72,13 @@ export function mountInk(canvas: HTMLCanvasElement, isActive: () => boolean) {
     q.draw();
   };
   const resize = () => {
-    const r = dpr(1.75, 1.25);
+    const r = dpr(1.75, 1.25) * tierScale([1, 0.8, 0.66]);
     canvas.width = Math.floor(canvas.clientWidth * r); canvas.height = Math.floor(canvas.clientHeight * r);
     draw(Math.max(0, last));
   };
   resize();
   const offView = onViewport(resize);
+  onQuality(resize);
   const off = addTick((_, dt) => {
     if (!isActive()) { if (!cleared) { draw(0); last = 0; cleared = true; } return; }
     cleared = false;

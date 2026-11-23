@@ -25,6 +25,28 @@ export function softwareGL(): boolean {
 export const dpr = (d: number, m: number) => (softwareGL() ? 0.5 : Math.min(isMobile() ? m : d, devicePixelRatio || 1));
 export const richGL = () => !isMobile() && !softwareGL();
 
+// Quality tier for slower machines. 0 is full quality. Tiers 1 and 2 only lower the internal
+// resolution of the soft WebGL scenes (forge glow, ink, the gold module object, footer rays); text,
+// UI cards and layout never change. Weak hardware starts at 1; the clock steps down at most twice
+// if frames stay slow. ?tier=0|1|2 forces one.
+let tier = 0;
+try {
+  const n = navigator as Navigator & { deviceMemory?: number };
+  if ((n.hardwareConcurrency || 8) <= 4 || (n.deviceMemory || 8) <= 4) tier = 1;
+} catch { /* keep 0 */ }
+{ const m = /[?&]tier=(\d)/.exec(typeof location !== 'undefined' ? location.search : ''); if (m) tier = Math.min(2, +m[1]); }
+const tierSubs = new Set<() => void>();
+export const qualityTier = () => tier;
+/** Pick this scene's factor for the current tier: [full, tier 1, tier 2]. */
+export const tierScale = (f: [number, number, number]) => f[tier];
+export function onQuality(fn: () => void): () => void { tierSubs.add(fn); return () => tierSubs.delete(fn); }
+export function lowerQuality(): boolean {
+  if (tier >= 2 || /[?&]tier=/.test(location.search)) return false;
+  tier++;
+  tierSubs.forEach((fn) => fn());
+  return true;
+}
+
 let probe: HTMLDivElement | null = null;
 let lvhCache = 0;
 let dirty = true;
