@@ -10,13 +10,18 @@ export function startIndexPreview() {
     const video = box?.querySelector('video');
     if (!list || !box || !video || isTouch() || prefersReducedMotion()) return;
 
+    gsap.set(box, { xPercent: -50, yPercent: -100 }); // bottom-centre anchor (GSAP owns the transform, so CSS translate is not enough)
     const x = gsap.quickTo(box, 'x', { duration: 0.6, ease: 'power3.out' });
     const y = gsap.quickTo(box, 'y', { duration: 0.6, ease: 'power3.out' });
     const rot = gsap.quickTo(box, 'rotate', { duration: 0.8, ease: 'power3.out' });
     let lastX = 0, px = 0, py = 0, current = '';
+    let row: HTMLElement | null = null;
+    // The preview rides above the hovered row (CSS anchors its bottom edge), so it never covers that row's label.
+    const place = () => { x(px); y(row ? row.getBoundingClientRect().top - 10 : py); };
 
     const show = (e: Event) => {
-      const key = (e.currentTarget as HTMLElement).dataset.preview!;
+      row = e.currentTarget as HTMLElement;
+      const key = row.dataset.preview!;
       if (key !== current) {
         current = key;
         video.poster = `/service-loops/${key}.webp`;
@@ -31,9 +36,9 @@ export function startIndexPreview() {
     list.addEventListener('pointerleave', hide);
     addEventListener('pointermove', (e) => {
       px = e.clientX; py = e.clientY;
-      x(px + 150); y(py); rot(gsap.utils.clamp(-10, 10, (px - lastX) * 0.5)); lastX = px;
+      place(); rot(gsap.utils.clamp(-10, 10, (px - lastX) * 0.5)); lastX = px;
     }, { passive: true });
     // pointerleave never fires when the page scrolls out from under a still pointer
-    onScroll(() => { if (!list.contains(document.elementFromPoint(px, py))) hide(); });
+    onScroll(() => { if (!list.contains(document.elementFromPoint(px, py))) hide(); else place(); });
   });
 }

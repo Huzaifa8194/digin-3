@@ -80,7 +80,7 @@ button.dk-btn--solid { border: 0; }
 
 /* Shared closing section */
 .dk-close { padding-block: clamp(6rem, 4rem + 8vw, 12rem); border-top: 1px solid var(--ln); display: grid; gap: clamp(2rem, 3vw, 3rem); }
-.dk-close h2 { font-size: var(--t-mega); font-weight: 800; letter-spacing: -0.07em; line-height: 0.9; max-width: 12ch !important; }
+.dk-close h2 { font-size: var(--t-mega); font-weight: 800; letter-spacing: -0.04em; line-height: 0.9; max-width: 12ch !important; }
 .dk-close__row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem 3rem; }
 .dk-close__row p { color: var(--soft); max-width: 34rem; font-size: var(--t-m); line-height: 1.5; }
 
@@ -104,3 +104,26 @@ button.dk-btn--solid { border: 0; }
 @media (prefers-reduced-motion: reduce) {
   .dk *, .dk *::before, .dk *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+/* Skills pass: body copy never leaves one word alone on its last line; footer links are 44px targets */
+.dk-main p, .dk-main li, .dk-main dd { text-wrap: pretty; }
+.dk .site-footer-end a { display: inline-flex; align-items: center; gap: 0.5em; min-height: 44px; padding-inline: 0.5rem; margin-right: -0.5rem; }
+
+/* Skills pass: one footer on every page, the homepage instrument (page background, beam rule,
+   quarter-turn bearings on the columns), on the same content edge as the page */
+.dk .site-footer { background: #03070f; border-top: 0; }
+.dk .site-footer::before { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: linear-gradient(90deg, #ff3341, #8cc0ff 55%, transparent); }
+.dk .site-footer-inner { width: auto; margin-inline: var(--gut, 5%); }
+.dk .site-footer-directory h2 { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: #8cc0ff; }
+.dk .site-footer-directory h2::before { color: #9aa8ba; }
+.dk .site-footer-directory > div:nth-child(1) h2::before { content: "090° / "; }
+.dk .site-footer-directory > div:nth-child(2) h2::before { content: "180° / "; }
+.dk .site-footer-directory > div:nth-child(3) h2::before { content: "270° / "; }
+.dk .site-footer-directory > div:nth-child(4) h2::before { content: "360° / "; }
+.dk .site-footer-end { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; letter-spacing: 0.04em; }
+
+/* Skills pass 2: the logo answers the pointer like the nav does, with the same red bar drawing in */
+.dk > header .brand { position: relative; }
+.dk > header .brand::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: #db000a; scale: 0 1; transform-origin: left; transition: scale 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
+@media (hover: hover) { .dk > header .brand:hover::after { scale: 1 1; } }
+.dk > header .brand:focus-visible::after { scale: 1 1; }

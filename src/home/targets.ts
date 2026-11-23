@@ -5,7 +5,8 @@ import { gsap } from 'gsap';
 
 type Layout = { cx: number; cy: number; r: number };
 type State = 'idle' | 'risk' | 'fixed';
-type Target = { deg: number; r: number; risk: string; fix: string; state: State; vis: number; fixed: number; el: HTMLElement; text: HTMLElement; until: number; x: number; y: number };
+type Target = { deg: number; r: number; risk: string; fix: string; state: State; vis: number; fixed: number; el: HTMLElement; text: HTMLElement; until: number; x: number; y: number; flip: boolean; born: number };
+type Box = { l: number; r: number; t: number; b: number };
 
 const LIST: [number, number, string, string][] = [
   [24, 0.62, 'Kerberoastable account', 'Path closed'],
@@ -53,7 +54,7 @@ export function createTargets(host: HTMLElement, compact: () => boolean) {
     el.className = 'hm-tag';
     el.innerHTML = '<span class="hm-tag__line"></span><span class="hm-tag__text"></span>';
     host.appendChild(el);
-    return { deg, r, risk, fix, state: 'idle', vis: 0, fixed: 0, el, text: el.querySelector('.hm-tag__text')!, until: 0, x: 0, y: 0 };
+    return { deg, r, risk, fix, state: 'idle', vis: 0, fixed: 0, el, text: el.querySelector('.hm-tag__text')!, until: 0, x: 0, y: 0, flip: false, born: 0 };
   });
   const T = new Float32Array(40);
   const P = new Float32Array(9).fill(-100);
@@ -65,11 +66,36 @@ export function createTargets(host: HTMLElement, compact: () => boolean) {
     const o = { n: 0 };
     gsap.to(o, { n: label.length, duration: Math.min(0.3, label.length * 0.015), ease: 'none', onUpdate: () => { t.text.textContent = label.slice(0, Math.round(o.n)); } });
   };
+  // The label's box from geometry (home.css .hm-tag__text: 34px off the target, 40px up, mono caps),
+  // sized for the longer of its two texts so the flip from risk to fix never grows into a neighbour.
+  // Computed, not measured: reading layout every frame would thrash.
+  const box = (t: Target, flip: boolean): Box => {
+    const fs = compact() ? 9.92 : 11.52;
+    const w = (Math.max(t.risk.length, t.fix.length) + 2) * fs * 0.64 + fs * 1.3 + 2;
+    const l = flip ? t.x - 34 - w : t.x + 34;
+    return { l, r: l + w, t: t.y - 40, b: t.y - 40 + fs * 1.25 + fs * 0.6 + 2 };
+  };
+  const hit = (a: Box, b: Box, m = 8) => a.l < b.r + m && b.l < a.r + m && a.t < b.b + m && b.t < a.b + m;
+  // Point the label inward on the right of the disc, and away from whichever screen edge it would cross.
+  const side = (t: Target, L: Layout) => {
+    let flip = t.x > L.cx + L.r * 0.3;
+    if (!flip && box(t, false).r > innerWidth - 8) flip = true;
+    if (flip && box(t, true).l < 8) flip = false;
+    return flip;
+  };
+  // The fixed controls (pause, sound, bearing readout) own the bottom-right corner; labels keep out of it.
+  const corner = (): Box => compact()
+    ? { l: innerWidth - 136, r: innerWidth, t: innerHeight - 104, b: innerHeight }
+    : { l: innerWidth - 170, r: innerWidth, t: innerHeight - 180, b: innerHeight };
+  const fits = (t: Target, flip: boolean) => { const b = box(t, flip); return b.l >= 8 && b.r <= innerWidth - 8 && b.t >= 8 && b.b <= innerHeight - 8 && !hit(b, corner(), 6); };
   const trigger = (t: Target, now: number) => {
     if (t.state !== 'idle') return;
-    // Labels never stack: skip a target whose label would land on a live one, and keep five at most.
+    // Labels never stack and never leave the screen: skip a target whose label would land on a live one
+    // or past an edge, and keep five at most.
     const live = targets.filter((o) => o.state !== 'idle');
-    if (live.length >= 5 || live.some((o) => Math.abs(o.y - t.y) < 38 && Math.abs(o.x - t.x) < 250)) return;
+    const mine = box(t, t.flip);
+    if (live.length >= 5 || !fits(t, t.flip) || live.some((o) => hit(mine, box(o, o.flip)))) return;
+    t.born = now;
     t.state = 'risk';
     t.until = now + 1.7;
     type(t, `▲ ${t.risk}`, 'is-risk');
@@ -81,10 +107,20 @@ export function createTargets(host: HTMLElement, compact: () => boolean) {
     /** Called every frame with the beam (unwrapped degrees) before and after this frame. */
     update(prev: number, cur: number, L: Layout, now: number, dpr: number, viewH: number, active: boolean) {
       const lo = Math.min(prev, cur), hi = Math.max(prev, cur);
-      targets.forEach((t, i) => {
+      targets.forEach((t) => {
         const a = (t.deg / 180) * Math.PI;
         t.x = L.cx + Math.sin(a) * t.r * L.r;
         t.y = L.cy - Math.cos(a) * t.r * L.r;
+        t.flip = side(t, L);
+      });
+      // The disc moves between chapters, so live labels can drift into each other or off screen:
+      // the older label keeps its place and the newer one stands down at once.
+      const live = targets.filter((o) => o.state !== 'idle').sort((p, q) => p.born - q.born);
+      live.forEach((t, k) => {
+        const b = box(t, t.flip);
+        if (!fits(t, t.flip) || live.slice(0, k).some((o) => o.state !== 'idle' && hit(b, box(o, o.flip), 4))) { t.state = 'idle'; t.el.className = 'hm-tag'; }
+      });
+      targets.forEach((t, i) => {
         if (active && hi - lo < 180) {
           const n = Math.ceil((lo - t.deg) / 360);
           if (t.deg + 360 * n <= hi && hi > lo) trigger(t, now);
@@ -100,9 +136,8 @@ export function createTargets(host: HTMLElement, compact: () => boolean) {
         t.vis += (wantVis - t.vis) * 0.18;
         t.fixed += (wantFix - t.fixed) * 0.12;
         T.set([t.x * dpr, (viewH - t.y) * dpr, t.vis, t.fixed], i * 4);
-        const flip = t.x > L.cx + L.r * 0.3; // labels on the right side point left
         t.el.style.transform = `translate(${t.x.toFixed(1)}px, ${t.y.toFixed(1)}px)`;
-        t.el.classList.toggle('is-flip', flip);
+        t.el.classList.toggle('is-flip', t.flip);
         t.el.classList.toggle('is-compact', compact());
       });
       pings.forEach((p, k) => P.set([p.x * dpr, (viewH - p.y) * dpr, p.t], k * 3));

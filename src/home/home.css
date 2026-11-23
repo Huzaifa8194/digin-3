@@ -48,9 +48,9 @@ html:not(.js) .hm-loader, .hm-loader[hidden] { display: none; }
   min-height: calc(100svh - var(--hdr)); display: grid; align-content: center; gap: clamp(1.25rem, 2.2vw, 2rem);
   padding-block: clamp(2rem, 6vh, 4rem) clamp(1.5rem, 4vh, 2.5rem); max-width: min(60vw, 64rem);
 }
-.hm-hero__title { font-size: clamp(3.2rem, 0.4rem + 8.4vw, 10.5rem); font-weight: 800; line-height: 0.86; letter-spacing: -0.075em; margin-left: -0.055em !important; }
+.hm-hero__title { font-size: clamp(3.2rem, 0.4rem + 8.4vw, 10.5rem); font-weight: 800; line-height: 0.86; letter-spacing: -0.04em; margin-left: -0.055em !important; }
 .hm-hero__title > span { display: block; width: fit-content; padding-right: 0.08em; }
-.hm-hero__angle { padding-bottom: 0.14em; margin-bottom: -0.14em; background: linear-gradient(90deg, #ff4d5a 0%, #ff8a8f 35%, #8cc0ff 75%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hm-hero__angle { padding-bottom: 0.14em; margin-bottom: -0.14em; color: var(--red-t); }
 .hm-hero__foot { display: grid; gap: 1.5rem; max-width: 36rem; }
 .hm-hero__foot p { color: var(--soft); font-size: clamp(1rem, 0.95rem + 0.3vw, 1.175rem); line-height: 1.6; }
 .hm-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
@@ -64,9 +64,9 @@ html:not(.js) .hm-loader, .hm-loader[hidden] { display: none; }
 /* ---------- Chapters ---------- */
 .hm-ch { min-height: 100svh; display: grid; align-content: center; gap: 1.4rem; padding-block: clamp(5rem, 12vh, 8rem); max-width: min(58vw, 56rem); scroll-margin-top: var(--hdr); }
 .hm-ch__mark { display: flex; align-items: baseline; gap: 1rem; }
-.hm-ch__deg { font-size: clamp(4rem, 2rem + 6vw, 8.5rem); font-weight: 800; line-height: 0.8; letter-spacing: -0.07em; color: transparent; -webkit-text-stroke: 1.5px rgb(140 192 255 / 0.75); margin-left: -0.05em; }
+.hm-ch__deg { font-size: clamp(4rem, 2rem + 6vw, 8.5rem); font-weight: 800; line-height: 0.8; letter-spacing: -0.04em; color: transparent; -webkit-text-stroke: 1.5px rgb(140 192 255 / 0.75); margin-left: -0.05em; }
 .hm-ch__name { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cool); }
-.hm-ch__title { font-size: clamp(2.3rem, 1rem + 4vw, 5.25rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.95; text-wrap: balance; }
+.hm-ch__title { font-size: clamp(2.3rem, 1rem + 4vw, 5.25rem); font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; text-wrap: balance; }
 .hm-ch__lede { color: var(--soft); font-size: clamp(1rem, 0.95rem + 0.35vw, 1.2rem); line-height: 1.6; max-width: 40rem; }
 .hm-ch__grid { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr); gap: clamp(1.5rem, 3vw, 3rem); margin-top: 0.75rem; align-items: start; }
 .hm-sub { font-family: var(--mono); font-size: 0.72rem !important; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mut); margin-bottom: 0.5rem !important; }
@@ -106,13 +106,13 @@ a:focus-visible .hm-dial { rotate: 0deg; }
 .hm-svc a:focus-visible .hm-svc__name { translate: 12px 0; }
 .hm-more { display: inline-flex; gap: 0.6rem; align-items: center; font-weight: 700; width: fit-content; padding-block: 0.4rem; }
 .hm-train { margin-top: 2rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem 2.5rem; padding: clamp(1.5rem, 2.5vw, 2.25rem); border: 1px solid var(--ln2); border-radius: 12px; background: rgb(11 20 34 / 0.82); }
-.hm-train__title { font-size: clamp(1.6rem, 1rem + 1.8vw, 2.6rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1; margin: 0.5rem 0 0.75rem !important; }
+.hm-train__title { font-size: clamp(1.6rem, 1rem + 1.8vw, 2.6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin: 0.5rem 0 0.75rem !important; }
 .hm-train p:not(.dk-kicker) { color: var(--soft); line-height: 1.55; }
 .hm-train .dk-btn { grid-column: 1 / -1; justify-self: start; }
 
 /* ---------- Talk (360°) ---------- */
 .hm-talk { min-height: 100svh; display: grid; align-content: center; gap: 1.75rem; padding-block: clamp(5rem, 12vh, 8rem); scroll-margin-top: var(--hdr); }
-.hm-talk__title { font-size: clamp(2.6rem, 0.8rem + 6vw, 7.5rem); font-weight: 800; letter-spacing: -0.07em; line-height: 0.9; max-width: 13ch !important; }
+.hm-talk__title { font-size: clamp(2.6rem, 0.8rem + 6vw, 7.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 0.9; max-width: 13ch !important; }
 .hm-talk__grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: end; max-width: 72rem; }
 .hm-talk__form { padding: clamp(1.25rem, 2.5vw, 2.25rem); border: 1px solid var(--ln2); border-radius: 12px; background: rgb(8 15 27 / 0.88); display: grid; gap: 1rem; }
 .hm-talk__lede { color: var(--soft); font-size: var(--t-m); line-height: 1.45; }
@@ -129,7 +129,7 @@ a:focus-visible .hm-dial { rotate: 0deg; }
 /* ---------- FAQ ---------- */
 .hm-faq { position: relative; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 5rem); padding-block: clamp(5rem, 10vh, 8rem); border-top: 1px solid var(--ln); background: #03070f; }
 .hm-faq__head { display: grid; gap: 1rem; align-content: start; }
-.hm-faq__head h2 { font-size: clamp(2rem, 1rem + 3vw, 4rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.98; }
+.hm-faq__head h2 { font-size: clamp(2rem, 1rem + 3vw, 4rem); font-weight: 800; letter-spacing: -0.04em; line-height: 0.98; }
 .hm-faq__head p:last-child { color: var(--soft); line-height: 1.6; }
 .hm-faq__items { border-top: 1px solid var(--ln2); }
 .hm-faq details { border-bottom: 1px solid var(--ln2); }
@@ -281,9 +281,9 @@ html:not(.radar-on) .hm-tags, html:not(.radar-on) .hm-sound, html:not(.radar-on)
 
 /* ---------- Skills pass: craft floor ---------- */
 /* Headline words stay separate words; tracking eased from -0.075em */
-.hm-hero__title { letter-spacing: -0.06em; word-spacing: 0.06em; }
-.hm-ch__title { letter-spacing: -0.05em; }
-.hm-talk__title { letter-spacing: -0.06em; }
+.hm-hero__title { letter-spacing: -0.04em; word-spacing: 0.06em; }
+.hm-ch__title { letter-spacing: -0.04em; }
+.hm-talk__title { letter-spacing: -0.04em; }
 /* Browser defaults belong to the theme too */
 .hm-route { caret-color: var(--cool); accent-color: var(--risk); }
 html:has(> .hm-route) { scrollbar-color: #24344d #03070f; }
@@ -325,4 +325,17 @@ html:not(.js) .hm-self { display: none; }
 @media (max-width: 760px) {
   .hm-self__rows { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 0.25rem; }
   .hm-self__rows > div:nth-child(3) { padding-left: 0; border-left: 0; }
+}
+/* Skills pass 2: the placeholder reads at 4.5:1 on the field */
+.hm-talk__form textarea::placeholder { color: #8796a8; opacity: 1; }
+/* Phones: past the hero the bearing readout floated over headings and copy; the chapter marks carry the bearing there */
+@media (max-width: 760px) {
+  .hm-hud { transition: opacity 0.4s, visibility 0.4s; }
+  html:not(.at-hero) .hm-hud { opacity: 0; visibility: hidden; }
+}
+/* Phones: the pause control stays (WCAG 2.2.2); only the sound toggle goes. It lives with the hero,
+   and past the hero it is hidden from focus as well as from sight, like the readout. */
+@media (max-width: 760px) {
+  .hm-sound.hm-motion { display: block; right: 12px; bottom: 3.6rem; }
+  html:not(.at-hero) .hm-sound { visibility: hidden; transition: opacity 0.4s, visibility 0.4s; }
 }

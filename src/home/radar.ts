@@ -338,8 +338,10 @@ async function runLoader(s: { intro: number; angle: number }, L: () => Layout, s
     const tick = () => {
       const el2 = (performance.now() - start) / 1000;
       const goal = Math.min(done ? 360 : 300, (el2 / MIN) * 360);
-      shown.v += (goal - shown.v) * 0.2;
-      if (goal >= 360 && shown.v > 358.5) shown.v = 360;
+      // Ease by elapsed time, not by frame count: a slow GPU drawing 4 frames a second
+      // otherwise stretched a 1.5 s count to nearly 10 s.
+      shown.v += (goal - shown.v) * (1 - Math.pow(0.8, gsap.ticker.deltaRatio()));
+      if ((goal >= 360 && shown.v > 358.5) || el2 > MIN + MAX + 0.4) shown.v = 360;
       count.textContent = `${pad(shown.v)}°`;
       arc.style.strokeDashoffset = String(len * (1 - shown.v / 360));
       if (shown.v >= 360) { gsap.ticker.remove(tick); resolve(); }

@@ -34,19 +34,24 @@ function startPortraitIndex() {
     const box = document.querySelector<HTMLElement>('[data-portrait]');
     const img = box?.querySelector('img');
     if (!list || !box || !img || isTouch() || prefersReducedMotion()) return;
+    gsap.set(box, { xPercent: -50, yPercent: -100 }); // bottom-centre anchor (GSAP owns the transform, so CSS translate is not enough)
     const x = gsap.quickTo(box, 'x', { duration: 0.6, ease: 'power3.out' });
     const y = gsap.quickTo(box, 'y', { duration: 0.6, ease: 'power3.out' });
     const rot = gsap.quickTo(box, 'rotate', { duration: 0.8, ease: 'power3.out' });
     let lastX = 0, px = 0, py = 0;
+    let row: HTMLElement | null = null;
+    // The portrait rides above the hovered row (CSS anchors its bottom edge), so it never covers that row's name or role.
+    const place = () => { x(px); y(row ? row.getBoundingClientRect().top - 10 : py); };
     list.querySelectorAll<HTMLElement>('li[data-person]').forEach((li) => li.addEventListener('pointerenter', () => {
+      row = li;
       img.src = li.dataset.person!;
       img.style.objectPosition = li.dataset.pos || '50% 30%';
       gsap.to(box, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'expo.out' });
     }));
     const hide = () => gsap.to(box, { autoAlpha: 0, scale: 0.85, duration: 0.4, ease: 'expo.out' });
     list.addEventListener('pointerleave', hide);
-    addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; x(px + 170); y(py); rot(gsap.utils.clamp(-10, 10, (px - lastX) * 0.5)); lastX = px; }, { passive: true });
-    onScroll(() => { if (!list.contains(document.elementFromPoint(px, py))) hide(); });
+    addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; place(); rot(gsap.utils.clamp(-10, 10, (px - lastX) * 0.5)); lastX = px; }, { passive: true });
+    onScroll(() => { if (!list.contains(document.elementFromPoint(px, py))) hide(); else place(); });
   });
 }
 
