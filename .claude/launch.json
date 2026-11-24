@@ -72,6 +72,19 @@
         "--noreload"
       ],
       "port": 8765
+    },
+    {
+      "name": "vite-dev-appsiege",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5203",
+        "--strictPort"
+      ],
+      "port": 5203
     }
   ]
 }
