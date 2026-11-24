@@ -4,3 +4,5 @@ dist/
 .shots/
 .jury/
 _archive/
+release/
+backend/.venv/

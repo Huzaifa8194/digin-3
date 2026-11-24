@@ -61,6 +61,17 @@
         "--strictPort"
       ],
       "port": 5198
+    },
+    {
+      "name": "django-site",
+      "runtimeExecutable": "backend/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "backend/manage.py",
+        "runserver",
+        "127.0.0.1:8765",
+        "--noreload"
+      ],
+      "port": 8765
     }
   ]
 }

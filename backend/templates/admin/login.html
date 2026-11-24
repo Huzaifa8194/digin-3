@@ -1,0 +1,10 @@
+{% extends "admin/login.html" %}
+{% load static %}
+
+{% block login_after %}
+  {{ block.super }}
+  {% if form.pow_challenge %}
+    <div id="pow-challenge" hidden data-challenge="{{ form.pow_challenge }}" data-worker="{% static 'core/pow-worker.js' %}"></div>
+    <script src="{% static 'core/pow-login.js' %}" defer></script>
+  {% endif %}
+{% endblock %}

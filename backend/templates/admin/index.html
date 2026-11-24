@@ -1,0 +1,49 @@
+{% extends 'admin/base.html' %}
+{% load i18n unfold %}
+
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
+
+{% block branding %}{% include "unfold/helpers/site_branding.html" %}{% endblock %}
+
+{% block content %}
+  <div class="flex flex-col gap-6 mb-8">
+    <div class="flex flex-col gap-6 lg:flex-row">
+      {% for kpi in kpis %}
+        {% if kpi.link and can_view_leads %}
+          {% component "unfold/components/card.html" with href=kpi.link class="lg:w-1/4" %}
+            {% component "unfold/components/text.html" %}{{ kpi.title }}{% endcomponent %}
+            {% component "unfold/components/title.html" %}{{ kpi.value }}{% endcomponent %}
+          {% endcomponent %}
+        {% else %}
+          {% component "unfold/components/card.html" with class="lg:w-1/4" %}
+            {% component "unfold/components/text.html" %}{{ kpi.title }}{% endcomponent %}
+            {% component "unfold/components/title.html" %}{{ kpi.value }}{% endcomponent %}
+          {% endcomponent %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if can_view_leads %}
+      <div class="flex flex-col gap-6 lg:flex-row">
+        <div class="lg:w-2/3">
+          {% component "unfold/components/card.html" with title="Latest leads" %}
+            {% if recent_table.rows %}
+              {% component "unfold/components/table.html" with table=recent_table card_included=1 striped=1 %}{% endcomponent %}
+            {% else %}
+              {% component "unfold/components/text.html" %}No leads yet. Website form submissions appear here.{% endcomponent %}
+            {% endif %}
+          {% endcomponent %}
+        </div>
+        <div class="lg:w-1/3">
+          {% component "unfold/components/card.html" with title="Most requested (30 days)" %}
+            {% if topics_table.rows %}
+              {% component "unfold/components/table.html" with table=topics_table card_included=1 %}{% endcomponent %}
+            {% else %}
+              {% component "unfold/components/text.html" %}Nothing yet.{% endcomponent %}
+            {% endif %}
+          {% endcomponent %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

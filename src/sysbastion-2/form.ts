@@ -1,6 +1,7 @@
 // Chapter 08 email field. A bubble rides the end of what you type and answers it: wrong shapes
-// get a one-liner, a real address gets the enter key. Submitting opens a drafted email to
-// DigiInn360 (there is no server behind this page); nothing is stored or sent from the page.
+// get a one-liner, a real address gets the enter key. Submitting sends the request to the site
+// backend; if the backend can't be reached it falls back to a drafted email to DigiInn360.
+import { submitLead, warmLeadSession } from '../lead-api';
 
 const POOLS: Record<string, string[]> = {
   noat: ['no @ yet.', 'keep typing.'],
@@ -127,7 +128,8 @@ export function mountForm(foot: HTMLElement) {
   input.addEventListener('blur', () => ph.classList.toggle('off', input.value.length > 0));
   layout();
 
-  form.addEventListener('submit', (e) => {
+  input.addEventListener('focus', warmLeadSession, { once: true });
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = input.value.trim();
     const v = judge(email);
@@ -139,6 +141,19 @@ export function mountForm(foot: HTMLElement) {
       return;
     }
     const to = 'info@digiinn360.com';
+    const send = form.querySelector<HTMLButtonElement>('[data-send]');
+    send?.setAttribute('disabled', '');
+    const result = await submitLead({ kind: 'demo', email, product: 'SysBastion V1.4' });
+    send?.removeAttribute('disabled');
+    if (result.ok) {
+      form.innerHTML = `<p class="big-done">Request received</p><p class="foot__cap" role="status">We reply to ${esc(email)} to book the walkthrough.</p>`;
+      return;
+    }
+    if ('errors' in result) {
+      set({ mode: 'text', text: 'not quite an email.', side: 'center' });
+      input.focus();
+      return;
+    }
     const body = `Hello DigiInn360,\n\nI'd like a SysBastion V1.4 walkthrough on a test machine.\nWork email: ${email}\n`;
     location.href = `mailto:${to}?subject=${encodeURIComponent('SysBastion V1.4 demo request')}&body=${encodeURIComponent(body)}`;
     // a mailto link can open nothing (webmail, no mail app), so the page says what to do if it didn't

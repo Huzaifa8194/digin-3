@@ -1,6 +1,16 @@
 # DiggiIn / Signal
 
-A local, static animation concept. No backend or database.
+Vite site plus a small Django backend (`backend/`) for the contact/demo forms, a MySQL database and a 2FA-protected admin. Deploys to cPanel like the previous Digiinn360 site.
+
+## Deploy package (cPanel)
+
+```sh
+npm run package
+```
+
+Creates `release/digiinn360-website.zip` (backend + built site, no secrets). Hand it over with `backend/INSTALL.md`, which is also inside the zip.
+
+Local backend: `cd backend && py -3.12 -m venv .venv && .venv\Scripts\pip install -r requirements.txt`, then `DJANGO_DEBUG=true .venv/Scripts/python manage.py migrate` and `runserver 127.0.0.1:8765`. `npm run dev` proxies `/api` there. Tests: `DJANGO_DEBUG=true .venv/Scripts/python manage.py test`. Dependencies: edit `backend/requirements.in`, then `pip-compile --generate-hashes --allow-unsafe --strip-extras -o requirements.txt requirements.in` (checksum-pinned). Hosting security checklist: `backend/SECURITY.md`.
 
 ## Start
 

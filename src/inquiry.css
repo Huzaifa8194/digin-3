@@ -1,0 +1,19 @@
+/* Inquiry form additions: contact inputs, honeypot, send status. */
+.hp-field { position: absolute !important; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+#inquiry { position: relative; }
+#inquiry .form-optional { text-transform: none; letter-spacing: 0; opacity: 0.8; }
+#inquiry .form-status { margin: 0; font-size: 0.9rem; line-height: 1.45; }
+#inquiry button[disabled] { opacity: 0.6; cursor: progress; }
+
+/* Home (dark) */
+.hm-talk__form input:not([type='hidden']) { background: #050c18; border: 1px solid var(--ln2); color: var(--ink); font: inherit; font-size: 1rem; padding: 0.85rem 0.9rem; border-radius: 8px; min-width: 0; }
+.hm-talk__form input:focus-visible { border-color: var(--cool); outline: 2px solid rgb(140 192 255 / 0.4); outline-offset: 1px; }
+.hm-talk__form input[aria-invalid='true'] { border-color: var(--risk); }
+.hm-talk__form .form-status { color: var(--ink); }
+.hm-talk__form .form-status[data-kind='ok'] { color: #8ce0b4; }
+
+/* Contact page (light) */
+.contact-inquiry input:not([type='hidden']) { width: 100%; min-height: 48px; border: 1px solid #9bb2c8; border-radius: 8px; padding: 12px; background: #fff; color: inherit; font: inherit; }
+.contact-inquiry :is(input, textarea)[aria-invalid='true'] { border-color: #c4122f; }
+.contact-inquiry .form-error { margin: 0; color: #b0102a; font-size: 0.9rem; }
+.contact-inquiry .form-status[data-kind='ok'] { color: #14663d; font-weight: 700; }
