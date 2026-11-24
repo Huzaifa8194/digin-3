@@ -1,136 +1,172 @@
-# SysBastion landing page: design record
+# /sysbastion/: design record
 
-Built with the `/awwwards` skill (juliobsz/skills). Planning artifacts live here so later passes
-stay consistent. The previous `/sysbastion/` page was deleted and nothing from it was reused.
+A one-to-one rebuild of the motion system of grail-app.com (Awwwards, studied from its shipped
+source and ~300 captured frames), carrying SysBastion V1.4 content. Look and transitions come from
+the reference; facts come only from the V1.4 engineering report and the V1.4 promo film.
 
-## Phase 0: Brief
+## Brief
 
-- **Subject:** SysBastion V1.4, a Windows endpoint hardening console by DigiInn360.
-- **Audience:** IT administrators, security leads and MSPs who look after Windows fleets.
-- **Job:** explain what SysBastion closes, prove it is reversible, and send people to
-  "Request a demo" (`/contact/` on the DigiInn360 site).
-- **Assets:** `Digin-Promotional/SysBastion/SysBastion_V1.4_Promo_PlanB_NewUI.mp4` (58.6 s,
-  1080p). Studied frame by frame. Its chapters, in order:
-  `00:00` Every attack needs a way in. A script. A macro. A connection out. /
-  `00:05` SysBastion, deny by default / `00:08` one-click hardening (9 controls) /
-  `00:13` 14 risky file types, opened as text, blocked by policy /
-  `00:20` PowerShell locked at the machine level / `00:24` 35 tools, no internet, enforced twice /
-  `00:32` Shields-Up, nothing gets in uninvited, still on after restart /
-  `00:36` document readers hardened before they're installed / `00:40` Restore All, exact
-  original not defaults / `00:46` audit log, what when who / `00:50` 16 admin tools one tab away /
-  `00:54` Deny by default. Reversible by design.
-- **Facts used:** only the eight selling points from the owner plus what the film shows on
-  screen (setting names, the 14 extensions, the 16 tool names, journal and audit columns).
-- **Assumptions:** the CTA goes to the existing DigiInn360 contact page. The demo journal on the
-  page uses typical starting values (Enabled, On, Hidden) taken from the film's own journal; the
-  page says plainly that nothing on the visitor's computer changes.
+- **Subject:** SysBastion V1.4, DigiInn360's Windows hardening console.
+- **Audience:** IT leads, security engineers, MSPs looking after Windows fleets.
+- **Job:** show what V1.4 closes, how it was checked, that every change can be put back, and get
+  a demo request.
+- **Sources:** `DigiInn360_SysBastion_V1.4_Security_Engineering_Progress_Report.docx` (statuses
+  PASS / PARTIAL / PENDING are respected: the page never claims a PENDING item), the
+  `SysBastion_V1.4_Promo_PlanB.mp4` film (stills used as row images), two app screenshots
+  (cropped to the window, used as the "device" the rule card lands in).
 
-## Phase 1: Concepts
+## How the reference works (and what this page copies)
 
-| | Idea | Anchor | Signature | O / F / Fe / P |
-|---|---|---|---|---|
-| A. Material: the change journal | The page is a machine being hardened. Each section is a real SysBastion control group; as you read it, the page applies it and posts a journal entry with the value it replaced. A bar that mirrors the app's own bottom bar counts what is applied, and "Restore all applied" rewinds the whole page to the exact originals | SysBastion journals every change and restores exact originals ("Reversible by design") | Restore all applied: every toggle, struck extension and journal row flips back in reverse order while the counter runs down | 4 / 5 / 4 / 1 |
-| B. Name: the bastion | A star fort plan: each feature is a bastion angle on a fortification drawing | the word bastion | the plan draws itself as you scroll | 3 / 3 / 3 / 4 |
-| C. Process: ways in | The hero lists the ways in (a script, a macro, a connection out) as open lines from an endpoint; each section cuts one | the film's opening line | lines from endpoint to internet are cut one by one | 3 / 4 / 4 / 3 |
+One Lenis scroll value `p = scroll / viewport height` is read once per frame. It is turned into
+~25 CSS custom properties on the page root with smoothstep windows, and CSS does every transform
+with `calc()` on those variables. WebGL scenes (card spiral, ink spread, forge, rays) render only
+while their input changed in the last ~0.45 s, then sleep. Pinned stretches are `position:sticky`
+inside tall wrappers with negative margins so chapters overlap.
 
-**Pick A.** It is the only one built on what makes SysBastion different (the journal and exact
-restore), it makes "deny by default, reversible by design" something the visitor does rather
-than reads, and it cannot be moved to another product. **Steal from C** for the hero statement
-and for the outbound firewall diagram (endpoint, two walls, internet), both straight from the film.
-
-## Concept card
-
-```
-Idea:        This page hardens itself as you read it, keeps a journal, and can put every value back.
-Metaphor:    SysBastion's own console: control groups, toggles, a change journal, a bottom action bar.
-Signature:   "Restore all applied" rewinds the page (journal driver module, src/sysbastion/motion/journal.ts).
-Emotion:     calm control. Dark, precise, nothing loud until something is blocked.
-Motion verb: switch and lock. Short travel, then a firm settle (expo.out), like a toggle thumb.
-Screenshot:  the 14 extensions struck through in red beside the journal bar reading "Applied 2 of 6".
-```
-
-## Phase 2: System
-
-**Palette** (sampled from the film and the app UI; dark because the product and the film are dark,
-not as a default):
-
-| Role | Hex | Source |
+| p (viewports) | Reference beat | Here |
 |---|---|---|
-| ground | `#07090c` | film background |
-| surface | `#0e131a` | app panels |
-| ink | `#eef1f5` | film headline white |
-| muted | `#8d97a5` | app secondary text (AA on ground) |
-| line | `rgb(238 241 245 / 0.1)` | app hairlines |
-| accent | `#2f7bff` / text `#5c97ff` | the app's Apply button and the WFP wall |
-| blocked | `#ff4d5e` | "Blocked by policy", the Defender wall |
-| without | `#f2b84b` | "Without SysBastion, script runs" |
+| loader | book cover on pink opens, its page becomes a hole onto the site | a shield badge on ice blue opens the same way |
+| 0 to 0.72 | spiral of bent WebGL quest cards collapses into a deck | spiral of SysBastion rule cards, pattern backs per control group |
+| 0.2 to 1.5 | "Everyone's out living..." staggered lines | Chapter 01, the problem |
+| 1.18 to 1.7 | deck to one card | one rule card: "Disable SMB1 and SMB2" |
+| 1.9 to 2.6 | ink blot spreads from centre, card does a row-staggered 360 flip, lands in the phone, live clock behind | ink spreads, card flips and lands in the SysBastion window, live journal clock behind |
+| 3.0 to 4.9 | white sheet rotates in (7 deg, 0.84 scale), rows slide in from both sides, photo clip opens, photos follow the cursor | Chapter 03, five ways in, film stills |
+| 4.9 to 6.3 | sheet rotates out, two-column headline, dark modal in the phone slides away | Chapter 04, the change journal and Restore all |
+| 6.3 to 6.6 | ink collapses to a dot, forge shader (torch follows cursor) | same |
+| 6.6 to 9.1 | 3D totems, arrow cursor, click left or right, pills | six gold modules built in three.js |
+| 8.6 to 9.9 | physics balls drop into four columns, counters climb | four evidence layers from the report |
+| 9.7 to 11.3 | white sheet rotates in, crest wheel spins with scroll speed, bulges to the cursor, title morphs letter by letter | sixteen system tools |
+| 11.3 to end | footer slides up behind, light rays from a tile follow the cursor, talking email bubble | demo request |
 
-Red and amber only ever mean blocked and unprotected. Blue only ever means applied or actionable.
+## System
 
-**Type:** Switzer (Fontshare, 400 to 700) for everything, set tight like the film's headlines
-(-0.045em at display size). JetBrains Mono 400 for data that is data: extensions, timestamps,
-journal values, tool names. Self-hosted woff2 in `public/sysbastion/fonts`.
+- **Palette:** ground `#000`, ink `#c9daf8` (pink in the reference, moved to SysBastion blue),
+  ink text `#1d3461`, sheet `#f6f6f6`, forge gold `#c79650`, accent `#cfe0ff`.
+- **Type:** Playfair (variable, 300, high optical size) uppercase for display at line-height 0.88,
+  standing in for the reference's PP Pangaia; Switzer for UI and body.
+- **Motion:** ease `cubic-bezier(0.22, 1, 0.36, 1)` for every timed reveal; scroll-driven values
+  use smoothstep. One clock (gsap.ticker) runs Lenis and every scene.
+- **Reduced motion / no WebGL:** no Lenis, no GL, all copy visible, stills instead of scenes.
 
-**Grid:** 12 columns, fluid gutter, content capped at 1600 px. Hang lines: col 1, col 6, col 8.
-Section rhythm alternates tight (hardening list), airy (statements), full viewport (Shields-Up).
+## Phones, fallbacks, QA (production build)
 
-**Shape:** 6 px radius on panels and buttons; toggles and chips are pills (they are controls).
+- **Phones** follow the reference's own phone layout (captured at 390 x 844 with `?forceMobile=1`):
+  the spiral stops before the flip and fades (`--deckout`), Chapter 02 is a static block with the
+  window image, Chapter 06 is a 2 x 2 grid of pattern tiles that fill and count up (no physics),
+  modules show a still crest instead of the 3D stage.
+- **No WebGL / software GL / reduced motion:** a rendered still of the spiral
+  (`public/sysbastion/deck-hero.webp`, made from this page's own scene), a CSS ink disc driven by
+  `--inkfill`, a CSS forge gradient, crest stills for modules. `?nogl=1` forces this path.
+- **Display font** is Playfair subset to caps, digits and punctuation (107 KB to 31 KB); every
+  display line is uppercase.
+- **Measured:** desktop LCP 0.46 to 0.50 s, phone LCP 2.44 to 2.68 s (throttled), CLS 0, axe 0
+  serious, every keyboard stop visibly focused, no colour-only hovers, no console errors. Scroll
+  frame rate in the same software-rendered browser: 19 fps here against 17 fps for the reference.
+- **Kept on purpose:** the floating demo pill is hidden at the very top (the nav carries the same
+  button there), as in the reference.
 
-**Motion language:** engine eases only (`expo.out` entrances, `power3.out` UI). Reveals are line
-masks on headings and one clip reveal per media frame. Applying a group: toggles switch with a
-40 ms stagger, extensions get struck, the status chip flips to "Applied", a journal row posts.
+## Pass 2: the app window carries the story
 
-**Sections (each a different layout family):**
-```
-hero        statement + poster wordmark ................. Poster
-film        16:9 player | chapter index ................. Full-bleed media + index list
-intro       large paragraph across 9 cols ............... Statement
-01 harden   clip 7 cols | toggle list 5 cols ............ Asymmetric pair
-02 scripts  14 extension chips | without/with ........... Typographic grid
-03 shell    statement left | clip right ................. Split
-04 outbound 35 + tool names | endpoint/walls/internet ... Data/facts + diagram
-05 shields  full-bleed clip, type over a scrim .......... Full-bleed media
-06 readers  rows per app with policies ................. Index list
-07 restore  sticky copy | live journal table ............ Sticky narrative
-08 audit    "What. When. Who." across the width + log ... Poster
-tools       16 names in a tight grid .................... Gallery wall (type)
-cta/footer  final composition ........................... Footer as finale
-```
+- **The window is HTML now** (`src/sysbastion/ui.ts`, `ui-data.ts`, `ui.css`), rebuilt at 1066 x 716
+  from the V1.4 screenshots (Inter, sampled colours). Pages: Harden (UAC, System hardening),
+  Script & execution, PowerShell, Network & firewall, Document readers, System tools, Journal &
+  restore, Audit log. Control names come from the screenshots, the film and the report's lists.
+- **Hero spiral tiles** are real panels of that window, captured from the same HTML by the dev-only
+  page `/sysbastion/ui-lab/` (not in the build) into `public/sysbastion/ui/tile-*.webp`. The
+  deck always ends on System hardening, which flips and **docks into its own slot** in the window
+  (`S.dock` gives the spiral the slot's screen rect); the HTML card takes over once it lands.
+- **Chapter 02** plays inside the window on scroll: the eight controls are selected, Apply is
+  pressed, and each change is written to the live change journal (Was / Now / Time) before the
+  status bar confirms the readback. The chapter got 60vh more scroll so this can play out.
+- **Chapter 04** is the Journal & restore page: the "Restore all applied?" dialog drops away as the
+  sheet clears, then the rows return to their originals one by one, newest first.
+- **Ways-in rows** show the matching panels; **modules** show the section's panel beside the gold
+  object; the **tools wheel** is the sixteen tool buttons.
+- **Typography:** the display face now uses its optical-size axis at real size (no forced 1200,
+  which made hairlines vanish at mid sizes), tighter tracking on large lines, balanced breaks;
+  reading copy at 1.45 to 1.55 leading with brighter greys.
+- Regenerate tiles after UI edits: run the dev server, then capture `.sbw-card` from
+  `/sysbastion/ui-lab/?tile=<id>` at 2x (and `?win=apply&active=hardening&sel=8&done=8`,
+  `?win=journal&restored=8&dlg=0` at 1.5x for the phone stills).
 
-**Hover treatments (one per role):** primary buttons flood from the pointer's side; nav links
-draw an underline; film chapters slide a marker and travel their arrow; inline links keep an
-underline at rest. Native cursor always.
+## Pass 3: try the product (Chapter 03)
 
-**Idle state:** the film plays muted in the hero (pause control provided), the outbound diagram
-keeps sending packets that stop at the two walls, the journal caret blinks. All stop under
-reduced motion.
+- Each "way in" row is a button. Its panel grows (FLIP, 900 ms) into the full SysBastion window on
+  the page for that way in, with the matching control highlighted and explained.
+  `src/sysbastion/demo.ts` + `demo.css` load only on first open (31 KB + 7 KB).
+- Everything is clickable, with no backend: sidebar pages, toggles (selections), radios, Select all,
+  Apply selected (optional restore point step, journal written per change, "Applied" badges),
+  Journal & restore (session entries, Restore all, newest first), Audit log, PowerShell App
+  Control actions, System tools buttons. State lasts for the visit.
+- Every control has a tooltip (`demo-tips.ts`): what it does and, where the engineering report
+  tested it, what it found (passed, partly, still being tested, configured only, unsupported).
+- "?" runs a 5-step tour. Esc or the backdrop closes it, the window shrinks back into its row,
+  and focus returns to the row. Phones get a fluid window (sidebar as tabs, tooltips on tap);
+  reduced motion gets a fade. The demo lifts the app's faintest greys so its text passes AA.
 
-**No loader, no WebGL, no page transition:** a product landing page inside an existing site earns
-the craft in type, layout and the signature, not theatre. Links leave to other DigiInn360 pages.
+## Pass 4: audited against Impeccable and taste-skill
 
-**Genericness test:** a generic model would land on "dark security SaaS: hero, three feature
-cards, gradient glow, pricing". Changed: no cards row (each group has its own layout), no glow,
-no pricing, the feature list is an interactive journal that the visitor can undo, and the copy
-uses the film's own lines and the app's real setting names.
+Both skills were run as an audit, not a redesign: the Grail scroll world stays. Impeccable's
+critique ran as two isolated reviews (a design review, 25/36 on Nielsen's heuristics, and a
+detector plus browser evidence pass); taste-skill's `copy-lint` and `consistency.mjs` ran on the
+live page at 1440 and 390.
 
-## QA record (production build, skill scripts)
+- **Hero:** the h1 now names the category, platform and buyer ("Windows 10 hardening for IT and
+  security teams"); "Deny by default" stays as the big brand line (a `<p>`). A fact line (14 file
+  types, 35 outbound tools, Office macros, journaled Restore all) and a second button, **Try the
+  console**, sit bottom left; the button opens the working console on System hardening.
+- **Headings:** the paired-fragment headings ("Setting changed. Old value kept.", "It starts with
+  one file. It rarely stays that small.", "Six sections. One console.", "Close the ways in. Keep
+  the receipts.") became plain claims with a noun. Row titles are a verb and an object. The
+  eyebrow labels ("A way in", the tools kicker) are gone.
+- **Ways in:** "Try it in the app" shows at rest under each title, not only on hover; 44 px on
+  phones, where it no longer cuts the title.
+- **The console:** Restore asks first ("Restore all applied?", like the app and Chapter 04), and
+  both restore buttons carry the same label. **Book a walkthrough** in the top bar closes the
+  console, scrolls to the email field and focuses it; the first Restore suggests it once.
+- **Modules:** the module's own name is the big line ("UAC"); the fantasy epithets are gone. The
+  gold object steps left and down in size so the name and the app panel both read.
+- **Evidence:** the counters that climbed with every dropped ball are replaced by figures from the
+  engineering report: 30/30 Acrobat and Office policy values, 8/8 journals, 2/2 firewall
+  journals still Applied after reboot, 6 harmless test runs refused or blocked.
+- **System tools:** every tool on the wheel opens the System tools tab in the console.
+- **Demo request:** visible "Work email" label, the field in the sans face (the caps-only display
+  face could not show what was typed), an always-present **Request a demo** button, and an honest
+  result: the page says a draft should have opened and gives the address with a copy button in
+  case nothing did. Footer legal row is "© 2026 DigiInn360"; brand spelling fixed in meta.
+- **Pill:** pinned bottom right (no more sliding across content); on phones it waits until after
+  the hero and steps aside while you scroll down.
+- **Palette:** the card-back patterns moved from Grail's red, mustard, lilac and green to the
+  product's ink, ice blue, steel and gold; `deck-hero.webp` was re-rendered from the scene.
 
-- Pass 1: fixed white-on-blue contrast (accent deepened to `#2563eb`), brand link name mismatch,
-  a 18 px tap target, hero statement alignment, and moved the hero intro to CSS (`.rise`) so the
-  LCP text paints without waiting for JS.
-- Pass 2: phone scroll was 22 fps under 4x throttle; the film no longer autoplays on phones and
-  the fixed bars dropped `backdrop-filter`. Now 108 fps.
-- Independent critic (screenshots only) scored 7.1 and read the idea correctly. Its fix list
-  was applied: flood hovers on Journal and film controls, an inline-link band on the byline,
-  a solid top bar, the light DigiInn360 logo in the footer, clips cropped to the UI panel,
-  mobile spacing and table chip fixes.
-- Final: 0 audit FAILs, 0 axe violations, no color-only or dead hovers, no overflow,
-  desktop LCP 0.38 s, throttled phone LCP 1.8 s, CLS 0, idle motion present,
-  reduced motion complete. Restore cycle verified headless: 6 applied, 0 after Restore All,
-  6 after Apply all, no console errors.
+**Kept on purpose (skill rules waived for the Grail world):** scroll-linked motion, pinned
+stretches, overlapping chapters and the reveal-on-scroll lines (taste: scroll-reveal, pinned,
+section-height, one-section, flush); the rotated white sheets and the tilted window (taste: tilt);
+the corner running heads ("The problem / Chapter 01"), which are colontitles, not eyebrows over a
+heading; the tools title morph, which shows broken letters mid-transition by design. Checker
+contrast fails left on the page were verified as mid-animation states or as text over the fixed
+ink layer that hit-testing cannot see (real ratios 6.2:1 to 9.1:1). The detector's
+`flat-type-hierarchy` is a static-scan artefact: the page's CSS loads through JS.
 
-## Stack
+## Pass 5: smoother on slower machines (nothing removed)
 
-Existing project: Vite multi-page + TypeScript + GSAP. Added Lenis. The page is a Vite entry at
-`sysbastion/index.html`, with code in `src/sysbastion/`. The engine is a trimmed port of the
-skill's `engine.md` (scroll, reveals, page lifecycle; no loader, GL or transitions).
+Measured by scrolling the page under 4x CPU throttling with a CPU profile and timeline traces,
+then comparing against the previous commit section by section.
+
+- **Every frame reads, then writes.** The clock now runs a read phase (`addRead`) before the
+  ticks. The scroll driver measures everything before its first style write; the row lean, the
+  tools wheel, the spiral's dock target and the footer rays measure in the read phase. Reading
+  layout after a write had forced two or three full restyles and layouts per frame.
+- **`window.scrollY` is read in the read phase too.** Chrome restyles and lays out the page to
+  answer it; the wheel read it every frame, on every chapter.
+- **Scroll variables live where they are used.** Each `--var` is written only on the elements whose
+  CSS reads it (`VAR_HOME` in `main.ts`), not on `.page`, and only when its value changes. Before,
+  one scroll frame restyled 660 to 860 elements; now 3 to 50.
+- **Quality tier for weak hardware.** Machines with 4 cores or 4 GB or less start at tier 1, and
+  the clock steps down a tier (at most twice) if frames average under about 38 fps for two seconds.
+  Tiers only lower the internal resolution of the soft WebGL scenes (forge glow, ink, the gold
+  module object, footer rays); at tier 2 the forge redraws every other frame. Text, UI cards, the
+  spiral and the physics balls keep full resolution. `?tier=0|1|2` forces a tier.
+- Result in traces (same machine, both builds interleaved): main-thread work per scroll frame
+  fell from 60 to 15 ms in the hero, 84 to 32 ms in Chapter 02 and 146 to 40 ms in Modules.
+  Chapter 07 stays GPU-bound (the wheel under the shader band's backdrop blur, and the forge).

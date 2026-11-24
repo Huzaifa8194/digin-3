@@ -41,20 +41,23 @@ class LeadAdmin(ModelAdmin):
     list_filter = (
         ("status", ChoicesDropdownFilter),
         ("kind", ChoicesDropdownFilter),
+        ("partner_type", ChoicesDropdownFilter),
         ("created_at", RangeDateFilter),
         "assigned_to",
     )
     list_filter_submit = True
-    search_fields = ("name", "email", "company", "message", "interest", "product")
+    search_fields = ("name", "email", "company", "message", "interest", "product", "country", "company_website")
     date_hierarchy = "created_at"
     list_per_page = 50
     actions = ["mark_contacted", "mark_spam", "export_csv"]
     readonly_fields = (
         "kind", "name", "email", "company", "phone", "interest", "product", "message",
+        "partner_type", "company_website", "country",
         "source_page", "created_at", "updated_at", "contacted_at", "ip_address", "user_agent",
     )
     fieldsets = (
         ("Submission", {"fields": ("kind", "created_at", "name", "email", "company", "phone", "interest", "product", "message", "source_page")}),
+        ("Partner details", {"fields": ("partner_type", "company_website", "country")}),
         ("Follow-up", {"fields": ("status", "assigned_to", "internal_notes", "contacted_at")}),
         ("Technical", {"classes": ("collapse",), "fields": ("ip_address", "user_agent", "updated_at")}),
     )
@@ -74,7 +77,13 @@ class LeadAdmin(ModelAdmin):
             obj.contacted_at = timezone.now()
         super().save_model(request, obj, form, change)
 
-    @display(description="Type", label={"Project inquiry": "primary", "Demo request": "info"})
+    def get_fieldsets(self, request, obj=None):
+        sets = super().get_fieldsets(request, obj)
+        if obj is not None and obj.kind != Lead.Kind.PARTNER:
+            sets = tuple(s for s in sets if s[0] != "Partner details")
+        return sets
+
+    @display(description="Type", label={"Project inquiry": "primary", "Demo request": "info", "Partner application": "success"})
     def kind_label(self, obj):
         return obj.get_kind_display()
 
@@ -88,7 +97,7 @@ class LeadAdmin(ModelAdmin):
 
     @display(description="Topic")
     def topic(self, obj):
-        text = obj.product or obj.interest or ""
+        text = obj.product or obj.interest or obj.get_partner_type_display() or ""
         return text[:60]
 
     @display(
@@ -121,7 +130,8 @@ class LeadAdmin(ModelAdmin):
         response["Content-Disposition"] = f'attachment; filename="leads-{stamp}.csv"'
         response.write("﻿")  # Excel-friendly UTF-8
         writer = csv.writer(response)
-        columns = ["created_at", "kind", "status", "name", "email", "company", "phone", "interest", "product", "message", "source_page"]
+        columns = ["created_at", "kind", "status", "name", "email", "company", "phone", "interest", "product",
+                   "partner_type", "company_website", "country", "message", "source_page"]
         writer.writerow(columns)
         for lead in queryset.iterator():
             row = []

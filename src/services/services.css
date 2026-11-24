@@ -1,31 +1,10 @@
 /* Services page. Scoped to .svc-route / .svc-* so the site's global CSS and this page never collide.
    Tokens from services/DESIGN.md. --svc-mix (0% → 100%) is written by the spectrum driver. */
 
-@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/jetbrains-mono-400-normal.woff2') format('woff2'); font-weight: 400 500; font-display: swap; }
+@import '../tokens.css';
 
-.svc-route {
-  --g: #050a14;
-  --surface: #0b1422;
-  --ink: #eef3f9;
-  --mut: #9aa8ba;
-  --ln: rgb(238 243 249 / 0.1);
-  --ln2: rgb(238 243 249 / 0.18);
-  --risk: #ff3341;
-  --risk-t: #ff6b72;
-  --ahead: #5aa2ff;
-  --ahead-t: #8cc0ff;
-  --accent: color-mix(in oklab, var(--risk-t), var(--ahead-t) var(--svc-mix));
-  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
-  --gut: clamp(1rem, 0.4rem + 2.6vw, 3.5rem);
-  --hdr: 80px;
-  --e-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --t-mega: clamp(3.1rem, 0.6rem + 7.6vw, 9.25rem);
-  --t-xl: clamp(2.3rem, 1rem + 4.4vw, 5.6rem);
-  --t-l: clamp(1.75rem, 1.15rem + 2.2vw, 3.25rem);
-  --t-m: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
-  background: var(--g);
-  color: var(--ink);
-}
+/* Tokens: ../tokens.css. Only the page's own mix lives here. */
+.svc-route { --accent: color-mix(in oklab, var(--risk-t), var(--ahead-t) var(--svc-mix)); }
 :root { --svc-mix: 0%; }
 html:has(> .svc-route) { background: #050a14; scroll-padding-top: 90px; }
 html.lenis { scroll-behavior: auto; }
@@ -268,28 +247,16 @@ html.lenis, html.lenis body { height: auto; }
 
 /* Skills pass: body copy never leaves one word alone on its last line; footer links are 44px targets */
 .svc p, .svc li { text-wrap: pretty; }
-.svc-route .site-footer-end a { display: inline-flex; align-items: center; gap: 0.5em; min-height: 44px; padding-inline: 0.5rem; margin-right: -0.5rem; }
-
-/* Skills pass: one footer on every page, the homepage instrument (page background, beam rule,
-   quarter-turn bearings on the columns), on the same content edge as the page */
-.svc-route .site-footer { background: #03070f; border-top: 0; }
-.svc-route .site-footer::before { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: linear-gradient(90deg, #ff3341, #8cc0ff 55%, transparent); }
-.svc-route .site-footer-inner { width: auto; margin-inline: var(--gut, 5%); }
-.svc-route .site-footer-directory h2 { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: #8cc0ff; }
-.svc-route .site-footer-directory h2::before { color: #9aa8ba; }
-.svc-route .site-footer-directory > div:nth-child(1) h2::before { content: "090° / "; }
-.svc-route .site-footer-directory > div:nth-child(2) h2::before { content: "180° / "; }
-.svc-route .site-footer-directory > div:nth-child(3) h2::before { content: "270° / "; }
-.svc-route .site-footer-directory > div:nth-child(4) h2::before { content: "360° / "; }
-.svc-route .site-footer-end { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; letter-spacing: 0.04em; }
 
 /* Skills pass 2: the sculpture passes behind its labels, never through them */
 .svc-rail__end { position: relative; z-index: 1; padding: 0.25em 0.5em; margin-right: -0.5em; border-radius: 4px; background: rgb(5 10 20 / 0.86); }
 .svc-stage__label { z-index: 1; padding: 0.25em 0.5em; margin-right: -0.5em; border-radius: 4px; background: rgb(5 10 20 / 0.86); }
 .svc-steps { position: relative; z-index: 2; background: linear-gradient(rgb(5 10 20 / 0.86), rgb(5 10 20 / 0.86)) padding-box; }
-
-/* Skills pass 2: the logo answers the pointer like the nav does, with the same red bar drawing in */
-.svc-route > header .brand { position: relative; }
-.svc-route > header .brand::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: #db000a; scale: 0 1; transform-origin: left; transition: scale 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
-@media (hover: hover) { .svc-route > header .brand:hover::after { scale: 1 1; } }
-.svc-route > header .brand:focus-visible::after { scale: 1 1; }
+/* Skills pass 2: each index row ends in a drawn arrow down to its section (was a 01.1 sub-number) */
+.svc-index__go { flex: none; width: 0.9rem; height: 0.9rem; background: var(--mut); transition: background-color 0.3s, translate 0.45s var(--e-out);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.5v9M2.5 7 6 10.5 9.5 7' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.5v9M2.5 7 6 10.5 9.5 7' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") center / contain no-repeat; }
+@media (hover: hover) { .svc-index__list a:hover .svc-index__go { background: var(--ink); translate: 0 2px; } }
+.svc-index__list a:focus-visible .svc-index__go { background: var(--ink); }
+/* Skills pass 2: contact lines are 44px targets, not 26px links touching each other */
+.svc-contact__lines a { display: inline-flex; align-items: center; min-height: 44px; }

@@ -98,7 +98,8 @@ export function startSpectrum() {
     const s = { p: 0, target: 0, px: 0, py: 0, aimX: 0, aimY: 0, visible: true, shown: -1 };
 
     const fit = () => {
-      const dpr = Math.min(devicePixelRatio || 1, mobile ? 1.25 : 1.75);
+      // Phones: the sculpture is a 32% backdrop under the copy, so 1x is indistinguishable and far cheaper.
+      const dpr = Math.min(devicePixelRatio || 1, mobile ? 1 : 1.75);
       const r = canvas.getBoundingClientRect();
       canvas.width = Math.max(1, Math.round(r.width * dpr));
       canvas.height = Math.max(1, Math.round(r.height * dpr));
@@ -169,7 +170,8 @@ export function startSpectrum() {
       gsap.ticker.add((t) => {
         if (!s.visible) return;
         const ms = t * 1000;
-        if (mobile && ms - last < 33) return; // ~30 fps on phones is plenty for a slow sculpture
+        // Phones: ~30 fps in the hero, ~20 fps once it is a backdrop under the chapters
+        if (mobile && ms - last < (scrollY > innerHeight ? 50 : 33)) return;
         last = ms;
         const k = 1 - Math.pow(0.9, gsap.ticker.deltaRatio());
         s.p += (s.target - s.p) * k;

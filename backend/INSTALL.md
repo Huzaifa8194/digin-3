@@ -1,5 +1,7 @@
 # Digiinn360 website: installation on cPanel
 
+For a one-page version, see START-HERE.md.
+
 This package contains the complete website (already built) and its small admin
 system. It installs the same way as the previous Digiinn360 site: **cPanel →
 Setup Python App** with a **MySQL database**. No Node.js or build step is needed.
@@ -141,8 +143,10 @@ hosting-side steps such as Cloudflare, cPanel 2FA and backups.
 
 ## Updating the website later
 
-1. Upload the new `digiinn360-website.zip` to the home folder and extract it
-   over the old folder (overwrite). Your `.env` is not in the zip, so your
+1. In File Manager, open `digiinn360-website` and **delete its `site` folder**
+   (the old copy of the website; pages that were removed must not linger).
+   Then upload the new `digiinn360-website.zip` to the home folder and extract
+   it over the old folder (overwrite). Your `.env` is not in the zip, so your
    settings stay.
 2. Run `python install.py` again in Terminal (Step 4), then **Restart**.
 

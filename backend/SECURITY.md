@@ -67,7 +67,7 @@ addresses, once email is set up in `.env` (see INSTALL.md).
 | Setting | Effect |
 |---|---|
 | `ADMIN_ALLOWED_IPS=203.0.113.10` | Admin only reachable from the office IP(s). Everyone else gets "not found". |
-| `POW_MAX_NUMBER=300000` | Makes the anti-bot puzzle 3× harder during a spam wave (slower phones wait a little longer). |
+| `POW_MAX_NUMBER=200000` | Makes the anti-bot puzzle 4× harder during a spam wave (slower phones wait a little longer). |
 | Admin → Website settings → *Accept submissions* off | Pauses the forms; visitors are offered email instead. |
 | `SECURE_HSTS_INCLUDE_SUBDOMAINS=true` | Only once **every** subdomain (mail, webmail, cpanel…) works on HTTPS. |
 

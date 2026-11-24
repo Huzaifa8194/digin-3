@@ -37,7 +37,10 @@ class LeadForm(forms.Form):
     company = forms.CharField(max_length=160, required=False)
     phone = forms.CharField(max_length=40, required=False)
     interest = forms.CharField(max_length=160, required=False)
-    product = forms.CharField(max_length=80, required=False)
+    product = forms.CharField(max_length=200, required=False)
+    partner_type = forms.ChoiceField(choices=[("", "")] + list(Lead.PartnerType.choices), required=False)
+    company_website = forms.CharField(max_length=200, required=False)
+    country = forms.CharField(max_length=80, required=False)
     message = forms.CharField(max_length=2000, required=False)
     page = forms.CharField(max_length=200, required=False)
 
@@ -52,6 +55,17 @@ class LeadForm(forms.Form):
 
     def clean_product(self):
         return clean_text(self.cleaned_data["product"])
+
+    def clean_country(self):
+        return clean_text(self.cleaned_data["country"])
+
+    def clean_company_website(self):
+        site = clean_text(self.cleaned_data["company_website"]).replace(" ", "")
+        if not site:
+            return ""
+        if not re.match(r"^(https?://)?[a-z0-9-]+(\.[a-z0-9-]+)+(/\S*)?$", site, re.I):
+            raise forms.ValidationError("Enter a web address like example.com.")
+        return site if site.lower().startswith(("http://", "https://")) else f"https://{site}"
 
     def clean_message(self):
         return clean_text(self.cleaned_data["message"], multiline=True)
@@ -73,6 +87,13 @@ class LeadForm(forms.Form):
 
     def clean(self):
         data = super().clean()
+        if data.get("kind") == Lead.Kind.PARTNER:
+            if not data.get("name"):
+                self.add_error("name", "Tell us your name.")
+            if not data.get("company"):
+                self.add_error("company", "Tell us your company name.")
+            if not data.get("partner_type"):
+                self.add_error("partner_type", "Choose how you would like to partner.")
         if data.get("kind") == Lead.Kind.INQUIRY:
             if not data.get("name"):
                 self.add_error("name", "Tell us your name.")

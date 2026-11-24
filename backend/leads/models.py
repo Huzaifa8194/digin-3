@@ -9,6 +9,13 @@ class Lead(models.Model):
     class Kind(models.TextChoices):
         INQUIRY = "inquiry", "Project inquiry"
         DEMO = "demo", "Demo request"
+        PARTNER = "partner", "Partner application"
+
+    class PartnerType(models.TextChoices):
+        RESELLER = "reseller", "Reseller or distributor"
+        MSP = "msp", "Managed service provider (MSP / MSSP)"
+        TECHNOLOGY = "technology", "Technology or integration partner"
+        REFERRAL = "referral", "Referral partner"
 
     class Status(models.TextChoices):
         NEW = "new", "New"
@@ -26,7 +33,10 @@ class Lead(models.Model):
     company = models.CharField(max_length=160, blank=True)
     phone = models.CharField(max_length=40, blank=True)
     interest = models.CharField("Service / topic", max_length=160, blank=True)
-    product = models.CharField(max_length=80, blank=True)
+    product = models.CharField("Product(s)", max_length=200, blank=True)
+    partner_type = models.CharField(max_length=16, choices=PartnerType.choices, blank=True, db_index=True)
+    company_website = models.CharField(max_length=200, blank=True)
+    country = models.CharField(max_length=80, blank=True)
     message = models.TextField(blank=True)
     source_page = models.CharField(max_length=200, blank=True)
 

@@ -15,7 +15,7 @@ import { aegis, darkintel, mobile, shadowad, sysbastion } from '../products/loop
 
 const SCENES = { shadowad, sysbastion, 'aegis-shield': aegis, 'mobile-pentest': mobile, darkintel360: darkintel } as const;
 const ACCENTS: Record<string, string> = { shadowad: '#c9ed91', sysbastion: '#8cc0ff', 'aegis-shield': '#b8dcff', 'mobile-pentest': '#f5cfab', darkintel360: '#dbc4ff' };
-const NAMES: Record<string, string> = { shadowad: 'ShadowAD', sysbastion: 'SysBastion', 'aegis-shield': 'AEGIS-SHIELD', 'mobile-pentest': 'Mobile pentest', darkintel360: 'DarkIntel360' };
+const NAMES: Record<string, string> = { shadowad: 'ShadowAD', sysbastion: 'SysBastion', 'aegis-shield': 'AEGIS-SHIELD', 'mobile-pentest': 'AppSiege', darkintel360: 'DarkIntel360' };
 
 // Product cards: each runs its coded loop while on screen; pointing at a card fast-forwards it.
 function startCards() {

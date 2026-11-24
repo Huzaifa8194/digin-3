@@ -2,7 +2,7 @@
 
 @property --sw { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 
-.hm-route { background: #03070f; --cool: #8cc0ff; --risk: #ff3341; }
+.hm-route { background: #03070f; } /* tokens: ../tokens.css */
 html:has(> .hm-route) { background: #03070f; }
 
 /* ---------- Radar layer ---------- */
@@ -228,17 +228,7 @@ html:not(.radar-on) .hm-tags, html:not(.radar-on) .hm-sound, html:not(.radar-on)
 .hm-talk__lines span { width: auto; color: var(--soft); }
 .hm-talk__form select { text-overflow: ellipsis; }
 
-/* Footer keeps the instrument: page background, beam rule, quarter-turn bearings on the columns */
-.hm-route .site-footer { background: #03070f; border-top: 0; }
-.hm-route .site-footer::before { content: ''; position: absolute; inset: 0 0 auto; height: 1px; background: linear-gradient(90deg, var(--risk), var(--cool) 55%, transparent); }
-.hm-route .site-footer-directory h2 { font-family: var(--mono); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cool); }
-.hm-route .site-footer-directory h2::before { color: var(--mut); }
-.hm-route .site-footer-directory > div:nth-child(1) h2::before { content: '090° / '; }
-.hm-route .site-footer-directory > div:nth-child(2) h2::before { content: '180° / '; }
-.hm-route .site-footer-directory > div:nth-child(3) h2::before { content: '270° / '; }
-.hm-route .site-footer-directory > div:nth-child(4) h2::before { content: '360° / '; }
-.hm-route .site-footer-end { font-family: var(--mono); letter-spacing: 0.04em; }
-.hm-route .site-footer-end a { display: inline-flex; align-items: center; gap: 0.5em; min-height: 44px; padding-inline: 0.5rem; margin-right: -0.5rem; }
+/* Footer: the shared instrument footer lives in ../tokens.css */
 
 @media (max-width: 760px) {
   /* No cover on phones: the headline is the first paint */
@@ -339,3 +329,5 @@ html:not(.js) .hm-self { display: none; }
   .hm-sound.hm-motion { display: block; right: 12px; bottom: 3.6rem; }
   html:not(.at-hero) .hm-sound { visibility: hidden; transition: opacity 0.4s, visibility 0.4s; }
 }
+/* Chapters are one column that never grows past the screen to fit a child's min-content */
+.hm-ch, .hm-talk { grid-template-columns: minmax(0, 1fr); }

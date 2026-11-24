@@ -195,3 +195,12 @@ class AdminLoginCaptchaTests(TestCase):
         for _ in range(6):
             self.client.post(f"{ADMIN}login/", {"username": "boss", "password": "wrong-password"})
         self.assertTrue(any("locked" in m.subject for m in mail.outbox), [m.subject for m in mail.outbox])
+
+
+class MovedPageRedirectTests(TestCase):
+    def test_old_product_addresses_redirect_permanently(self):
+        for old, new in [("/sysbastion-2/", "/sysbastion/"), ("/sysbastion-2/ui-lab/", "/sysbastion/"),
+                         ("/mobile-pentest/", "/appsiege/"), ("/mobile-pentest", "/appsiege/"), ("/app-siege/", "/appsiege/")]:
+            res = self.client.get(old)
+            self.assertEqual(res.status_code, 301, old)
+            self.assertEqual(res["Location"], new, old)

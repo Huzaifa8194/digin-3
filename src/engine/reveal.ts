@@ -26,7 +26,8 @@ function splitTween(el: HTMLElement, isIntro: boolean) {
     linesClass: 'split-line',
     onSplit(self) {
       gsap.set(el, { visibility: 'visible' });
-      if (s.done) return;
+      // A landed line needs no mask: left on, it clips ascenders and descenders at tight line-heights.
+      if (s.done) { gsap.set(self.masks, { overflow: 'visible' }); return; }
       const targets = type === 'lines' ? self.lines : type === 'words' ? self.words : self.chars;
       s.tween = gsap.from(targets, {
         yPercent: 110,
@@ -40,7 +41,7 @@ function splitTween(el: HTMLElement, isIntro: boolean) {
         onComplete: () => {
           s.done = true;
           if (type === 'chars') split.revert();
-          else gsap.set(targets, { clearProps: 'transform' });
+          else { gsap.set(targets, { clearProps: 'transform' }); gsap.set(self.masks, { overflow: 'visible' }); }
         },
         scrollTrigger: isIntro ? undefined : { trigger: el, start: 'top 88%', once: true },
       });

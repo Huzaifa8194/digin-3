@@ -26,7 +26,9 @@ if (!existsSync(join(dist, 'index.html'))) {
   process.exit(1);
 }
 
-rmSync(releaseDir, { recursive: true, force: true });
+// Clear only our own outputs: on Windows the release folder itself may be held open by another program.
+rmSync(out, { recursive: true, force: true, maxRetries: 5 });
+rmSync(zip, { force: true, maxRetries: 5 });
 mkdirSync(out, { recursive: true });
 
 cpSync(backend, out, {

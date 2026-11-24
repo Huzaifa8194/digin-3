@@ -161,3 +161,50 @@ class AuditFixApiTests(LeadApiTests):
                 self.assertFalse(_rate_limited("1.2.3.4"))
             with _mock.patch("leads.api.time.time", return_value=start + 7200):
                 self.assertTrue(_rate_limited("1.2.3.4"))
+
+
+class PartnerApplicationTests(LeadApiTests):
+    def partner(self, **extra):
+        return self.post({"kind": "partner", "name": "Sara", "company": "Netguard Ltd", "email": "sara@netguard.example",
+                          "partner_type": "msp", "company_website": "netguard.example", "country": "UAE",
+                          "product": "SysBastion, DarkIntel360", "message": "We run SOC services for 40 clients.", **extra})
+
+    def test_partner_application_stored(self):
+        res = self.partner()
+        self.assertEqual(res.status_code, 201, res.content)
+        lead = Lead.objects.get()
+        self.assertEqual(lead.kind, "partner")
+        self.assertEqual(lead.partner_type, "msp")
+        self.assertEqual(lead.company_website, "https://netguard.example")
+        self.assertIn("Managed service provider", mail.outbox[0].body)
+
+    def test_partner_requires_company_and_type(self):
+        res = self.partner(company="", partner_type="")
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(set(res.json()["errors"]), {"company", "partner_type"})
+
+    def test_partner_type_must_be_known(self):
+        res = self.partner(partner_type="owner")
+        self.assertEqual(res.status_code, 400)
+
+    def test_bad_website_rejected(self):
+        res = self.partner(company_website="javascript:alert(1)")
+        self.assertEqual(res.status_code, 400)
+        self.assertIn("company_website", res.json()["errors"])
+
+
+@override_settings(ADMIN_REQUIRE_2FA=False, POW_ENABLED=False)
+class LeadAdminPagesTests(TestCase):
+    def test_partner_and_inquiry_admin_pages_render(self):
+        from django.conf import settings as dj
+        from django.contrib.auth import get_user_model
+
+        boss = get_user_model().objects.create_superuser("boss", "b@example.com", "a-long-password-123")
+        self.client.force_login(boss)
+        partner = Lead.objects.create(kind="partner", name="Sara", email="s@x.example", company="Net", partner_type="msp")
+        inquiry = Lead.objects.create(kind="inquiry", name="Ali", email="a@x.example", message="hi")
+        base = f"/{dj.ADMIN_PATH}/leads/lead/"
+        self.assertContains(self.client.get(base + "?partner_type__exact=msp"), "Sara")
+        self.assertContains(self.client.get(f"{base}{partner.pk}/change/"), "Partner details")
+        self.assertNotContains(self.client.get(f"{base}{inquiry.pk}/change/"), "Partner details")
+        self.assertEqual(self.client.get(f"/{dj.ADMIN_PATH}/").status_code, 200)

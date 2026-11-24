@@ -15,11 +15,12 @@ if (form) {
   const name = field<HTMLInputElement>('#inq-name');
   const email = field<HTMLInputElement>('#inq-email');
   const company = field<HTMLInputElement>('#inq-company');
+  const phone = field<HTMLInputElement>('#inq-phone');
   const honeypot = field<HTMLInputElement>('#inq-website');
   const status = field<HTMLElement>('[data-form-status]');
   const submit = field<HTMLButtonElement>('button[type="submit"]');
   const useApi = form.hasAttribute('data-api') && !!email;
-  const controls: Record<string, HTMLInputElement | HTMLTextAreaElement | null> = { name, email, message: brief };
+  const controls: Record<string, HTMLInputElement | HTMLTextAreaElement | null> = { name, email, phone, message: brief };
 
   const showError = (key: string, text: string) => {
     const el = form.querySelector<HTMLElement>(`[data-error-for="${key}"]`);
@@ -67,6 +68,7 @@ if (form) {
       name: name?.value.trim(),
       email: email!.value.trim(),
       company: company?.value.trim(),
+      phone: phone?.value.trim() || undefined,
       interest: interest.value,
       message: brief.value.trim(),
       website: honeypot?.value ?? '',

@@ -1,0 +1,56 @@
+/* One set of tokens for the dark site pages: home, products and about (body.dk) and services (body.svc-route).
+   Before this file each of those defined the same values itself; edit them here. */
+
+@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/jetbrains-mono-400-normal.woff2') format('woff2'); font-weight: 400 500; font-display: swap; }
+
+:is(.dk, .svc-route) {
+  /* Ground and ink */
+  --g: #050a14;
+  --surface: #0b1422;
+  --ink: #eef3f9;
+  --soft: #c9d3df;
+  --mut: #9aa8ba;
+  --ln: rgb(238 243 249 / 0.1);
+  --ln2: rgb(238 243 249 / 0.18);
+
+  /* Risk (red) and ahead (blue): the two ends of every page's story */
+  --red: #db000a;        /* brand red: buttons, bars */
+  --risk: #ff3341;       /* risk on dark: marks, rules */
+  --risk-t: #ff6b72;     /* risk as text */
+  --ahead: #5aa2ff;      /* ahead/cooled on dark */
+  --ahead-t: #8cc0ff;    /* ahead as text */
+  --red-t: var(--risk-t);
+  --blue-t: var(--ahead-t);
+  --cool: var(--ahead-t);
+
+  /* Type, space, motion */
+  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --gut: clamp(1rem, 0.4rem + 2.6vw, 3.5rem);
+  --hdr: 80px;
+  --e-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-mega: clamp(3.1rem, 0.6rem + 7.6vw, 9.25rem);
+  --t-xl: clamp(2.3rem, 1rem + 4.4vw, 5.6rem);
+  --t-l: clamp(1.75rem, 1.15rem + 2.2vw, 3.25rem);
+  --t-m: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+
+  background: var(--g);
+  color: var(--ink);
+}
+
+/* Shared chrome for both scopes: one footer, one logo hover, 44px footer targets */
+:is(.dk, .svc-route) .site-footer { background: #03070f; border-top: 0; }
+:is(.dk, .svc-route) .site-footer::before { content: ''; position: absolute; inset: 0 0 auto; height: 1px; background: linear-gradient(90deg, var(--risk), var(--ahead-t) 55%, transparent); }
+:is(.dk, .svc-route) .site-footer-inner { width: auto; margin-inline: var(--gut); }
+:is(.dk, .svc-route) .site-footer-directory h2 { font-family: var(--mono); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ahead-t); }
+:is(.dk, .svc-route) .site-footer-directory h2::before { color: var(--mut); }
+:is(.dk, .svc-route) .site-footer-directory > div:nth-child(1) h2::before { content: '090° / '; }
+:is(.dk, .svc-route) .site-footer-directory > div:nth-child(2) h2::before { content: '180° / '; }
+:is(.dk, .svc-route) .site-footer-directory > div:nth-child(3) h2::before { content: '270° / '; }
+:is(.dk, .svc-route) .site-footer-directory > div:nth-child(4) h2::before { content: '360° / '; }
+:is(.dk, .svc-route) .site-footer-end { font-family: var(--mono); letter-spacing: 0.04em; }
+:is(.dk, .svc-route) .site-footer-end a { display: inline-flex; align-items: center; gap: 0.5em; min-height: 44px; padding-inline: 0.5rem; margin-right: -0.5rem; }
+
+:is(.dk, .svc-route) > header .brand { position: relative; }
+:is(.dk, .svc-route) > header .brand::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: var(--red); scale: 0 1; transform-origin: left; transition: scale 0.45s var(--e-out); }
+@media (hover: hover) { :is(.dk, .svc-route) > header .brand:hover::after { scale: 1 1; } }
+:is(.dk, .svc-route) > header .brand:focus-visible::after { scale: 1 1; }

@@ -1,0 +1,38 @@
+/* Form panel shared by contact and partners: channel strip on top, dark fields. */
+.ct-panel { display: grid; gap: 0.75rem; padding: clamp(1rem, 2vw, 1.5rem); border: 1px solid var(--ln2); border-radius: 12px; background: var(--surface); }
+.ct-form { display: grid; gap: 1rem; padding-top: 0.5rem; position: relative; }
+.ct-form__title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; }
+.ct-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.ct-field { display: grid; gap: 0.4rem; min-width: 0; align-content: start; }
+.ct-field label, .ct-legend { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mut); }
+.ct-field .form-optional { text-transform: none; letter-spacing: 0; }
+.ct-field :is(input, select, textarea) {
+  width: 100%; min-height: 50px; padding: 0.8rem 0.9rem; border: 1px solid var(--ln2); border-radius: 8px;
+  background: #050c18; color: var(--ink); font: inherit; font-size: 1rem; transition: border-color 0.3s, box-shadow 0.3s;
+}
+.ct-field textarea { min-height: 8rem; resize: vertical; line-height: 1.5; }
+.ct-field textarea::placeholder { color: #8796a8; opacity: 1; }
+.ct-field select {
+  -webkit-appearance: none; appearance: none; padding-right: 2.75rem; cursor: pointer;
+  background: #050c18 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238cc0ff' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 1rem center / 12px 8px;
+}
+.ct-field :is(input, select, textarea):hover { border-color: rgb(238 243 249 / 0.32); }
+.dk .ct-field :is(input, select, textarea):focus-visible { outline: none; border-color: var(--ahead-t); box-shadow: 0 0 0 3px rgb(140 192 255 / 0.25); }
+.ct-field [aria-invalid='true'] { border-color: var(--risk); }
+.dk .form-error { margin: 0; color: var(--risk-t); font-size: 0.875rem; line-height: 1.4; }
+.ct-form__end { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; padding-top: 0.25rem; }
+.dk .form-note { color: var(--mut); font-size: 0.875rem; margin: 0; }
+.dk .form-status { margin: 0; padding: 0.9rem 1rem; border-radius: 8px; border: 1px solid var(--ln2); font-size: 0.95rem; line-height: 1.45; }
+.dk .form-status[data-kind='ok'] { border-color: rgb(140 192 255 / 0.5); color: var(--ahead-t); background: rgb(90 162 255 / 0.08); }
+.dk .form-status[data-kind='info'] { color: var(--soft); }
+.ct button[disabled] { opacity: 0.6; cursor: progress; }
+
+@media (max-width: 700px) {
+  .ct-grid { grid-template-columns: minmax(0, 1fr); }
+  .ct-form__end .dk-btn { width: 100%; }
+}
+/* The legacy site sheet styles #inquiry label (11px, grey #52677c, margins); the dark form overrides it. */
+.dk .ct-form .ct-field label, .dk #inquiry.ct-form .ct-field label { display: block; margin: 0; font-size: 0.72rem; line-height: 1.3; color: var(--mut); }
+.dk .ct-form .form-optional { color: var(--mut); opacity: 0.85; }
+/* Spam trap: present for bots, never shown to people or screen readers */
+.hp-field { position: absolute !important; left: -10000px; width: 1px; height: 1px; overflow: hidden; }

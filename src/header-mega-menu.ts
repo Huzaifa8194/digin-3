@@ -24,7 +24,7 @@ const groups = [
       { title: 'Identity and infrastructure', links: [
         ['ShadowAD', 'Assess Active Directory and Microsoft Entra ID security.', '#shadowad'],
         ['SysBastion', 'Explore Windows and Linux hardening controls.', '#sysbastion'],
-        ['Mobile App Penetration Testing', 'Review the mobile testing offering for Android and iOS.', '#mobile-pentest'],
+        ['AppSiege', 'Agentic penetration testing for Android and iOS apps.', '#appsiege'],
       ] },
       { title: 'Detection and intelligence', links: [
         ['AEGIS-SHIELD', 'Investigate and contain suspicious Windows activity.', '#aegis-shield'],

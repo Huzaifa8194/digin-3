@@ -275,10 +275,10 @@ LEADS_RATE_LIMITS = (
 LEADS_MIN_FILL_SECONDS = env_int("LEADS_MIN_FILL_SECONDS", 3)
 
 # Proof-of-work CAPTCHA (ALTCHA) on the website forms and the admin login.
-# Higher POW_MAX_NUMBER = more work per attempt (100000 is about 0.5-2 s in a
+# Higher POW_MAX_NUMBER = more work per attempt (50000 is about 0.3-3 s in a
 # background thread on a phone; visitors don't wait because it starts on focus).
 POW_ENABLED = env_bool("POW_ENABLED", True)
-POW_MAX_NUMBER = env_int("POW_MAX_NUMBER", 100000)
+POW_MAX_NUMBER = env_int("POW_MAX_NUMBER", 50000)
 POW_TTL_SECONDS = 1800
 LEADS_FORM_TOKEN_MAX_AGE = 2 * 3600
 

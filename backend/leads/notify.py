@@ -22,7 +22,7 @@ def notify_new_lead(lead: Lead) -> None:
     recipients = SiteSettings.load().recipients()
     if not recipients:
         return
-    topic = lead.product or lead.interest or lead.get_kind_display()
+    topic = lead.product or lead.interest or lead.get_partner_type_display() or lead.get_kind_display()
     subject = f"[Website] {lead.get_kind_display()}: {_one_line(topic)}"
     admin_path = reverse("admin:leads_lead_change", args=[lead.pk])
     body = "\n".join(
@@ -34,6 +34,15 @@ def notify_new_lead(lead: Lead) -> None:
             f"Company:  {lead.company or '-'}",
             f"Phone:    {lead.phone or '-'}",
             f"Topic:    {topic}",
+            *(
+                [
+                    f"Partner:  {lead.get_partner_type_display()}",
+                    f"Website:  {lead.company_website or '-'}",
+                    f"Country:  {lead.country or '-'}",
+                ]
+                if lead.kind == Lead.Kind.PARTNER
+                else []
+            ),
             f"Page:     {lead.source_page or '-'}",
             "",
             lead.message or "(no message)",
