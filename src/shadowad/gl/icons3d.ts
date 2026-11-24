@@ -8,8 +8,8 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 export type IconKind = 'reticle' | 'terminal' | 'tree' | 'controls' | 'shield' | 'report';
 export const ICON_KINDS: IconKind[] = ['controls', 'terminal', 'tree', 'reticle', 'shield', 'report'];
 
-const BEVEL = (depth: number, bevel: number, curve = 40): THREE.ExtrudeGeometryOptions =>
-  ({ depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 6, curveSegments: curve });
+const BEVEL = (depth: number, bevel: number, curve = 96): THREE.ExtrudeGeometryOptions =>
+  ({ depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 12, curveSegments: curve });
 
 function roundRect(w: number, h: number, r: number, x = 0, y = 0) {
   const s = new THREE.Shape();
@@ -22,10 +22,10 @@ function roundRect(w: number, h: number, r: number, x = 0, y = 0) {
 }
 const centerZ = (g: THREE.BufferGeometry, depth: number, bevel: number) => { g.translate(0, 0, -(depth / 2)); void bevel; return g; };
 const tube = (pts: [number, number, number][], r: number, closed = false, seg = 64) =>
-  new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p)), closed, 'centripetal'), seg, r, 16, closed);
+  new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p)), closed, 'centripetal'), seg, r, 32, closed);
 const capsule = (a: THREE.Vector3, b: THREE.Vector3, r: number) => {
   const len = a.distanceTo(b);
-  const g = new THREE.CapsuleGeometry(r, len, 6, 16);
+  const g = new THREE.CapsuleGeometry(r, len, 12, 32);
   g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize()));
   g.translate((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2);
   return g;
@@ -37,7 +37,7 @@ const stroke = (pts: [number, number, number][], r: number) => {
   for (let k = 0; k < v.length - 1; k++) gs.push(capsule(v[k], v[k + 1], r));
   return merge(gs);
 };
-const sphere = (p: THREE.Vector3, r: number) => { const g = new THREE.SphereGeometry(r, 40, 24); g.translate(p.x, p.y, p.z); return g; };
+const sphere = (p: THREE.Vector3, r: number) => { const g = new THREE.SphereGeometry(r, 72, 48); g.translate(p.x, p.y, p.z); return g; };
 const strip = (g: THREE.BufferGeometry) => { const n = g.index ? g.toNonIndexed() : g; for (const k of Object.keys(n.attributes)) if (k !== 'position' && k !== 'normal' && k !== 'uv') n.deleteAttribute(k); if (!n.attributes.uv) n.setAttribute('uv', new THREE.Float32BufferAttribute(new Float32Array((n.attributes.position.count) * 2), 2)); return n; };
 const merge = (gs: THREE.BufferGeometry[]) => mergeGeometries(gs.map(strip))!;
 
@@ -45,9 +45,9 @@ const merge = (gs: THREE.BufferGeometry[]) => mergeGeometries(gs.map(strip))!;
 function parts(kind: IconKind): [THREE.BufferGeometry, THREE.BufferGeometry] {
   switch (kind) {
     case 'reticle': {
-      const ring = new THREE.TorusGeometry(0.66, 0.12, 40, 128);
-      const inner = new THREE.TorusGeometry(0.34, 0.045, 24, 96);
-      const arms = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([x, y]) => { const g = new RoundedBoxGeometry(x ? 0.46 : 0.1, y ? 0.46 : 0.1, 0.12, 4, 0.045); g.translate(x * 0.76, y * 0.76, 0); return g; });
+      const ring = new THREE.TorusGeometry(0.66, 0.12, 64, 256);
+      const inner = new THREE.TorusGeometry(0.34, 0.045, 40, 192);
+      const arms = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([x, y]) => { const g = new RoundedBoxGeometry(x ? 0.46 : 0.1, y ? 0.46 : 0.1, 0.12, 6, 0.045); g.translate(x * 0.76, y * 0.76, 0); return g; });
       return [merge([ring, inner, ...arms]), merge([sphere(new THREE.Vector3(0, 0, 0), 0.1)])];
     }
     case 'terminal': {
@@ -78,7 +78,7 @@ function parts(kind: IconKind): [THREE.BufferGeometry, THREE.BufferGeometry] {
       const body = centerZ(new THREE.ExtrudeGeometry(roundRect(1.62, 1.34, 0.18), BEVEL(0.2, 0.06)), 0.2, 0.06);
       const xs = [-0.5, -0.17, 0.17, 0.5], at = [0.22, -0.16, 0.32, -0.26];
       const tracks = xs.map((x) => capsule(new THREE.Vector3(x, -0.42, 0.15), new THREE.Vector3(x, 0.42, 0.15), 0.035));
-      const knobs = xs.map((x, k) => { const g = new RoundedBoxGeometry(0.26, 0.15, 0.13, 3, 0.05); g.translate(x, at[k], 0.2); return g; });
+      const knobs = xs.map((x, k) => { const g = new RoundedBoxGeometry(0.26, 0.15, 0.13, 6, 0.05); g.translate(x, at[k], 0.2); return g; });
       return [merge([body, ...tracks]), merge(knobs)];
     }
     case 'shield': {
@@ -93,7 +93,7 @@ function parts(kind: IconKind): [THREE.BufferGeometry, THREE.BufferGeometry] {
         s.bezierCurveTo(-w * 0.38, h * 0.43, -w * 0.22, h * 0.47, 0, h / 2);
         return s;
       };
-      const body = centerZ(new THREE.ExtrudeGeometry(sh(1.5, 1.86), BEVEL(0.18, 0.07, 64)), 0.18, 0.07);
+      const body = centerZ(new THREE.ExtrudeGeometry(sh(1.5, 1.86), BEVEL(0.18, 0.07, 128)), 0.18, 0.07);
       // a monitoring trace across the face: detection, watching for the next attempt
       const pulse = stroke([[-0.46, 0.04, 0.17], [-0.2, 0.04, 0.17], [-0.08, 0.34, 0.17], [0.06, -0.26, 0.17], [0.18, 0.14, 0.17], [0.26, 0.04, 0.17], [0.46, 0.04, 0.17]], 0.05);
       return [body, merge([pulse])];
@@ -107,9 +107,9 @@ function parts(kind: IconKind): [THREE.BufferGeometry, THREE.BufferGeometry] {
       const page = centerZ(new THREE.ExtrudeGeometry(s, BEVEL(0.09, 0.04)), 0.09, 0.04);
       const ear = new THREE.Shape(); ear.moveTo(w / 2 - fold, h / 2); ear.lineTo(w / 2 - fold, h / 2 - fold + 0.04); ear.quadraticCurveTo(w / 2 - fold, h / 2 - fold, w / 2 - fold + 0.04, h / 2 - fold); ear.lineTo(w / 2, h / 2 - fold);
       const earG = new THREE.ExtrudeGeometry(ear, BEVEL(0.03, 0.015)); earG.translate(0, 0, 0.06);
-      const lines = [[0.36, 0.56], [0.16, 0.76], [-0.04, 0.76], [-0.24, 0.5]].map(([y, len]) => { const g = new RoundedBoxGeometry(len, 0.075, 0.05, 3, 0.035); g.translate(-0.38 + len / 2, y, 0.08); return g; });
+      const lines = [[0.36, 0.56], [0.16, 0.76], [-0.04, 0.76], [-0.24, 0.5]].map(([y, len]) => { const g = new RoundedBoxGeometry(len, 0.075, 0.05, 6, 0.035); g.translate(-0.38 + len / 2, y, 0.08); return g; });
       // a check mark in a round badge at the foot: signed off
-      const badge = new THREE.CylinderGeometry(0.17, 0.17, 0.06, 48); badge.rotateX(Math.PI / 2); badge.translate(0.3, -0.52, 0.08);
+      const badge = new THREE.CylinderGeometry(0.17, 0.17, 0.06, 96); badge.rotateX(Math.PI / 2); badge.translate(0.3, -0.52, 0.08);
       const tick = stroke([[0.21, -0.52, 0.13], [0.27, -0.59, 0.13], [0.4, -0.44, 0.13]], 0.026);
       const glass = merge([page, earG, tick]);
       return [glass, merge([...lines, badge])];

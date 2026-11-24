@@ -44,7 +44,7 @@ export function createBastion(env: { maxAniso: number; bakes: Bakes }) {
   // (a front fill light used to live here; folded into the hemisphere to save a light on every fragment)
 
   // ---------- terrain: a graded grid (dense at the summit) displaced and lit entirely from the bakes ----------
-  const SEG = 200, HALF = 230;
+  const SEG = 320, HALF = 230;   // finer terrain mesh: the baked relief reads sharper up close
   const tg = new THREE.PlaneGeometry(2, 2, SEG, SEG);
   tg.rotateX(-Math.PI / 2);
   const tp = tg.attributes.position as THREE.BufferAttribute;
@@ -114,7 +114,7 @@ export function createBastion(env: { maxAniso: number; bakes: Bakes }) {
     b.delay = clamp(rowK * 0.55 + b.seed * 0.28);
   });
 
-  const blockGeo = new RoundedBoxGeometry(1, 1, 1, 3, 0.11);
+  const blockGeo = new RoundedBoxGeometry(1, 1, 1, 5, 0.11);
   // baked chiselled-snow albedo + tangent-space normals: smooth, mipmapped detail instead of runtime bump
   const blockMat = new THREE.MeshLambertMaterial({ color: '#ffffff', map: env.bakes.blockAlbedo, normalMap: env.bakes.blockNormal, normalScale: new THREE.Vector2(1.1, 1.1) });
   // light from inside catches every side face and rim of a block, so the seams glow
@@ -143,7 +143,7 @@ export function createBastion(env: { maxAniso: number; bakes: Bakes }) {
 
   // inner light, seen through every seam
   const glowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 1.6, 0.4), toneMapped: false, fog: false, side: THREE.DoubleSide });
-  const glow = new THREE.Mesh(new THREE.SphereGeometry(R - 0.3, 48, 20, Math.PI / 2 + 0.5, Math.PI * 2 - 1.0, 0, Math.PI / 2), glowMat);
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(R - 0.3, 96, 40, Math.PI / 2 + 0.5, Math.PI * 2 - 1.0, 0, Math.PI / 2), glowMat);
   glow.position.y = H0 - 0.12;
   const tube = new THREE.Mesh(new THREE.CylinderGeometry(TR - 0.24, TR - 0.24, 1.6, 24, 1, true, -Math.PI / 2, Math.PI), glowMat);
   tube.rotation.x = Math.PI / 2; tube.position.set(0, H0 - 0.1, R * Math.cos(0.36) + 0.62);

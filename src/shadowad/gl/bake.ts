@@ -202,8 +202,8 @@ export type Bakes = ReturnType<typeof prepareBakes>['bakes'];
  *   compile()       compiles every bake program in parallel (KHR_parallel_shader_compile)
  *   run()           renders the passes in strips, yielding between them
  */
-export function prepareBakes(renderer: THREE.WebGLRenderer, o: { mobile: boolean; onProgress: (k: number) => void }) {
-  const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+export function prepareBakes(renderer: THREE.WebGLRenderer, o: { mobile: boolean; hq?: boolean; onProgress: (k: number) => void }) {
+  const maxAniso = Math.min(16, renderer.capabilities.getMaxAnisotropy());
   const r = rng(2024);
   const lat = new Uint8Array(256 * 256 * 4).map(() => (r() * 256) | 0);
   const latTex = new THREE.DataTexture(lat, 256, 256, THREE.RGBAFormat);
@@ -244,9 +244,11 @@ export function prepareBakes(renderer: THREE.WebGLRenderer, o: { mobile: boolean
   };
 
   const N = 46, F = 250, I = 14;
-  const sizeH = o.mobile ? 512 : 1024;
-  const sizeCI = o.mobile ? 1024 : 2048, sizeCN = o.mobile ? 1024 : 2048, sizeCF = o.mobile ? 512 : 1024;
-  const S = o.mobile ? 512 : 1024;
+  // ?hq (recording, presenting) bakes at twice the desktop size: 4K near colour, 2K relief
+  const k = o.hq && !o.mobile ? 2 : 1;
+  const sizeH = (o.mobile ? 512 : 1024) * k;
+  const sizeCI = (o.mobile ? 1024 : 2048) * k, sizeCN = (o.mobile ? 1024 : 2048) * k, sizeCF = (o.mobile ? 512 : 1024) * k;
+  const S = (o.mobile ? 512 : 1024) * k;
   const hN = target(sizeH, THREE.HalfFloatType, false, false), hF = target(sizeH, THREE.HalfFloatType, false, false);
   const cI = target(sizeCI, THREE.UnsignedByteType, true, false), cN = target(sizeCN, THREE.UnsignedByteType, true, false), cF = target(sizeCF, THREE.UnsignedByteType, true, false);
   const blockN = target(S, THREE.UnsignedByteType, true, true), blockA = target(S, THREE.UnsignedByteType, true, true);

@@ -75,13 +75,16 @@ export async function createGL(canvas: HTMLCanvasElement, onProgress: (k: number
   renderer.transmissionResolutionScale = 0.5;
   renderer.autoClear = true;
   const mobile = matchMedia('(max-width: 720px), (pointer: coarse)').matches;
-  // adaptive resolution: render scale relative to CSS pixels
-  const dprCap = Math.min(window.devicePixelRatio || 1, mobile ? 1.6 : 1.25);
-  const minScale = mobile ? 0.6 : 0.55;
-  let scale = Math.min(dprCap, mobile ? 1.1 : 0.85);
+  // ?hq pins the render to full resolution with no adaptive drop (recording, presenting)
+  const hq = new URLSearchParams(location.search).has('hq');
+  // render scale relative to CSS pixels: start sharp (native pixels, up to 2x on retina) and only
+  // drop under sustained load, never below 0.8 on desktop
+  const dprCap = Math.min(window.devicePixelRatio || 1, mobile ? 1.6 : 2);
+  const minScale = mobile ? 0.65 : 0.8;
+  let scale = hq ? dprCap : Math.min(dprCap, mobile ? 1.1 : Math.max(1, dprCap));
   renderer.setPixelRatio(scale);
   renderer.setSize(innerWidth, innerHeight, false);
-  const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  const maxAniso = Math.min(16, renderer.capabilities.getMaxAnisotropy());
   onProgress(0.08); await frame();
 
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -91,7 +94,7 @@ export async function createGL(canvas: HTMLCanvasElement, onProgress: (k: number
 
   // bake terrain light and surface detail on the GPU once (the reference ships these as baked textures)
   performance.mark('sb:bake');
-  const prep = prepareBakes(renderer, { mobile, onProgress: (k) => onProgress(0.5 + k * 0.4) });
+  const prep = prepareBakes(renderer, { mobile, hq, onProgress: (k) => onProgress(0.5 + k * 0.4) });
   const bakes = prep.bakes;
   await fontsReady;   // only the blurred-word textures need the web font
   performance.mark('sb:scenes');
@@ -105,7 +108,8 @@ export async function createGL(canvas: HTMLCanvasElement, onProgress: (k: number
 
   // ---------- post chain ----------
   const rtOpts = { type: THREE.HalfFloatType, depthBuffer: false, stencilBuffer: false, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter } as const;
-  const rtScene = new THREE.WebGLRenderTarget(1, 1, { ...rtOpts, depthBuffer: true });
+  // 4x MSAA on the scene target: clean edges on blocks, icons and wires
+  const rtScene = new THREE.WebGLRenderTarget(1, 1, { ...rtOpts, depthBuffer: true, samples: renderer.capabilities.isWebGL2 ? 4 : 0 });
   const rt4 = new THREE.WebGLRenderTarget(1, 1, rtOpts), rt8 = new THREE.WebGLRenderTarget(1, 1, rtOpts), rt16 = new THREE.WebGLRenderTarget(1, 1, rtOpts), rt8b = new THREE.WebGLRenderTarget(1, 1, rtOpts), rt4b = new THREE.WebGLRenderTarget(1, 1, rtOpts);
   const quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2));
@@ -117,7 +121,7 @@ export async function createGL(canvas: HTMLCanvasElement, onProgress: (k: number
   const up = mat(UP_FS, { tSrc: { value: null }, uTexel: { value: new THREE.Vector2() } });
   const final = mat(FINAL_FS, {
     tScene: { value: rtScene.texture }, tBloom: { value: rt4b.texture }, uBloom: { value: 0.5 }, uExposure: { value: 0.8 },
-    uChroma: { value: 0 }, uWhite: { value: 0 }, uDark: { value: 0 }, uGlitch: { value: 0 }, uTime: { value: 0 }, uGrain: { value: 0.038 }, uVig: { value: 0.22 }, uRes: { value: new THREE.Vector2(1, 1) }, uFlash: { value: new THREE.Vector3(1, 0.78, 0.45) },
+    uChroma: { value: 0 }, uWhite: { value: 0 }, uDark: { value: 0 }, uGlitch: { value: 0 }, uTime: { value: 0 }, uGrain: { value: 0.026 }, uVig: { value: 0.22 }, uRes: { value: new THREE.Vector2(1, 1) }, uFlash: { value: new THREE.Vector3(1, 0.78, 0.45) },
   });
   const pass = (m: THREE.ShaderMaterial, src: THREE.Texture | null, dst: THREE.WebGLRenderTarget | null) => {
     quad.material = m;
@@ -180,7 +184,7 @@ export async function createGL(canvas: HTMLCanvasElement, onProgress: (k: number
   performance.mark('sb:ready');
 
   // ---------- adaptive resolution ----------
-  let acc = 0, n = 0, good = 0, cooldown = 0, pinned = false;
+  let acc = 0, n = 0, good = 0, cooldown = 0, pinned = hq;
   function adapt(dt: number) {
     if (pinned || dt > 0.1) return;             // pinned by QA, or a tab switch/stall
     acc += dt; n++;
@@ -223,7 +227,7 @@ export async function createGL(canvas: HTMLCanvasElement, onProgress: (k: number
     final.uniforms.uFlash.value.set(...(amber ? [1, 0.78, 0.45] : [0.045, 0.05, 0.06]) as [number, number, number]);
     const u = final.uniforms;
     u.uWhite.value = white * 0.96;
-    u.uChroma.value = white * 1.6 + k.glitch * 2.2 + 0.07;
+    u.uChroma.value = white * 1.6 + k.glitch * 2.2 + 0.025;   // a whisper of lens fringe at rest, not a soft edge
     u.uGlitch.value = k.glitch + Math.max(0, white - 0.5) * 0.8;
     u.uDark.value = k.dark;
     u.uTime.value = k.t;
