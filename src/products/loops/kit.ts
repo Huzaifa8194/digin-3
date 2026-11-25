@@ -129,7 +129,7 @@ export class Loop {
     this.total = beats.reduce((a, b) => a + b.d, 0);
   }
   resize() {
-    const dpr = Math.min(devicePixelRatio || 1, 1.75);
+    const dpr = Math.min(devicePixelRatio || 1, 2);
     const r = this.canvas.getBoundingClientRect();
     this.canvas.width = Math.max(1, Math.round(r.width * dpr));
     this.canvas.height = Math.max(1, Math.round(r.height * dpr));

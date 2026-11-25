@@ -163,7 +163,7 @@ async function load(canvas: HTMLCanvasElement, mod: Promise<typeof import('three
   // ---- sizing: world units = CSS px at z = 0 ----
   const resize = () => {
     const w = innerWidth, h = innerHeight;
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobile() ? 1 : 1.5));
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobile() ? 2 : 1.5));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.position.set(0, 0, (h / 2) / Math.tan((camera.fov * Math.PI) / 360));

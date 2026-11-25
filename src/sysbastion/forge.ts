@@ -39,7 +39,7 @@ export function mountForge(canvas: HTMLCanvasElement, isActive: () => boolean) {
   const move = (e: MouseEvent) => { target.x = e.clientX / innerWidth; target.y = e.clientY / innerHeight; };
   addEventListener('mousemove', move, { passive: true });
   // a soft glow: on slower machines it renders at a lower internal resolution, the browser scales it up
-  const resize = () => { const r = dpr(1.5, 1) * tierScale([1, 0.66, 0.5]); canvas.width = Math.floor(canvas.clientWidth * r); canvas.height = Math.floor(canvas.clientHeight * r); };
+  const resize = () => { const r = dpr(1.5, 1.5) * tierScale([1, 0.66, 0.5]); canvas.width = Math.floor(canvas.clientWidth * r); canvas.height = Math.floor(canvas.clientHeight * r); };
   resize();
   const offView = onViewport(resize);
   const offQ = onQuality(resize);

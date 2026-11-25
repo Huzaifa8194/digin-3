@@ -91,7 +91,7 @@ function paintBack(cv: HTMLCanvasElement, k: number, scale: number) {
 export function mountSpiral(canvas: HTMLCanvasElement) {
   const scale = isMobile() ? 1.5 : 2;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile(), alpha: true });
-  renderer.setPixelRatio(dpr(2, 1.5));
+  renderer.setPixelRatio(dpr(2, 2));
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);

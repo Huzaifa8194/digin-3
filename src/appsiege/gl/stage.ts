@@ -108,7 +108,7 @@ export class Stage {
 
   resize(w: number, h: number) {
     this.W = w; this.H = h;
-    this.dpr = Math.min(devicePixelRatio || 1, this.low ? 1 : 1.5);
+    this.dpr = Math.min(devicePixelRatio || 1, Math.min(innerWidth, innerHeight) < 760 ? 2 : this.low ? 1 : 1.5);
     this.renderer.setPixelRatio(this.dpr);
     this.renderer.setSize(w, h, false);
     const pw = Math.round(w * this.dpr), ph = Math.round(h * this.dpr);

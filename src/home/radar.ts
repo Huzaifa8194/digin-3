@@ -168,7 +168,7 @@ export function startRadar() {
     root.classList.toggle('radar-on', !!U);
 
     const mobile = () => innerWidth < 760;
-    const dpr = () => Math.min(devicePixelRatio || 1, mobile() ? 1 : 1.5);
+    const dpr = () => Math.min(devicePixelRatio || 1, mobile() ? 2 : 1.5);
     const s = { idle: 0, angle: 0, target: 0, ghost: 0, mx: innerWidth * 0.7, my: innerHeight * 0.4, tmx: innerWidth * 0.7, tmy: innerHeight * 0.4, intro: 0, L: layoutFor('hero', innerWidth, innerHeight), shown: -1 };
 
     // Bearings: piecewise between section anchors, so each chapter's centre sits on its angle.

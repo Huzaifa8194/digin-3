@@ -173,7 +173,7 @@ export function shadowAD(root: HTMLElement): Hero {
   }
 
   const size = () => {
-    dpr = Math.min(devicePixelRatio || 1, matchMedia('(pointer: coarse)').matches ? 1 : 1.25);
+    dpr = Math.min(devicePixelRatio || 1, matchMedia('(pointer: coarse)').matches ? 2 : 1.25);
     w = canvas.clientWidth; h = canvas.clientHeight;
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     paintStatic();
@@ -361,7 +361,7 @@ export function appSiege(root: HTMLElement): Hero {
     drawDust();
   }
   const size = () => {
-    dpr = Math.min(devicePixelRatio || 1, 1.5);
+    dpr = Math.min(devicePixelRatio || 1, 2);
     w = canvas.clientWidth; h = canvas.clientHeight;
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     place();

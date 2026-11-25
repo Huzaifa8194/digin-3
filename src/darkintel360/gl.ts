@@ -332,7 +332,7 @@ export function createGL(canvas: HTMLCanvasElement) {
   let w = 1, h = 1;
   function resize() {
     w = innerWidth; h = innerHeight;
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, phone() ? 1.5 : 1.5));
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, phone() ? 2 : 1.5));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
     placeSignals();

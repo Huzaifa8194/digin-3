@@ -38,7 +38,7 @@ export async function mountStats(root: HTMLElement, canvas: HTMLCanvasElement, g
   const layout = () => {
     W = canvas.clientWidth; H = canvas.clientHeight;
     if (!W || !H) return;
-    R = dpr(2, 1.5);
+    R = dpr(2, 2);
     canvas.width = goo.width = Math.floor(W * R); canvas.height = goo.height = Math.floor(H * R);
     floorY = H * FLOOR_FRAC;
     rad = Math.max(15, Math.min(48, Math.sqrt((0.68 * (W / 4) * (H - floorY)) / (TARGET_PER_COL * Math.PI))));

@@ -37,7 +37,7 @@ export function createStage(canvas: HTMLCanvasElement) {
     canvas.style.display = 'none';
     return { ok: false, render() {}, resize() {}, dirty() {}, hit: () => false, viewW: () => 9.5, screenCanvas: () => scr };
   }
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, LOW ? 1.25 : 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, Math.min(innerWidth, innerHeight) < 760 ? 2 : LOW ? 1.25 : 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.08;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setClearColor(0x000000, 0);

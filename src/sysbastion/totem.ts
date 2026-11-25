@@ -112,7 +112,7 @@ type Item = { group: THREE.Group; mode: 'enter' | 'exit' | 'idle'; t: number; di
 export function mountTotem(canvas: HTMLCanvasElement, isActive: () => boolean) {
   if (!richGL()) return { show: () => {}, dispose: () => {} };
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  const ratio = () => dpr(2, 1.5) * tierScale([1, 0.8, 0.66]);
+  const ratio = () => dpr(2, 2) * tierScale([1, 0.8, 0.66]);
   renderer.setPixelRatio(ratio());
   renderer.setClearColor(0, 0);
   renderer.toneMapping = THREE.NeutralToneMapping;

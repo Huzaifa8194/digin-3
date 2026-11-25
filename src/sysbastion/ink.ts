@@ -72,7 +72,7 @@ export function mountInk(canvas: HTMLCanvasElement, isActive: () => boolean) {
     q.draw();
   };
   const resize = () => {
-    const r = dpr(1.75, 1.25) * tierScale([1, 0.8, 0.66]);
+    const r = dpr(1.75, 2) * tierScale([1, 0.8, 0.66]);
     canvas.width = Math.floor(canvas.clientWidth * r); canvas.height = Math.floor(canvas.clientHeight * r);
     draw(Math.max(0, last));
   };

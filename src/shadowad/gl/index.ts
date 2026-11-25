@@ -79,9 +79,9 @@ export async function createGL(canvas: HTMLCanvasElement, onProgress: (k: number
   const hq = new URLSearchParams(location.search).has('hq');
   // render scale relative to CSS pixels: start sharp (native pixels, up to 2x on retina) and only
   // drop under sustained load, never below 0.8 on desktop
-  const dprCap = Math.min(window.devicePixelRatio || 1, mobile ? 1.6 : 2);
+  const dprCap = Math.min(window.devicePixelRatio || 1, 2);
   const minScale = mobile ? 0.65 : 0.8;
-  let scale = hq ? dprCap : Math.min(dprCap, mobile ? 1.1 : Math.max(1, dprCap));
+  let scale = hq ? dprCap : Math.min(dprCap, Math.max(1, dprCap));
   renderer.setPixelRatio(scale);
   renderer.setSize(innerWidth, innerHeight, false);
   const maxAniso = Math.min(16, renderer.capabilities.getMaxAnisotropy());
