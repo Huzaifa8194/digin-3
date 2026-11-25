@@ -12,6 +12,17 @@ Creates `release/digiinn360-website.zip` (backend + built site, no secrets). Han
 
 Local backend: `cd backend && py -3.12 -m venv .venv && .venv\Scripts\pip install -r requirements.txt`, then `DJANGO_DEBUG=true .venv/Scripts/python manage.py migrate` and `runserver 127.0.0.1:8765`. `npm run dev` proxies `/api` there. Tests: `DJANGO_DEBUG=true .venv/Scripts/python manage.py test`. Dependencies: edit `backend/requirements.in`, then `pip-compile --generate-hashes --allow-unsafe --strip-extras -o requirements.txt requirements.in` (checksum-pinned). Hosting security checklist: `backend/SECURITY.md`.
 
+## SEO
+
+Method: the open-source [claude-seo](https://github.com/AgriciDaniel/claude-seo) skill (MIT): on-page checks, schema rules, technical and AI-crawler guidance.
+
+- Each page owns its `<title>` (30-60 chars) and `<meta name="description">` (120-160 chars) in its HTML file.
+- `tools/seo.ts` (a Vite plugin) generates everything else into the served HTML: canonical, robots, Open Graph and Twitter tags with image size and alt, the manifest link, and one JSON-LD `@graph` per page (Organization, WebSite, WebPage, BreadcrumbList, plus the services catalogue, product list, team, software/product and the AeroNexus film). At build it also writes `sitemap.xml` (git `lastmod`, image entries), `robots.txt` and `llms.txt`. Add a page there when you add one to `vite.config.ts`.
+- Add the company's social profile URLs to `SAME_AS` in `tools/seo.ts`.
+- `/appsiege/` copy is baked into its HTML at build (`src/appsiege/doc.ts`), so it is readable without JavaScript.
+- Product share images: `npm run build`, `npx vite preview --port 5211`, then `npm run og` re-renders `public/<product>/og.jpg` from the live pages.
+- `npm run build && npm run test:seo` checks every page: lengths, uniqueness, one H1, canonical, social tags, image files, JSON-LD references, noindex on design and 404 pages, sitemap and robots.
+
 ## Start
 
 ```sh

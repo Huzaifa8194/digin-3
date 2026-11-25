@@ -288,3 +288,4 @@ html.no-gl .doc { display: block; max-width: 980px; margin: 0 auto; padding: 140
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+.doc__pts { margin: 12px 0 0; padding-left: 1.2em; color: #d6dbe2; display: grid; gap: 4px; }

@@ -98,6 +98,20 @@
         "--strictPort"
       ],
       "port": 5207
+    },
+    {
+      "name": "vite-preview-seo",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "preview",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5211",
+        "--strictPort"
+      ],
+      "port": 5211
     }
   ]
 }

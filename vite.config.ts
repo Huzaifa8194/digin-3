@@ -1,6 +1,8 @@
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
+import { seo } from './tools/seo';
+import { ctLinksHTML, docCardsHTML, docColumnHTML, docHeadline, docLab, docLabCopy } from './src/appsiege/doc';
 
 // Public address of the live site. Canonical links, Open Graph tags, the sitemap and
 // robots.txt were written for the Vercel preview; the build points them here instead.
@@ -27,8 +29,32 @@ function productionOrigin(): Plugin {
   };
 }
 
+// /appsiege/ builds its readable document from src/appsiege/content.ts. Bake it into the served
+// HTML so crawlers and readers without JavaScript get the whole page, not empty containers.
+function prerenderAppSiege(): Plugin {
+  const fill = (html: string, attr: string, content: string) =>
+    html.replace(new RegExp(`(<([a-z0-9]+)[^>]*\\b${attr}\\b[^>]*>)\\s*(</\\2>)`), (_m, open, _tag, close) => open + content + close);
+  return {
+    name: 'appsiege-prerender',
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html, ctx) {
+        if (!/(^|\/)appsiege\/index\.html$/.test(ctx.path)) return html;
+        let out = html;
+        out = fill(out, 'data-docheadline', docHeadline());
+        out = fill(out, 'data-doccolumn', docColumnHTML());
+        out = fill(out, 'data-doccards', docCardsHTML());
+        out = fill(out, 'data-doclab', docLab());
+        out = fill(out, 'data-doclabcopy', docLabCopy());
+        out = fill(out, 'data-ctlinks', ctLinksHTML());
+        return out;
+      },
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [productionOrigin()],
+  plugins: [seo(), prerenderAppSiege(), productionOrigin()],
   server: {
     // `npm run dev` + `python manage.py runserver` in backend/: forms reach the real API.
     proxy: { '/api': 'http://127.0.0.1:8765' },

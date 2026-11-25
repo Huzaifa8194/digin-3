@@ -4,6 +4,7 @@ import './style.css';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { cards, chat, contact, headline, lab, MEDIA } from './content';
+import { ctLinksHTML, docCardsHTML, docColumnHTML, docHeadline, docLab, docLabCopy } from './doc';
 import { cardIndex, cardU, MAXU, T, TOTAL } from './timeline';
 import { paint, SCENES } from './scenes';
 
@@ -15,20 +16,16 @@ const COARSE = matchMedia('(pointer: coarse)').matches;
 const LOW = COARSE || Math.min(innerWidth, innerHeight) < 700 || (navigator.hardwareConcurrency || 8) <= 4;
 
 // ---------- real content (always in the DOM) ----------
-$('[data-docheadline]').textContent = headline.lines.map((l) => l[0] + l.slice(1).toLowerCase()).join(' ');
-$('[data-doccolumn]').innerHTML = headline.column.map((p) => `<p>${p.replace(/\n/g, ' ').toLowerCase().replace(/^./, (c) => c.toUpperCase()).replace(/\bios\b/g, 'iOS').replace(/\bapk\b/g, 'APK').replace(/\bipa\b/g, 'IPA').replace(/\bai\b/g, 'AI')}</p>`).join('');
-$('[data-doccards]').innerHTML = cards.map((c, k) => `<li class="doc__card" id="card-${c.id}">
-  <a class="doc__link" href="#card-${c.id}" data-cardlink="${k}"><span class="doc__tag">${c.tag}</span> ${c.title.join(' ')}</a>
-  <p>${c.body}</p>
-  <img class="doc__img" src="${MEDIA + c.poster}" alt="" width="768" height="${c.clip ? 432 : 334}" loading="lazy">
-</li>`).join('');
-$('[data-doclab]').textContent = lab.title.join(' ').replace(/\/\/|->/g, '').trim().replace(/^./, (c) => c) ;
-$('[data-doclabcopy]').textContent = lab.copy.replace(/\n/g, ' ').toLowerCase().replace(/^./, (c) => c.toUpperCase()) + '.';
+$('[data-docheadline]').textContent = docHeadline();
+$('[data-doccolumn]').innerHTML = docColumnHTML();
+$('[data-doccards]').innerHTML = docCardsHTML();
+$('[data-doclab]').textContent = docLab();
+$('[data-doclabcopy]').textContent = docLabCopy();
 
 // ---------- contact ----------
 const ct = $('[data-contact]');
 $('[data-route]').innerHTML = contact.route.map((w, i) => (i ? '<svg class="ct__arrow" viewBox="0 0 90 60" aria-hidden="true"><path d="M0 30 H86 M58 2 L88 30 L58 58"/></svg>' : '') + `<span>${w}</span>`).join('');
-$('[data-ctlinks]').innerHTML = contact.links.map((l) => `<li><a href="${l.href}">${l.label}</a></li>`).join('');
+$('[data-ctlinks]').innerHTML = ctLinksHTML();
 const phone = $<HTMLAnchorElement>('[data-phone]'); phone.href = contact.phone.href; phone.textContent = contact.phone.label;
 const mob = $<HTMLAnchorElement>('[data-mobile]'); mob.href = contact.mobile.href; mob.textContent = 'Mobile ' + contact.mobile.label;
 {
