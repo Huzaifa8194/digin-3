@@ -13,6 +13,7 @@ export function initScope() {
   const draft = document.querySelector<HTMLElement>('[data-scope-draft]');
   const cta = document.querySelector<HTMLAnchorElement>('[data-scope-cta]');
   const listeners: ScopeListener[] = [];
+  cta?.addEventListener('click', () => { try { sessionStorage.setItem('demo-brief', cta.dataset.brief ?? ''); } catch { /* storage blocked */ } });
   // the explanation of the pedestal stays folded until asked for
   const more = document.querySelector<HTMLButtonElement>('[data-more]');
   more?.addEventListener('click', () => {
@@ -37,7 +38,9 @@ export function initScope() {
         `Estate: ${ENV[env]}`, `Size: ${sizeText}`, 'Mode: review (risky steps wait for approval)', '',
         'Company:', 'Role:', 'Best time to talk:',
       ].join('\n');
-      cta.href = `mailto:info@digiinn360.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      // The contact page picks shadowAD and starts the message with this scope.
+      cta.href = '/contact/?product=ShadowAD';
+      cta.dataset.brief = `${subject}.\n\n${body.split('\n').slice(2).join('\n')}`;
     }
     listeners.forEach((l) => l(env, size, fromUser));
   }

@@ -14,6 +14,17 @@ if (form) {
   const brief = field<HTMLTextAreaElement>('#brief')!;
   const name = field<HTMLInputElement>('#inq-name');
   const email = field<HTMLInputElement>('#inq-email');
+  // Arriving from a product page's demo button (/contact/?product=AeroNexus): pick that product
+  // and start the message. Only products listed in the select are accepted.
+  const product = new URLSearchParams(location.search).get('product');
+  const pick = product && [...interest.options].find((o) => o.value === `Product demo: ${product}`);
+  if (pick) {
+    interest.value = pick.value;
+    let carried = '', carriedEmail = '';
+    try { carried = sessionStorage.getItem('demo-brief') ?? ''; carriedEmail = sessionStorage.getItem('demo-email') ?? ''; sessionStorage.removeItem('demo-brief'); sessionStorage.removeItem('demo-email'); } catch { /* storage blocked */ }
+    if (!brief.value.trim()) brief.value = carried || `We would like a demo of ${product}.`;
+    if (email && !email.value && EMAIL.test(carriedEmail)) email.value = carriedEmail;
+  }
   const company = field<HTMLInputElement>('#inq-company');
   const phone = field<HTMLInputElement>('#inq-phone');
   const honeypot = field<HTMLInputElement>('#inq-website');

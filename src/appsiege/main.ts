@@ -161,7 +161,6 @@ let opened = false;
 // branding + end
 $('[data-top]').addEventListener('click', (e) => { if (NO_GL) return; e.preventDefault(); lenis?.scrollTo(0, { duration: 2.2 }); });
 $('[data-endtop]').addEventListener('click', () => lenis?.scrollTo(0, { duration: 2.6 }));
-$('[data-endcontact]').addEventListener('click', () => openContact());
 
 // ---------- sound ----------
 const audio = new Audio(); audio.loop = true; audio.preload = 'none'; audio.volume = 0.55;
@@ -174,7 +173,6 @@ soundBtn.addEventListener('click', () => {
 $$('[data-seek]').forEach((b) => b.addEventListener('click', () => { if (!audio.src || audio.paused) return soundBtn.click(); audio.currentTime = Math.max(0, audio.currentTime + 20 * +b.dataset.seek!); }));
 
 // ---------- nav ----------
-$('[data-nav="contact"]').addEventListener('click', (e) => { e.preventDefault(); openContact(); });
 $('[data-nav="agents"]').addEventListener('click', (e) => {
   e.preventDefault();
   if (!ct.hidden) closeContact();

@@ -188,7 +188,7 @@ const lenis = RM ? null : new Lenis({ lerp: 0.11, wheelMultiplier: 1 });
 const goto = (y: number) => (lenis ? lenis.scrollTo(y, { duration: 1.6 }) : scrollTo(0, y));
 const anchors: Record<string, () => number> = {
   content: () => 0, intro: () => 1.5 * vh, features: () => S.features.top - vh + 1.6 * vh, modes: () => S.modes.top,
-  panel: () => S.panel.top, contact: () => document.documentElement.scrollHeight - vh,
+  panel: () => S.panel.top,
 };
 $$<HTMLAnchorElement>('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => { const id = a.getAttribute('href')!.slice(1); if (anchors[id]) { e.preventDefault(); goto(anchors[id]()); } }));
 const navs = $$<HTMLAnchorElement>('[data-nav]');
