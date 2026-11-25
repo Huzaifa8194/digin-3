@@ -111,7 +111,7 @@ const labels = PARTS.map((p) => {
   el.className = 'a2-label';
   el.innerHTML = `<i class="a2-label__dot"></i><i class="a2-label__line"></i><span class="a2-label__txt"><b>${p.k}</b><span>${p.v}</span></span>`;
   labelsEl.appendChild(el);
-  return { el, id: p.id, pos: box.anchors[p.id].clone() };
+  return { el, txt: el.querySelector<HTMLElement>('.a2-label__txt')!, w: 0, shift: 0, id: p.id, pos: box.anchors[p.id].clone() };
 });
 const PART_BASE: Record<string, number> = {};
 Object.entries(box.parts).forEach(([k, o]) => { PART_BASE[k] = o.position.y; });
@@ -119,7 +119,7 @@ Object.entries(box.parts).forEach(([k, o]) => { PART_BASE[k] = o.position.y; });
 // ---------------------------------------------------------------- render
 let W = 0, H = 0, aspectK = 1;
 function resize() {
-  W = innerWidth; H = innerHeight;
+  W = innerWidth; H = innerHeight; labels.forEach((l) => { l.w = 0; });
   renderer.setSize(W, H, false);
   camera.aspect = W / H;
   aspectK = camera.aspect < 0.8 ? 1.85 : camera.aspect < 1.3 ? 1.35 : 1;
@@ -192,6 +192,10 @@ function frame(dt: number) {
       tmp.project(camera);
       const x = (tmp.x * 0.5 + 0.5) * W, y = (-tmp.y * 0.5 + 0.5) * H;
       l.el.style.transform = `translate(${x}px, ${y}px)`;
+      // On narrow screens a label near the right edge slides its text back inside; the dot stays on its part.
+      if (!l.w) l.w = l.el.offsetWidth;
+      const shift = Math.round(Math.min(0, W - 10 - (x + l.w)));
+      if (shift !== l.shift) { l.shift = shift; l.txt.style.translate = shift ? `${shift}px -40px` : ''; }
       l.el.style.opacity = String(S.labels);
     });
   } else labels.forEach((l) => { l.el.style.opacity = '0'; });
@@ -205,6 +209,9 @@ function frame(dt: number) {
   if (mi !== curTab) {
     curTab = mi;
     tabBtns.forEach((b, i) => b.setAttribute('aria-current', String(i === mi)));
+    // Phones scroll the tab strip sideways: keep the current module's tab in view.
+    const cur = tabBtns[mi];
+    if (cur && tabs.scrollWidth > tabs.clientWidth) tabs.scrollTo({ left: cur.offsetLeft - (tabs.clientWidth - cur.offsetWidth) / 2, behavior: 'smooth' });
   }
 }
 

@@ -272,6 +272,18 @@ html.no-gl .doc { display: block; max-width: 980px; margin: 0 auto; padding: 140
   .ct__qr img { width: 76px; height: 76px; }
   .cs { grid-template-columns: 1fr; padding: 80px 16px 24px; gap: 22px; overflow-y: auto; align-content: start; }
   .cs__media { border-radius: 14px; }
+  .hint { font-size: 11px; }
+}
+/* small phones: the nav pill would slide under the wordmark */
+@media (max-width: 400px) {
+  .top { right: 12px; }
+  .brand { left: 12px; }
+  .brand__word { letter-spacing: .06em; }
+  .pill { padding: 0 14px; gap: 10px; }
+  .pill__line { width: 14px; }
+}
+@media (max-width: 350px) {
+  .pill__line { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

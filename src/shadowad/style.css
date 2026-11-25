@@ -217,6 +217,7 @@ html:not(.gl) .sb-caps li { font: 400 16px/1.55 var(--sans); color: var(--muted)
 
 @media (max-width: 720px) {
   .sb-manifesto { width: 160px; }
+  .sb-num { font-size: max(11px, calc(var(--ui) * 0.92)); }
   html.gl .sb-tag--side { display: none; }
   .sb-arrow--prev { left: 12px; }
   .sb-arrow--next { right: 12px; }

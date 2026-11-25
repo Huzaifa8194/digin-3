@@ -210,7 +210,11 @@ html:not(.motion) .a2-ch--boot { display: none; }
 /* ---------------------------------------------------------------- phones */
 @media (max-width: 820px) {
   .a2-brand__by, .a2-chapter { display: none; }
-  .a2-top { grid-template-columns: 1fr auto; }
+  .a2-top { grid-template-columns: 1fr auto; padding-bottom: 22px; background: linear-gradient(var(--ground) calc(100% - 26px), transparent); }
+  .a2-brand { padding-block: 10px; margin-block: -10px; }
+  .a2-foot a { display: inline-block; padding-block: 6px; background-position: 0 calc(100% - 6px); }
+  .a2-cta__h { font-size: min(40px, 10.8vw); }
+  .a2-words span { font-size: min(56px, 12vw); }
   .a2-btn { height: 42px; padding: 0 16px; }
   .motion .a2-panel, .motion .a2-mod { left: 0 !important; right: 0 !important; width: auto; top: auto; bottom: 0; justify-content: flex-end; padding: 0 var(--m) 11vh; background: linear-gradient(transparent, rgba(5,6,8,.92) 30%); }
   .motion .a2-mod { padding-bottom: 76px; gap: 10px; }
@@ -226,6 +230,10 @@ html:not(.motion) .a2-ch--boot { display: none; }
   .a2-table div { grid-template-columns: 110px 1fr; }
   .a2-ch--hero { padding-top: 13vh; }
   .a2-label__txt b { font-size: 12px; }
+}
+@media (max-width: 420px) {
+  /* six part callouts share a 320px screen: titles only, the spec table below carries the detail */
+  .a2-label__txt span { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
