@@ -29,9 +29,10 @@ const groups = [
       { title: 'Detection and intelligence', links: [
         ['AEGIS-SHIELD', 'Investigate and contain suspicious Windows activity.', '#aegis-shield'],
         ['DarkIntel360', 'Track exposed credentials, data leaks, and emerging threats.', '#darkintel360'],
+        ['AeroNexus', 'Lock down, track and wipe company Android phones from one panel.', '#aeronexus'],
       ] },
     ],
-    feature: ['Choosing a security tool?', 'Compare the five offerings and watch their trailers.', '/products/', 'View products'],
+    feature: ['Choosing a security tool?', 'Compare the six offerings and watch their trailers.', '/products/', 'View products'],
   },
 ];
 

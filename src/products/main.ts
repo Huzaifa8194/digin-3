@@ -1,4 +1,4 @@
-// Products: five cards, each one that product's own hero rebuilt in code (src/products/heroes.ts).
+// Products: six cards, each one that product's own hero rebuilt in code (src/products/heroes.ts).
 // At rest a card shows its hero's finished frame. Pointing at it (or focusing it) replays that
 // hero's opening; on touch screens it plays as the card scrolls into view. A click anywhere opens
 // the product's website, and on the way the card opens into that product's own loading screen,
@@ -11,9 +11,10 @@ import { bootDark } from '../site-dark';
 import { isTouch, onPage, onScroll, prefersReducedMotion } from '../engine';
 import { markSVG } from '../sysbastion/patterns';
 import { aegis, appSiege, darkIntel, shadowAD, sysBastion, type Hero } from './heroes';
+import { aeroNexus } from './aeronexus-hero';
 
 const DRIVERS: Record<string, (root: HTMLElement) => Hero> = {
-  shadowad: shadowAD, sysbastion: sysBastion, aegis, appsiege: appSiege, darkintel: darkIntel,
+  shadowad: shadowAD, sysbastion: sysBastion, aegis, appsiege: appSiege, darkintel: darkIntel, aeronexus: aeroNexus,
 };
 const stacked = () => matchMedia('(min-width: 901px)').matches;
 let current: (() => void) | null = null; // the stop() of the hero that is playing
@@ -97,6 +98,7 @@ const LOADERS: Record<string, string> = {
   sysbastion: `<span class="pr-enter__sb">${markSVG}<span>Loading</span></span>`,
   aegis: '<span class="pr-enter__ag"><svg viewBox="-1.1 -1.15 2.2 2.3"><path d="M0-1Q.42-.8.86-.86C.88-.05.62.62 0 1.02-.62.62-.88-.05-.86-.86Q-.42-.8 0-1Z"/></svg><span>Powering the Mi713 <b>00</b></span></span>',
   darkintel: '<span class="pr-enter__di"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="6.2" fill="none" stroke="currentColor" stroke-width="2"/><ellipse cx="14" cy="14" rx="12.4" ry="4.6" transform="rotate(-24 14 14)" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="24.6" cy="9.6" r="2.3" fill="#c6f36d"/></svg>DarkIntel<b>360</b></span>',
+  aeronexus: '<span class="pr-enter__anx"><svg viewBox="-110 -110 220 220"><path class="g" d="M-110 0H110M0-110V110M-110-65H110M-110 65H110M-66-110V110M66-110V110"/><path class="m" pathLength="1" d="M0 -66 L66 64 H30 L0 2 L-30 64 H-66 Z"/><circle class="m" pathLength="1" cx="0" cy="44" r="11"/></svg></span>',
   appsiege: '<span class="pr-enter__as"><svg viewBox="0 0 120 120"><defs><pattern id="pr-hatch" width="7" height="9" patternUnits="userSpaceOnUse"><text x="0" y="8" font-size="9" font-family="monospace" fill="currentColor">/</text></pattern><clipPath id="pr-ldclip"><rect x="0" y="40" width="120" height="120"/></clipPath></defs><circle cx="60" cy="60" r="58" fill="url(#pr-hatch)" clip-path="url(#pr-ldclip)"/><circle cx="60" cy="60" r="58" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-width=".6"/><text x="60" y="64" text-anchor="middle" font-size="11" font-family="monospace" fill="#c9d1ff">/30</text></svg><p><img src="/appsiege/media/appsiege-icon.png" alt="" width="22" height="22">AppSiege</p></span>',
 };
 function startEnter() {

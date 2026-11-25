@@ -246,6 +246,57 @@
 .pr-enter__di svg { width: 1em; }
 .pr-enter__di b { color: #d9b8ff; font-weight: 500; }
 
+/* ---------- AeroNexus (/aeronexus/) ---------- */
+@font-face { font-family: 'Hanken Grotesk'; src: url('/fonts/aeronexus/hanken-grotesk-100_900-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'ANX Sora'; src: url('/fonts/aeronexus/sora-var.woff2') format('woff2'); font-weight: 100 800; font-display: swap; }
+.anx { background: #10171d; color: #e6fff8; font: 500 calc(13.5 * var(--u))/1.2 'Hanken Grotesk', system-ui, sans-serif; }
+.anx__desk { position: absolute; inset: 0; transform-origin: 46% 45%; }
+.anx__desk::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(180deg, rgba(255,255,255,.018) 0 2px, transparent 2px 9px), linear-gradient(100deg, #18232c, #0f161c); }
+.anx__mat { position: absolute; left: 12.5%; top: -6%; width: 96%; height: 86%; border-radius: calc(16 * var(--u)); rotate: -2.6deg; box-shadow: 0 calc(30 * var(--u)) calc(60 * var(--u)) rgba(0,0,0,.55);
+  background:
+    linear-gradient(90deg, rgba(190,255,240,.3) 0 1px, transparent 1px) 0 0 / calc(75 * var(--u)) calc(75 * var(--u)),
+    linear-gradient(0deg, rgba(190,255,240,.3) 0 1px, transparent 1px) 0 0 / calc(75 * var(--u)) calc(75 * var(--u)),
+    linear-gradient(90deg, rgba(190,255,240,.11) 0 1px, transparent 1px) 0 0 / calc(15 * var(--u)) calc(15 * var(--u)),
+    linear-gradient(0deg, rgba(190,255,240,.11) 0 1px, transparent 1px) 0 0 / calc(15 * var(--u)) calc(15 * var(--u)),
+    linear-gradient(135deg, #0f4a48, #0a3333); }
+.anx__matlab { position: absolute; right: calc(40 * var(--u)); top: calc(70 * var(--u)); display: grid; justify-items: end; gap: calc(4 * var(--u)); font: 400 calc(9 * var(--u))/1 'DM Mono', ui-monospace, monospace; color: rgba(210,255,244,.55); text-transform: uppercase; }
+.anx__matlab b { font: 700 calc(15 * var(--u))/1 'ANX Sora', sans-serif; color: rgba(210,255,244,.8); }
+.anx__zone { position: absolute; left: 29%; top: 25%; width: calc(132 * var(--u)); height: calc(232 * var(--u)); border: 1px dashed rgba(210,255,244,.6); rotate: 12deg; }
+.anx__zone i { position: absolute; left: 0; right: 0; top: calc(-16 * var(--u)); text-align: center; font: 600 calc(8.5 * var(--u))/1 'Hanken Grotesk', sans-serif; font-style: normal; text-transform: uppercase; color: rgba(210,255,244,.75); white-space: nowrap; }
+.anx__phone { position: absolute; left: 40.4%; top: 30.5%; width: calc(108 * var(--u)); height: calc(222 * var(--u)); padding: calc(4 * var(--u)); border-radius: calc(15 * var(--u)); background: #2b3946; rotate: 12deg; box-shadow: calc(-10 * var(--u)) calc(16 * var(--u)) calc(22 * var(--u)) rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.08); }
+.anx__phone canvas { display: block; width: 100%; height: 100%; border-radius: calc(12 * var(--u)); }
+.anx__cable { position: absolute; left: 25%; top: 66%; width: 30%; height: 40%; overflow: visible; }
+.anx__cable path { fill: none; stroke: #0b1117; stroke-width: calc(9 * var(--u)); stroke-linecap: round; filter: drop-shadow(0 calc(5 * var(--u)) calc(4 * var(--u)) rgba(0,0,0,.5)); }
+.anx__card { position: absolute; left: 4.2%; top: 44%; width: calc(186 * var(--u)); height: calc(118 * var(--u)); rotate: 13deg; background: #f2fffb; color: #071018; box-shadow: calc(-6 * var(--u)) calc(10 * var(--u)) calc(16 * var(--u)) rgba(0,0,0,.45); display: grid; grid-template-columns: auto 1fr; grid-template-rows: calc(27 * var(--u)) 1fr; gap: calc(8 * var(--u)); padding-bottom: calc(10 * var(--u)); }
+.anx__card b { grid-column: 1 / -1; background: #0f766e; color: #fff; font: 700 calc(11 * var(--u))/calc(27 * var(--u)) 'ANX Sora', sans-serif; padding-left: calc(10 * var(--u)); }
+.anx__qr { margin-left: calc(10 * var(--u)); width: calc(68 * var(--u)); height: calc(68 * var(--u)); background: conic-gradient(#071018 25%, transparent 0 50%, #071018 0 75%, transparent 0) 0 0 / calc(10 * var(--u)) calc(10 * var(--u)); outline: calc(3 * var(--u)) solid #071018; }
+.anx__card span { font: 600 calc(9.5 * var(--u))/1.3 'Hanken Grotesk', sans-serif; }
+.anx__card small { display: block; font: 400 calc(7.5 * var(--u))/1.4 'DM Mono', monospace; color: #3b4a52; margin-top: calc(4 * var(--u)); }
+.anx__pen { position: absolute; left: 75%; top: -2%; width: calc(8 * var(--u)); height: calc(240 * var(--u)); rotate: -32deg; border-radius: 99px; background: linear-gradient(90deg, #d8ccb9, #f4ebdc 45%, #cbbfac); box-shadow: calc(-8 * var(--u)) calc(10 * var(--u)) calc(10 * var(--u)) rgba(0,0,0,.4); }
+.anx__pen::after { content: ''; position: absolute; left: 0; right: 0; bottom: calc(-22 * var(--u)); height: calc(24 * var(--u)); background: #1d2a33; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+.anx__fleet { position: absolute; left: 79%; top: 61%; }
+.anx__fleet i { position: absolute; left: 0; top: 0; width: calc(110 * var(--u)); height: calc(225 * var(--u)); border-radius: calc(16 * var(--u)); background: linear-gradient(140deg, #26333e, #111a22); rotate: 58deg; box-shadow: calc(-12 * var(--u)) calc(14 * var(--u)) calc(22 * var(--u)) rgba(0,0,0,.6); }
+.anx__fleet i + i { left: calc(14 * var(--u)); top: calc(-10 * var(--u)); rotate: 66deg; }
+.anx__word { position: absolute; left: calc(45 * var(--u)); top: calc(60 * var(--u)); font: 700 calc(124 * var(--u))/1 'ANX Sora', sans-serif; letter-spacing: .01em; color: #e6fff8; transform-origin: 0 0; white-space: nowrap; }
+.anx__tag { position: absolute; left: 25.6%; top: calc(36 * var(--u)); font-size: calc(16 * var(--u)); text-transform: uppercase; }
+.anx__nav { position: absolute; right: calc(75 * var(--u)); top: calc(26 * var(--u)); display: flex; gap: calc(24 * var(--u)); font-size: calc(11.5 * var(--u)); text-transform: uppercase; }
+.anx__side { position: absolute; right: 0; top: 0; display: flex; align-items: center; gap: calc(8 * var(--u)); writing-mode: vertical-rl; height: calc(190 * var(--u)); padding: calc(14 * var(--u)) calc(8 * var(--u)); background: #e6fff8; color: #071018; font-size: calc(10.5 * var(--u)); font-weight: 600; text-transform: uppercase; }
+.anx__side i { width: calc(5 * var(--u)); height: calc(5 * var(--u)); border-radius: 50%; background: #071018; }
+.anx__copy { position: absolute; left: 64.4%; top: 41%; width: calc(452 * var(--u)); font-size: calc(28.5 * var(--u)); font-weight: 400; line-height: 1.2; text-shadow: 0 0 calc(18 * var(--u)) rgba(5, 25, 25, .6); }
+.anx__glass { position: absolute; left: calc(45 * var(--u)); bottom: calc(22 * var(--u)); width: calc(266 * var(--u)); height: calc(300 * var(--u)); padding: calc(18 * var(--u)); display: flex; flex-direction: column; background: rgba(230,255,248,.13); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.anx__glass b { font-size: calc(24 * var(--u)); font-weight: 500; line-height: 1.04; text-transform: uppercase; }
+.anx__glass i { margin-top: auto; height: 1px; background: repeating-linear-gradient(90deg, currentColor 0 3px, transparent 3px 6px); opacity: .55; margin-bottom: calc(30 * var(--u)); }
+.anx__glass small { text-align: right; font-size: calc(17 * var(--u)); line-height: 1.3; font-weight: 500; }
+.anx__film { position: absolute; right: calc(45 * var(--u)); bottom: calc(22 * var(--u)); width: calc(150 * var(--u)); aspect-ratio: 16 / 10; border-radius: calc(9 * var(--u)); overflow: hidden; box-shadow: 0 0 0 2px #2dd4bf, 0 0 calc(26 * var(--u)) rgba(45,212,191,.55); }
+.anx__film img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+.ph:hover .anx__film img { transform: scale(1.1); }
+.anx__film span { position: absolute; left: 50%; top: 50%; translate: -50% -50%; padding: calc(3 * var(--u)) calc(8 * var(--u)); border-radius: 99px; background: rgba(3,7,11,.7); font-size: calc(9.6 * var(--u)); font-weight: 700; text-transform: uppercase; }
+.pr-enter[data-p='aeronexus'] { background: #0b3a3a; }
+.pr-enter__anx svg { width: min(36vw, 44vh); overflow: visible; fill: none; }
+.pr-enter__anx .g { stroke: rgba(230,255,248,.12); stroke-width: .5; }
+.pr-enter__anx .m { stroke: #e6fff8; stroke-width: 1; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: pr-anx-draw .9s .25s cubic-bezier(.65,0,.35,1) forwards; }
+@keyframes pr-anx-draw { to { stroke-dashoffset: 0; } }
+
 /* ---------- Tablets and phones: cards flow one after another, each composed for the width ---------- */
 @media (max-width: 900px) {
   .pr-hero__row { grid-template-columns: minmax(0, 1fr); }
@@ -281,6 +332,15 @@
   .di__hero { padding-top: 30cqh; }
   .di__title { font-size: calc(56 * var(--u)); }
   .di__nav > span:first-child { display: none; }
+  .anx__nav, .anx__glass, .anx__card, .anx__matlab { display: none; }
+  .anx__word { font-size: calc(78 * var(--u)); top: calc(70 * var(--u)); left: calc(24 * var(--u)); }
+  .anx__tag { left: calc(24 * var(--u)); top: calc(160 * var(--u)); }
+  .anx__mat { left: -10%; top: 24%; width: 130%; height: 60%; }
+  .anx__zone { left: 38%; top: 6%; }
+  .anx__phone { left: 38%; top: 34%; }
+  .anx__pen, .anx__fleet, .anx__side { display: none; }
+  .anx__copy { left: calc(24 * var(--u)); right: calc(24 * var(--u)); width: auto; top: auto; bottom: calc(140 * var(--u)); font-size: calc(26 * var(--u)); }
+  .anx__film { right: calc(24 * var(--u)); bottom: calc(24 * var(--u)); }
   .di__probe { left: 50%; top: 16%; width: calc(130 * var(--u)); margin: calc(-65 * var(--u)) 0 0 calc(-65 * var(--u)); }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071018">
+<title>AeroNexus: Android device management for fleets | DigiInn360</title>
+<meta name="description" content="AeroNexus is DigiInn360's Android MDM panel: kiosk mode, app and hardware policy, geofences, remote screen, Lost Mode, wipe and an audit log for every action.">
+<link rel="canonical" href="https://digin-3.vercel.app/aeronexus/">
+<meta property="og:type" content="product"><meta property="og:site_name" content="DigiInn360">
+<meta property="og:title" content="AeroNexus: it leaves your hand, not your control">
+<meta property="og:description" content="Android device management for fleets that leave the building.">
+<meta property="og:url" content="https://digin-3.vercel.app/aeronexus/">
+<meta property="og:image" content="https://digin-3.vercel.app/aeronexus/media/film-poster.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/aeronexus/media/aeronexus-mark.svg">
+<link rel="preload" href="/fonts/aeronexus/hanken-grotesk-100_900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/aeronexus/sora-var.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"AeroNexus","applicationCategory":"BusinessApplication","operatingSystem":"Android","description":"Android mobile device management panel: kiosk mode, app and hardware policy, geofences, remote screen, Lost Mode, wipe and an audit log.","publisher":{"@type":"Organization","name":"DigiInn360","url":"https://digin-3.vercel.app/","telephone":"+92-51-2748690"}}</script>
+<script>(function(){var d=document.documentElement;d.classList.add('js');if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('rm');})();</script>
+</head>
+<body class="an">
+<a class="skip" href="#content">Skip to content</a>
+
+<!-- Loader: the Apex Node mark drawn as a construction, with real progress -->
+<div class="ld" data-loader role="status" aria-live="polite">
+  <svg class="ld__svg" viewBox="-110 -110 220 220" aria-hidden="true">
+    <g class="ld__grid"><path d="M-110 0H110M0-110V110M-110-65H110M-110 65H110M-66-110V110M66-110V110"/></g>
+    <path class="ld__mark" pathLength="1" d="M0 -66 L66 64 H30 L0 2 L-30 64 H-66 Z"/>
+    <circle class="ld__node" cx="0" cy="44" r="11" pathLength="1"/>
+    <g class="ld__h"><path d="M-34 -66H34M-66 30V98M66 30V98M-30 86V42M30 86V42"/><circle cx="0" cy="-66" r="3.2"/><circle cx="-34" cy="-66" r="2"/><circle cx="34" cy="-66" r="2"/><circle cx="66" cy="64" r="3.2"/><circle cx="-66" cy="64" r="3.2"/><circle cx="30" cy="64" r="3.2"/><circle cx="-30" cy="64" r="3.2"/><circle cx="0" cy="2" r="3.2"/></g>
+  </svg>
+  <span class="sr-only" data-ldsr>Loading AeroNexus</span>
+</div>
+
+<canvas class="gl" data-gl aria-hidden="true"></canvas>
+<div class="glow" data-glow aria-hidden="true"></div>
+<div class="edge" data-edge aria-hidden="true"></div>
+<div class="veil" data-veil aria-hidden="true"></div>
+<div class="frame" data-frame aria-hidden="true"><i></i></div>
+
+<!-- Fixed UI -->
+<header class="hd">
+  <a class="brand" href="#content" data-brand data-top aria-label="AeroNexus, back to the top"><span class="brand__w" aria-hidden="true">AERONEXUS</span></a>
+  <nav class="nav" aria-label="AeroNexus">
+    <ul>
+      <li><a href="#intro" data-flip data-nav="intro">Intro</a></li>
+      <li><a href="#features" data-flip data-nav="features">Features</a></li>
+      <li><a href="#modes" data-flip data-nav="modes">Product</a></li>
+      <li><a href="#contact" data-flip data-nav="contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+<a class="tab" href="#panel"><i aria-hidden="true"></i><span>AeroNexus panel</span></a>
+<p class="cue" data-cue aria-hidden="true"><span class="cue__i"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11"/><path d="M8 10.5l4 4 4-4"/></svg></span>Scroll to continue</p>
+<div class="dot" data-dot aria-hidden="true"></div>
+
+<main id="content">
+
+<!-- 01 Hero: the staging desk -->
+<section class="s hero" id="hero" aria-labelledby="h-hero">
+  <div class="hero__in" data-hero>
+    <h1 id="h-hero" class="sr-only">AeroNexus: Android device management by DigiInn360</h1>
+    <p class="hero__tag sub1" data-lit>Made for fleets. Built for control.</p>
+    <p class="hero__copy body1" data-lit>Enroll, lock down and track every company Android from one panel. AeroNexus keeps a phone yours after it leaves the building.</p>
+    <div class="hero__card" data-hcard>
+      <h2 class="h4">Built<br>by DigiInn360,<br>the security<br>engineering team.</h2>
+      <div class="dash"></div>
+      <p class="body2">Mobile device<br>management for<br>Android fleets.</p>
+    </div>
+    <button class="hero__vid" type="button" data-play data-hvid aria-label="Play the AeroNexus film, 65 seconds">
+      <img src="/aeronexus/media/film-poster.webp" alt="" width="960" height="540">
+      <span>Play</span>
+    </button>
+  </div>
+</section>
+
+<!-- 02 Intro: isn't just a phone / powered by policy -->
+<section class="s stage" id="intro" style="--h:800" aria-labelledby="h-intro">
+  <div class="pin" data-pin="intro">
+    <div class="intro__pre">
+      <h2 class="h2" id="h-intro" data-lit data-ipre1>Isn’t just<br>a phone.</h2>
+      <p class="body1" data-lit data-ipre2>A company phone isn’t just a phone. It’s your data, your apps and your name, on its way out the door.</p>
+    </div>
+    <div class="intro__head">
+      <p class="intro__title" data-lit data-ititle>Powered by policy<sup>*</sup></p>
+      <p class="intro__tagl h4" data-lit data-itag>AeroNexus</p>
+    </div>
+    <p class="intro__hint sub2" data-ihint><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V5a2 2 0 014 0v6m0-2a2 2 0 014 0v3m0-1a2 2 0 013 1v3a7 7 0 01-7 7h-1a6 6 0 01-5-3l-3-5a1.6 1.6 0 012.6-1.8L9 15"/></svg><span data-ihinttxt>Try to open the camera</span></p>
+    <p class="intro__cap sub2" data-lit data-icap>Policy fills in the gaps.<br>They opened the camera.<br>It stayed shut.</p>
+    <p class="intro__foot sub2" data-ifoot>* Not AI.<br>Just rules.</p>
+  </div>
+</section>
+
+<!-- 03 Reach: leaves the building, stays in reach -->
+<section class="s stage" id="reach" style="--h:1300" aria-labelledby="h-reach">
+  <div class="pin" data-pin="reach">
+    <p class="reach__lab sub1" data-rlab>Leaves the building,</p>
+    <p class="reach__odo" data-rodo><span class="sub2">Distance from the office</span><b data-rkm>0 km</b></p>
+    <p class="reach__link" data-rlink><span class="sub2">Panel link</span><b><i></i><em data-rstate>Live</em></b></p>
+    <h2 class="reach__big" id="h-reach" data-rbig>stays in reach</h2>
+    <div class="strip" data-strip>
+      <figure class="card" data-km="0" style="--op:64%"><img src="/aeronexus/media/w-handover.webp" alt="An office hand passes a company phone to a field worker" loading="lazy"><span class="card__chip"><b>09:00</b>Office</span><span class="card__km">0 km out</span><figcaption class="card__cap"><strong>Handed over.</strong><span>Enrolled before it left the desk.</span></figcaption></figure>
+      <figure class="card" data-km="0.2" style="--op:70%"><img src="/aeronexus/media/w-plaza.webp" alt="The worker walks out across the plaza with the phone" loading="lazy"><span class="card__chip"><b>09:05</b>Plaza</span><span class="card__km">0.2 km out</span><img class="card__scr" data-scr="kiosk" data-sp="1" alt=""><figcaption class="card__cap"><strong>One app only.</strong><span>Kiosk mode pins it to Orders.</span></figcaption></figure>
+      <figure class="card" data-km="2" style="--op:72%"><img src="/aeronexus/media/w-city-2km.webp" alt="The phone two kilometres from the office" loading="lazy"><span class="card__chip"><b>11:46</b>On route</span><span class="card__km">2 km out</span><img class="card__scr" data-scr="games" data-sp="1" alt=""><figcaption class="card__cap"><strong>A game turns up.</strong><span>Not approved, so the panel removes it.</span></figcaption></figure>
+      <figure class="card" data-km="9" style="--op:72%"><img src="/aeronexus/media/w-fence-alert.webp" alt="A phone leaving the geofence around a warehouse, its ring turning amber" loading="lazy"><span class="card__chip"><b>12:04</b>Warehouse B</span><span class="card__km">9 km out</span><figcaption class="card__cap"><strong>Crosses the fence.</strong><span>The panel flags it as it leaves.</span></figcaption></figure>
+      <figure class="card" data-km="18" style="--op:57%"><img src="/aeronexus/media/w-city-18km.webp" alt="The phone eighteen kilometres out, still on the control line" loading="lazy"><span class="card__chip"><b>13:30</b>Client site</span><span class="card__km">18 km out</span><img class="card__scr" data-scr="camblock" data-sp="1" alt=""><figcaption class="card__cap"><strong>Camera off on site.</strong><span>Switched off from the office.</span></figcaption></figure>
+      <figure class="card" data-km="20" style="--op:60%"><img src="/aeronexus/media/w-city-20km.webp" alt="The phone twenty kilometres out" loading="lazy"><span class="card__chip"><b>14:58</b>Gate 4</span><span class="card__km">20 km out</span><img class="card__scr" data-scr="remote" data-sp="0.5" alt=""><figcaption class="card__cap"><strong>Stuck on a form.</strong><span>Support sees the screen and taps Submit.</span></figcaption></figure>
+      <figure class="card" data-km="40" style="--op:48%"><img src="/aeronexus/media/w-lost-ring.webp" alt="The phone on a bus seat, locked in Lost Mode and ringing" loading="lazy"><span class="card__chip"><b>15:09</b>Off route</span><span class="card__km">40 km out</span><figcaption class="card__cap"><strong>Left on a bus.</strong><span>Lost Mode locks it, rings it, shows your message.</span></figcaption></figure>
+      <figure class="card" data-km="40" style="--op:62%"><img src="/aeronexus/media/w-tether.webp" alt="The control line running from the office roof out over the city" loading="lazy"><span class="card__chip"><b>15:12</b>Still off route</span><span class="card__km">40 km out</span><img class="card__scr" data-scr="wipe" data-sp="0.85" alt=""><figcaption class="card__cap"><strong>Not coming back?</strong><span>Wipe it from here. The data stays yours.</span></figcaption></figure>
+      <article class="card card--cover">
+        <p class="cv__issue">Audit no. 00124</p>
+        <p class="cv__box"><b data-cvnum>19</b>actions logged<br>this shift</p>
+        <p class="cv__title">We Are Still<br><span>In Control!</span></p>
+        <p class="cv__sub">The phone left the building...<br>and nothing else did.</p>
+        <p class="cv__no"><span>No</span>6</p>
+        <p class="cv__name">AeroNexus<small>A panel designed to be reached<br>from anywhere the fleet goes.</small><i></i></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 04 Features: three policies, then the construction -->
+<section class="s stage" id="features" style="--h:1050" aria-labelledby="h-feat">
+  <div class="pin" data-pin="features">
+    <h2 class="sr-only" id="h-feat">Features</h2>
+    <aside class="fp" data-fp>
+      <div class="fp__items">
+        <article class="fp__item" data-ft>
+          <span class="fp__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/></svg></span>
+          <h3 class="sub1" data-lit>One app, nothing else</h3>
+          <p class="body3" data-lit>Kiosk mode pins a phone to a single app. No home screen, no settings, no detours on the delivery route.</p>
+        </article>
+        <article class="fp__item" data-ft>
+          <span class="fp__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><circle cx="12" cy="13" r="3.2"/><path d="M4 4l16 17"/></svg></span>
+          <h3 class="sub1" data-lit>Hardware on your terms</h3>
+          <p class="body3" data-lit>Camera, GPS, Wi-Fi and mobile data are switches on the panel. Flip one in the office and the phone follows.</p>
+        </article>
+        <article class="fp__item" data-ft>
+          <span class="fp__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="2.2 2.6"/><circle cx="12" cy="12" r="2.4"/></svg></span>
+          <h3 class="sub1" data-lit>Perfectly fenced, seriously</h3>
+          <p class="body3" data-lit>Draw a geofence around the depot. The moment a phone crosses the line, the panel raises it.</p>
+        </article>
+      </div>
+      <div class="dash"></div>
+      <div class="fp__bigs">
+        <p class="h3" data-lit data-ftbig>Kiosk mode,<br>locked in</p>
+        <p class="h3" data-lit data-ftbig>Camera off<br>means off</p>
+        <p class="h3" data-lit data-ftbig>Out of bounds,<br>on the record</p>
+      </div>
+    </aside>
+    <div class="feat__caps" aria-hidden="true">
+      <p data-ftcap><span class="sub2">Apps a kiosk phone can open</span><span class="math">n = 1</span></p>
+      <p data-ftcap><span class="sub2">Hardware policy (HP)<br>A switch, not a suggestion</span><span class="math">cam = 0</span></p>
+      <p data-ftcap><span class="sub2">Inside the fence when<br>distance to depot is under r</span><span class="math">d ≤ r</span></p>
+    </div>
+    <div class="feat__scale" data-fscale aria-hidden="true"><i></i><span>Open<br>any app</span><span>Managed<br>approved list</span><span>Locked down<br>one app</span></div>
+    <div class="bp" data-bp aria-hidden="true">
+      <p class="bp__word" data-bpword><span>A</span><span>E</span><span>R</span><span data-bpo>O</span><span>N</span><span>E</span><span>X</span><span>U</span><span>S</span></p>
+      <svg class="bp__sk" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+        <g class="bp__guides"><path d="M0 405H1440M720 0V810M0 300H1440M0 510H1440M615 0V810M825 0V810"/></g>
+        <g class="sk" data-sk style="--d:-1.2">
+          <g transform="translate(250 190) rotate(-8)"><rect x="-70" y="-135" width="140" height="270" rx="20"/><rect x="-60" y="-120" width="120" height="240" rx="10"/><path d="M-40 -84h20v20h-20zM-10 -84h20v20h-20zM20 -84h20v20h-20zM-40 -52h20v20h-20zM-10 -52h20v20h-20zM20 -52h20v20h-20z"/><path d="M-90 -150 q-30 60 -8 130" stroke-dasharray="4 6"/><text x="-150" y="-160">kiosk : 1 app</text></g>
+        </g>
+        <g class="sk" data-sk style="--d:1.6">
+          <g transform="translate(1130 220) rotate(6)"><circle r="110" stroke-dasharray="3 7"/><circle r="64"/><path d="M0 -26a18 18 0 0118 18c0 16-18 34-18 34s-18-18-18-34a18 18 0 0118-18z"/><circle cy="-8" r="6"/><path d="M0 0L110 0" stroke-dasharray="2 5"/><text x="20" y="-122">r = 500 m</text></g>
+        </g>
+        <g class="sk" data-sk style="--d:.9">
+          <g transform="translate(330 610) rotate(4)"><path d="M0 -92 L92 88 H42 L0 2 L-42 88 H-92 Z"/><circle cy="62" r="15"/><path d="M-120 100H120M-120 -100H120" stroke-dasharray="2 6"/><text x="-110" y="128">apex / node</text></g>
+        </g>
+        <g class="sk" data-sk style="--d:-1.9">
+          <g transform="translate(1100 600) rotate(-5)"><rect x="-150" y="-16" width="300" height="32" rx="12"/><rect x="-128" y="-9" width="256" height="18" rx="5"/><path d="M-150 44H150M-150 38v12M150 38v12"/><text x="-40" y="76">158 mm</text><rect x="60" y="-90" width="64" height="52" rx="8"/><path d="M74 -90v-14a18 18 0 0136 0v14"/><text x="-150" y="-60">lost mode : lock + ring</text></g>
+        </g>
+      </svg>
+      <svg class="bp__c" data-bpc viewBox="-100 -100 200 200">
+        <circle class="bp__ring" r="64"/><circle class="bp__in" data-bpin r="36"/>
+        <g class="bp__hd" data-bphd><path d="M-36 -64H36M-36 64H36M-64 -36V36M64 -36V36"/><circle cx="0" cy="-64" r="2.6"/><circle cx="0" cy="64" r="2.6"/><circle cx="-64" cy="0" r="2.6"/><circle cx="64" cy="0" r="2.6"/><circle cx="-36" cy="-64" r="1.6"/><circle cx="36" cy="-64" r="1.6"/><circle cx="-36" cy="64" r="1.6"/><circle cx="36" cy="64" r="1.6"/><circle cx="-64" cy="-36" r="1.6"/><circle cx="-64" cy="36" r="1.6"/><circle cx="64" cy="-36" r="1.6"/><circle cx="64" cy="36" r="1.6"/></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 05 Lost Mode: write the lock-screen message -->
+<section class="s stage" id="lost" style="--h:400" aria-labelledby="h-lost">
+  <div class="pin pin--black" data-pin="lost">
+    <div class="ctr" data-lostc>
+      <p class="sub1" data-lit>Lost phone, simplified</p>
+      <h2 class="h2" id="h-lost" data-lit>Lost Mode<br>messaging</h2>
+      <p class="body2" data-lit>Write a message. Send. It sits on the lock screen<br>with the ringer on, until the phone comes home.</p>
+      <form class="lostf" data-lostform>
+        <label class="sr-only" for="lostmsg">Lock screen message</label>
+        <input id="lostmsg" name="msg" type="text" maxlength="64" autocomplete="off" value="Please call the office" data-lostinput>
+        <button class="pillbtn" type="submit" data-lostbtn><span data-flip>Unlock device</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- 06 Remote: commands that reach the phone -->
+<section class="s stage" id="remote" style="--h:400" aria-labelledby="h-remote">
+  <div class="pin" data-pin="remote">
+    <div class="ctr" data-remc>
+      <p class="sub1" data-lit>Remote control, zero drama</p>
+      <h2 class="h2" id="h-remote" data-lit>Commands that<br>reach the phone</h2>
+      <p class="body2" data-lit>Lock it, ring it, reboot it or push a file. The phone<br>doesn’t have to come back to the office for any of it.</p>
+      <div class="cmd" data-cmd>
+        <p class="cmd__top"><span>Command sent:</span><b data-cmdname>Lock</b></p>
+        <canvas class="cmd__scr" data-cmdscr width="420" height="150"></canvas>
+      </div>
+      <div class="cmd__pick" role="radiogroup" aria-label="Choose a command to send">
+        <button type="button" role="radio" aria-checked="true" data-cmdbtn="0" aria-label="Lock"></button>
+        <button type="button" role="radio" aria-checked="false" data-cmdbtn="1" aria-label="Ring"></button>
+        <button type="button" role="radio" aria-checked="false" data-cmdbtn="2" aria-label="Reboot"></button>
+        <button type="button" role="radio" aria-checked="false" data-cmdbtn="3" aria-label="Push a file"></button>
+      </div>
+      <p class="cmd__hint sub2">Pick a command</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 Audit: accountability -->
+<section class="s audit" id="audit" aria-labelledby="h-audit" data-audit>
+  <div class="audit__tall" style="--h:400">
+    <div class="audit__pin">
+      <div class="audit__shade" aria-hidden="true"></div>
+      <p class="audit__top sub2" data-atop>100% logged</p>
+      <p class="audit__side sub1" data-aside>Audit-friendly</p>
+      <h2 class="audit__word" id="h-audit" data-lit data-aword>accountability</h2>
+      <p class="audit__body body2" data-abody>Every lock, wipe and policy change is written down.<br>Who did it, when, and from where.<br>“It wasn’t me” stops working.</p>
+    </div>
+  </div>
+  <div class="cards3">
+    <article class="c3 c3--teal">
+      <h3 class="h3">Panels<br>for the whole<br>fleet</h3>
+      <p>Devices, apps, hardware, files, locations and commands live in one place, under one sign-in.</p>
+      <span class="c3__num" aria-hidden="true">1</span>
+    </article>
+    <article class="c3">
+      <h3 class="h3">Fields on<br>every entry</h3>
+      <div class="c3__art" aria-hidden="true">
+        <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" class="c3__disc"/><g class="c3__rows"><rect x="52" y="52" width="96" height="22" rx="5"/><rect x="52" y="84" width="96" height="22" rx="5"/><rect x="52" y="116" width="96" height="22" rx="5"/><path d="M62 63h18M88 63h14M110 63h28M62 95h18M88 95h14M110 95h28M62 127h18M88 127h14M110 127h28"/></g></svg>
+      </div>
+      <p>Each audit entry records who acted, when they did it, and which address it came from.</p>
+    </article>
+    <article class="c3">
+      <h3 class="h3">Trips back<br>to the office</h3>
+      <div class="c3__orbit" aria-hidden="true"><i></i><i></i><i></i>
+        <span>Lock</span><span>Ring</span><span>Reboot</span><span>Wipe</span><span>Kiosk</span><span>Push file</span><span>Hide app</span>
+      </div>
+      <p>None. Lock, ring, wipe or reconfigure from the panel while the phone stays in the field.</p>
+    </article>
+  </div>
+</section>
+
+<!-- 08 Field log -->
+<section class="s field" id="field" aria-labelledby="h-field">
+  <div class="field__head">
+    <h2 class="h2" id="h-field">One working day<br>with AeroNexus<br>on the fleet</h2>
+    <p class="body1">Don’t take a feature list for it. Follow one phone through one shift.</p>
+  </div>
+  <div class="tbl">
+    <p class="tbl__hd sub2"><span>Field log</span><span>Entries [ 5 ] &nbsp;·&nbsp; illustrative scenario</span><span>AeroNexus in use</span></p>
+    <article class="row">
+      <div class="row__l"><p class="row__t sub2"><b>[ 09:00 ]</b> Office</p><p class="row__q">The driver’s phone opens <em>one app</em>. Orders, and nothing else.</p><p class="row__who sub2">Kiosk mode<span>Configuration · Field Ops</span></p></div>
+      <img src="/aeronexus/media/p-kiosk.webp" alt="AeroNexus configuration page with kiosk mode switched on for the Orders app" width="1125" height="1080" decoding="async">
+    </article>
+    <article class="row">
+      <div class="row__l"><p class="row__t sub2"><b>[ 11:46 ]</b> 2 km out</p><p class="row__q">A game turns up on the phone. <em>It’s gone</em> before the next stop.</p><p class="row__who sub2">Applications<span>Install · remove · show · hide</span></p></div>
+      <img src="/aeronexus/media/p-apps.webp" alt="AeroNexus applications list with install, remove, show and hide actions" width="1125" height="1080" decoding="async">
+    </article>
+    <article class="row">
+      <div class="row__l"><p class="row__t sub2"><b>[ 12:04 ]</b> Warehouse B</p><p class="row__q">The phone crosses the fence line and <em>the panel says so</em>.</p><p class="row__who sub2">Geofence<span>Live locations</span></p></div>
+      <img src="/aeronexus/media/w-fence-alert.webp" alt="City map where a phone has left the warehouse geofence and its ring has turned amber" width="1600" height="900" decoding="async">
+    </article>
+    <article class="row">
+      <div class="row__l"><p class="row__t sub2"><b>[ 15:09 ]</b> 40 km off route</p><p class="row__q">Left on a bus. It <em>locks, rings</em> and shows your message.</p><p class="row__who sub2">Lost Mode<span>General commands</span></p></div>
+      <img src="/aeronexus/media/w-lost-ring.webp" alt="A phone on a bus seat locked in Lost Mode and ringing" width="1600" height="900" decoding="async">
+    </article>
+    <article class="row">
+      <div class="row__l"><p class="row__t sub2"><b>[ 15:12 ]</b> Office</p><p class="row__q">Every step above is in the log, <em>with a name on it</em>.</p><p class="row__who sub2">Audit<span>Who · when · from where</span></p></div>
+      <img src="/aeronexus/media/p-audit.webp" alt="AeroNexus audit log listing each action with date, user and IP address" width="1600" height="900" decoding="async">
+    </article>
+  </div>
+</section>
+
+<!-- 09 Reel: the horizontal run -->
+<section class="s reel" id="reel" style="--h:830" aria-labelledby="h-reel">
+  <h2 class="sr-only" id="h-reel">AeroNexus at a glance</h2>
+  <div class="reel__pin">
+    <div class="reel__track" data-reel>
+      <article class="rc rc--w rc--tl" style="--bg:#b4532a"><img src="/aeronexus/media/w-handover.webp" alt="" decoding="async"><h3 class="rc__big rc__big--s" data-rcbig>Leaves your hand<br>Not your control</h3></article>
+      <figure class="rc rc--n"><img src="/aeronexus/media/p-kiosk.webp" alt="Kiosk mode switch in the AeroNexus configuration page" decoding="async" style="object-position:12% 30%"></figure>
+      <article class="rc rc--w"><img src="/aeronexus/media/w-tether.webp" alt="" decoding="async"><h3 class="rc__big" data-rcbig>Always in reach</h3><p class="rc__meta sub2 rc__meta--bl">Lock. Ring. Wipe. From the panel.</p></article>
+      <figure class="rc rc--n rc--icon"><img src="/aeronexus/media/app-icon-1024.png" alt="The AeroNexus app icon: a phone tethered by a dotted line" decoding="async"></figure>
+      <article class="rc rc--w"><img src="/aeronexus/media/w-city-2km.webp" alt="" decoding="async"><p class="rc__meta sub2">No new hardware. Enroll the phones you have.</p><h3 class="rc__big" data-rcbig>Runs on Android</h3></article>
+      <figure class="rc rc--n"><img src="/aeronexus/media/w-lost.webp" alt="Phone locked in Lost Mode" decoding="async" style="object-position:47% 50%"></figure>
+      <article class="rc rc--w"><img src="/aeronexus/media/w-fence-alert.webp" alt="" decoding="async"><p class="rc__meta rc__meta--row sub2"><span>Test conditions: depot fence</span><span>Phone: Samsung A07</span><span>Result: flagged on exit</span></p><h3 class="rc__big" data-rcbig>Fence-tested</h3></article>
+      <figure class="rc rc--n"><img src="/aeronexus/media/p-hw.webp" alt="Hardware switches for camera, GPS, Wi-Fi and mobile data" decoding="async" style="object-position:16% 34%"></figure>
+      <article class="rc rc--w"><img src="/aeronexus/media/w-pins.webp" alt="" decoding="async"><p class="rc__meta sub2 rc__meta--c">From one phone to every pin on the map</p><h3 class="rc__big rc__big--c" data-rcbig>Fleet support</h3></article>
+    </div>
+  </div>
+</section>
+
+<!-- 10 Modes: choose your own -->
+<section class="s modes" id="modes" aria-labelledby="h-modes">
+  <div class="modes__top">
+    <p class="sub1">Choose your own</p>
+    <h2 class="modes__word" id="h-modes">AERONEXUS</h2>
+    <div class="tabs" role="tablist" aria-label="Policy profiles">
+      <button class="tabs__b" role="tab" aria-selected="true" data-tab="0"><span data-flip>Kiosk</span></button>
+      <button class="tabs__b" role="tab" aria-selected="false" data-tab="1"><span data-flip>Fleet</span></button>
+      <button class="tabs__b" role="tab" aria-selected="false" data-tab="2"><span data-flip>Lockdown</span></button>
+    </div>
+    <div class="modes__info">
+      <div><h3 class="sub1" data-mname>Kiosk</h3><p class="body2" data-mdesc></p></div>
+      <ul data-mlist></ul>
+    </div>
+  </div>
+  <div class="cmp">
+    <table>
+      <caption class="sr-only">Three example policy profiles compared</caption>
+      <thead><tr>
+        <th scope="col"><em>Profile</em><b>Kiosk</b><span>One phone. One app. Done properly.</span></th>
+        <th scope="col"><em>Profile</em><b>Fleet</b><span>Approved apps, live on the map, reachable all day.</span></th>
+        <th scope="col"><em>Profile</em><b>Lockdown</b><span>Camera off, fence on, for sites where nothing leaves.</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><i>Apps:</i>One</td><td><i>Apps:</i>Approved list</td><td><i>Apps:</i>Approved list</td></tr>
+        <tr><td><i>Camera:</i>Allowed</td><td><i>Camera:</i>Allowed</td><td><i>Camera:</i>Blocked</td></tr>
+        <tr><td><i>Geofence:</i>Optional</td><td><i>Geofence:</i>On</td><td><i>Geofence:</i>On</td></tr>
+        <tr><td><i>Remote screen:</i>Yes</td><td><i>Remote screen:</i>Yes</td><td><i>Remote screen:</i>Yes</td></tr>
+        <tr><td><i>Lost Mode:</i>Yes</td><td><i>Lost Mode:</i>Yes</td><td><i>Lost Mode:</i>Yes</td></tr>
+        <tr><td><i>Audit log:</i>Always</td><td><i>Audit log:</i>Always</td><td><i>Audit log:</i>Always</td></tr>
+        <tr><td><i>Best for:</i>Delivery and counter devices</td><td><i>Best for:</i>Field teams on the move</td><td><i>Best for:</i>Secure sites and warehouses</td></tr>
+      </tbody>
+    </table>
+    <p class="cmp__note sub2">Example profiles. You build your own under Configurations.</p>
+  </div>
+</section>
+
+<!-- 11 The panel -->
+<section class="s panel" id="panel" aria-labelledby="h-panel">
+  <p class="sub2">The panel behind all of it</p>
+  <h2 class="panel__word" id="h-panel">THE PANEL</h2>
+  <div class="panel__pills">
+    <button class="pillbtn pillbtn--d" type="button" data-play><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg><span data-flip>Film</span></button>
+    <a class="pillbtn pillbtn--d" href="/aeronexus/media/app-icon-1024.png" download="aeronexus-app-icon.png"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M10 17h4"/></svg><span data-flip>App icon (.png)</span></a>
+    <a class="pillbtn pillbtn--d" href="/contact/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg><span data-flip>Request a demo</span></a>
+  </div>
+  <div class="paper">
+    <h3>Abstract</h3>
+    <p>We present <em>AeroNexus</em>, an Android device management panel from DigiInn360 for fleets that leave the building. One panel enrolls company phones, pins them to approved apps, switches hardware on and off, draws geofences, pushes files, shares the screen, and locks or wipes a phone that goes missing. Released with an audit log that records who did what, when and from where. Limitations include a heavy dependency on the phone being switched on, and on someone remembering to charge it.</p>
+    <figure class="paper__fig"><img src="/aeronexus/media/p-dash.webp" alt="AeroNexus dashboard with device counts, online status and recent activity" width="1600" height="900" loading="lazy"><figcaption>Fig. 1. The dashboard. Figures shown are example data.</figcaption></figure>
+    <h3>In the sidebar</h3>
+    <p>Dashboard, Devices, Applications, Configurations, Files, Live Locations, Remote Screen, General Commands, Factory Reset, Messaging and Audit.</p>
+    <h3>Honest note</h3>
+    <p>Some screens on this page are concepts for features still being built: <em>the camera block, the kiosk app picker and app removal</em>. Times and distances tell a story, they are not measurements.</p>
+    <h3>Policy</h3>
+<pre>{
+  "device":   "Samsung A07",
+  "profile":  "Field Ops",
+  "kiosk":    "Orders",
+  "camera":   false,
+  "geofence": { "site": "Warehouse B", "radius_m": 500 },
+  "lost_mode": { "ring": true, "message": "Please call the office" }
+}</pre>
+  </div>
+</section>
+</main>
+
+<!-- 12 Contact -->
+<footer class="s foot" id="contact">
+  <canvas class="foot__pt" data-particles aria-hidden="true"></canvas>
+  <div class="foot__top">
+    <h2 class="h2">It leaves your hand,<br>not your control.</h2>
+    <p class="h2">If a phone carries your business,<br>let us show you the panel.</p>
+    <a class="pillbtn" href="/contact/"><span data-flip>Request a demo</span></a>
+  </div>
+  <div class="foot__bot">
+    <div class="foot__box">
+      <p class="sub2"><em>Built by DigiInn360<br>with care</em>Share with your IT team<br>if it helps</p>
+      <button class="pillbtn pillbtn--s" type="button" data-copy><span data-flip>Copy URL</span></button>
+    </div>
+    <div class="foot__mid">
+      <p class="sub2"><span>Call the office:</span><a href="tel:+92512748690" data-flip>051 2748690</a></p>
+      <p class="sub2"><span>Mobile:</span><a href="tel:+923095624742" data-flip>0309 5624742</a></p>
+    </div>
+    <ul class="foot__links sub2">
+      <li><a href="/products/" data-flip>Products</a></li>
+      <li><a href="/services/" data-flip>Services</a></li>
+      <li><a href="/about/" data-flip>About</a></li>
+      <li><a href="/contact/" data-flip>Contact</a></li>
+    </ul>
+    <p class="foot__legal sub2">AeroNexus is a product of DigiInn360. Some screens shown are concepts for planned features, and the figures in them are example data.</p>
+  </div>
+</footer>
+
+<!-- Film overlay -->
+<dialog class="vo" data-vo aria-label="AeroNexus film">
+  <button class="vo__x" type="button" data-voclose aria-label="Close the film"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <video data-vovideo controls playsinline preload="none" poster="/aeronexus/media/film-poster.webp" src="/aeronexus/media/film.mp4"></video>
+</dialog>
+
+<script type="module" src="/src/aeronexus/main.ts"></script>
+</body>
+</html>
