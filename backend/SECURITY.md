@@ -60,7 +60,7 @@ web application firewall (WAF) and bot blocking.
       (the developer rebuilds the package).
 
 Security alert emails (lockouts, 2FA resets) go to superusers' email
-addresses, once email is set up in `.env` (see INSTALL.md).
+addresses, once email is set up in `.env` (see START-HERE.md).
 
 ## Extra hardening you can switch on in `.env`
 

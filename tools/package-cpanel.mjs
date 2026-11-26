@@ -2,7 +2,7 @@
 //
 //   npm run package
 //
-// The zip holds the Django backend, the already-built website (site/) and INSTALL.md.
+// The zip holds the Django backend, the already-built website (site/), START-HERE.md and SECURITY.md.
 // No Node.js is needed on the server. Secrets (.env), local databases, logs and the
 // local virtualenv are never included.
 import { closeSync, cpSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync, writeSync } from 'node:fs';
