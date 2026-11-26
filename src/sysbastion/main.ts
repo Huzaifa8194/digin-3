@@ -80,7 +80,10 @@ const headline = $('[data-headline]');
   $$('[data-hl]').forEach((a) => {
     const t = a.textContent!.trim();
     a.setAttribute('aria-label', t);
-    a.innerHTML = `<span aria-hidden="true">${[...t].map((c, i) => `<span class="hl" style="--i:${i}">${c === ' ' ? '&nbsp;' : c}</span>`).join('')}</span>`;
+    // Letters are grouped so a long email address can only wrap right after the "@" on narrow screens.
+    let i = 0;
+    const groups = t.match(/[^@]*@|[^@]+/g) ?? [t];
+    a.innerHTML = `<span aria-hidden="true">${groups.map((g) => `<span class="hl-g">${[...g].map((c) => `<span class="hl" style="--i:${i++}">${c === ' ' ? '&nbsp;' : c}</span>`).join('')}</span>`).join('')}</span>`;
   });
   const ph = $('[data-ph]');
   const mid = (F.placeholder.length - 1) / 2;

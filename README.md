@@ -8,7 +8,7 @@ Vite site plus a small Django backend (`backend/`) for the contact/demo forms, a
 npm run package
 ```
 
-Creates `release/digiinn360-website.zip` (backend + built site, no secrets). Hand it over as is: `START-HERE.md` (install guide) and `SECURITY.md` (hosting checklist) are inside the zip.
+Creates `release/digiinn360-website.zip` (backend + built site, no secrets) and puts the client guides next to it: `START-HERE` (install guide) and `SECURITY` (hosting checklist), each as `.md` and `.pdf`. They are inside the zip too. The PDFs are made from `backend/*.md` by `npm run docs`; edit the Markdown, never the PDFs.
 
 Local backend: `cd backend && py -3.12 -m venv .venv && .venv\Scripts\pip install -r requirements.txt`, then `DJANGO_DEBUG=true .venv/Scripts/python manage.py migrate` and `runserver 127.0.0.1:8765`. `npm run dev` proxies `/api` there. Tests: `DJANGO_DEBUG=true .venv/Scripts/python manage.py test`. Dependencies: edit `backend/requirements.in`, then `pip-compile --generate-hashes --allow-unsafe --strip-extras -o requirements.txt requirements.in` (checksum-pinned). Hosting security checklist: `backend/SECURITY.md`.
 

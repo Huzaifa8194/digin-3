@@ -4,7 +4,7 @@
 import './inquiry.css';
 import { submitLead, warmLeadSession } from './lead-api';
 
-const TO = 'info@digiinn360.com';
+const TO = 'procurement@digiinn360.com';
 const EMAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
 const form = document.querySelector<HTMLFormElement>('#inquiry');

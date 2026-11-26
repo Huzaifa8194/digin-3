@@ -27,7 +27,7 @@ const SAME_AS: string[] = [];
 
 const PHONE = '+92-51-2748690';
 const MOBILE = '+92-309-5624742';
-const EMAIL = 'info@digiinn360.com';
+const EMAIL = 'procurement@digiinn360.com';
 const ADDRESS = {
   '@type': 'PostalAddress',
   streetAddress: 'House no 3, Street no 14, Sector F7',
@@ -273,7 +273,7 @@ export const PAGES: Page[] = [
     crumbs: [{ name: 'Contact', path: '/contact/' }],
     mainEntity: OFFICE_ID,
     entities: () => [officeNode()],
-    llms: 'Contact: email info@digiinn360.com, phone +92 51 2748690 or +92 309 5624742, office in Sector F7, Islamabad.',
+    llms: 'Contact: email procurement@digiinn360.com, phone +92 51 2748690 or +92 309 5624742, office in Sector F7, Islamabad.',
   },
   productPage(product('shadowad'), {
     ogTitle: 'shadowAD | Autonomous security testing, with a human in control',

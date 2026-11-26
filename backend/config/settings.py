@@ -265,7 +265,7 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL") or EMAIL_HOST_USER or "Digiinn360
 EMAIL_ENABLED = DEBUG or bool(env("EMAIL_HOST")) or "locmem" in EMAIL_BACKEND or "console" in EMAIL_BACKEND
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # Initial recipients for new-lead alerts; editable later in the admin.
-LEADS_NOTIFY_EMAILS = env_list("LEADS_NOTIFY_EMAILS", ["info@digiinn360.com"])
+LEADS_NOTIFY_EMAILS = env_list("LEADS_NOTIFY_EMAILS", ["procurement@digiinn360.com"])
 
 # --- Public form API ----------------------------------------------------------------
 LEADS_RATE_LIMITS = (

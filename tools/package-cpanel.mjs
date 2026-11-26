@@ -2,7 +2,8 @@
 //
 //   npm run package
 //
-// The zip holds the Django backend, the already-built website (site/), START-HERE.md and SECURITY.md.
+// The zip holds the Django backend, the already-built website (site/) and the client guides
+// (START-HERE and SECURITY, each as .md and .pdf). The guides are also copied next to the zip.
 // No Node.js is needed on the server. Secrets (.env), local databases, logs and the
 // local virtualenv are never included.
 import { closeSync, cpSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync, writeSync } from 'node:fs';
@@ -25,10 +26,19 @@ if (!existsSync(join(dist, 'index.html'))) {
   console.error('dist/ is missing. Run `npm run build` first (or use `npm run package`).');
   process.exit(1);
 }
+const GUIDES = ['START-HERE', 'SECURITY'].flatMap((n) => [`${n}.md`, `${n}.pdf`]);
+for (const n of ['START-HERE', 'SECURITY']) {
+  const md = join(backend, `${n}.md`), pdf = join(backend, `${n}.pdf`);
+  if (!existsSync(pdf) || statSync(pdf).mtimeMs < statSync(md).mtimeMs) {
+    console.error(`backend/${n}.pdf is missing or older than ${n}.md. Run \`npm run docs\` first (or use \`npm run package\`).`);
+    process.exit(1);
+  }
+}
 
 // Clear only our own outputs: on Windows the release folder itself may be held open by another program.
 rmSync(out, { recursive: true, force: true, maxRetries: 5 });
 rmSync(zip, { force: true, maxRetries: 5 });
+for (const g of GUIDES) rmSync(join(releaseDir, g), { force: true, maxRetries: 5 });
 mkdirSync(out, { recursive: true });
 
 cpSync(backend, out, {
@@ -127,5 +137,7 @@ function writeZip(zipPath, baseDir, topName) {
 }
 
 const count = writeZip(zip, releaseDir, name);
+for (const g of GUIDES) cpSync(join(out, g), join(releaseDir, g));
 console.log(`Package folder: ${relative(root, out)}`);
 console.log(`Upload this file: ${relative(root, zip)} (${count} files)`);
+console.log(`Guides for the client, next to the zip: ${GUIDES.join(', ')}`);

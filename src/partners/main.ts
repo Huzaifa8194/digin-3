@@ -133,8 +133,8 @@ function startForm() {
       `Company: ${val('company')}`, `Website: ${val('company_website')}`, `Country: ${val('country')}`,
       `Products: ${products()}`, '', val('message'), '', `Name: ${val('name')}`, `Email: ${val('email')}`, `Phone: ${val('phone')}`,
     ].join('\n');
-    setStatus(`${result.message ?? 'We could not send this from the page.'} Your email app will open with the application drafted. If nothing opens, write to info@digiinn360.com.`, 'info');
-    location.href = `mailto:info@digiinn360.com?subject=${encodeURIComponent('Partner application: ' + val('company'))}&body=${encodeURIComponent(body)}`;
+    setStatus(`${result.message ?? 'We could not send this from the page.'} Your email app will open with the application drafted. If nothing opens, write to procurement@digiinn360.com.`, 'info');
+    location.href = `mailto:procurement@digiinn360.com?subject=${encodeURIComponent('Partner application: ' + val('company'))}&body=${encodeURIComponent(body)}`;
   });
 }
 

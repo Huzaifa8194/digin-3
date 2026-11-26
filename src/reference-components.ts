@@ -48,7 +48,7 @@ export function mountTeam(anchor: Element) {
     </div>
     <div class="team-caption">
       <span>Different disciplines. One team.</span>
-      ${link('Work with us', 'mailto:info@digiinn360.com')}
+      ${link('Work with us', 'mailto:procurement@digiinn360.com')}
     </div>
   `;
 

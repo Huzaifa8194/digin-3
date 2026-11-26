@@ -163,5 +163,5 @@ export const footer = {
   caption: 'Demo on a test VM · No card, no spam',
   made: 'Made by DigiInn360',
   tagline: 'Deny by default. Reversible by design.',
-  mail: 'info@digiinn360.com',
+  mail: 'procurement@digiinn360.com',
 };

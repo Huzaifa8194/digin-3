@@ -8,7 +8,7 @@ _ERROR_500 = (
     "<!doctype html><html lang='en'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
     "<title>Something went wrong | Digiinn360</title><body style='font:16px/1.5 system-ui,Arial,sans-serif;padding:8vw'>"
     "<h1>Something went wrong on our side.</h1><p>Please try again in a minute, or write to "
-    "<a href='mailto:info@digiinn360.com'>info@digiinn360.com</a>.</p><p><a href='/'>Back to the home page</a></p></body></html>"
+    "<a href='mailto:procurement@digiinn360.com'>procurement@digiinn360.com</a>.</p><p><a href='/'>Back to the home page</a></p></body></html>"
 )
 
 
